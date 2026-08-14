@@ -25,8 +25,6 @@ from services.music import (
 from utils import clip_list_label
 from widgets import NavListView, PanelHeader, TrackList
 
-SAVED_SONGS_ICON = "🎵"
-
 
 def library_num_prefix(num: int, *, marked: bool) -> str:
     return f"{num}* " if marked else f"{num}. "
@@ -36,7 +34,7 @@ def _folder_icon(playlist_id: str) -> str:
     if playlist_id == LIKED_PLAYLIST_ID:
         return "❤️"
     if playlist_id == SAVED_SONGS_PLAYLIST_ID:
-        return SAVED_SONGS_ICON
+        return "🎵"
     return "📁"
 
 
@@ -48,6 +46,7 @@ def _same_library_row(item: Track, track: Track) -> bool:
 
 @dataclass
 class LibRow:
+    # unneeded, currently library top-level only has playlists
     kind: Literal["section", "playlist", "track"]
     label: str
     playlist: PlaylistSummary | None = None
@@ -60,10 +59,10 @@ class LibraryScreen(ContentView):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self._rows: list[LibRow] = []
-        self._drilled = False
+        self._drilled = False # inside a folder/playlist
         self._loaded = False
         self._opening: str | None = None
-        self._index_cursor = 0
+        self._index_cursor = 0 # focused playlist to restore when escape
         self._open_playlist: PlaylistSummary | None = None
         self._composing = False
         self._pending_focus_id: str | None = None
@@ -146,6 +145,7 @@ class LibraryScreen(ContentView):
         self._sidebar_fetch_done()
 
     def _build_index(
+        # set up/display library, respecting the display flags in settings
         self, playlists: list[PlaylistSummary], *, focus_playlist_id: str | None = None
     ) -> None:
         self._drilled = False
@@ -190,7 +190,7 @@ class LibraryScreen(ContentView):
             rows.append(
                 LibRow(
                     kind="playlist",
-                    label=f"{SAVED_SONGS_ICON} Saved Songs",
+                    label="🎵 Saved Songs",
                     playlist=saved,
                 )
             )

@@ -1,3 +1,16 @@
+priority:
+
+actually USE downloaded tracks if seen. e.g. playing track, and no need for 'fetching' anymore
+play inconsistencies still?
+x/p or d/p, y/p.
+
+
+
+
+
+
+other:
+
 oauth credentials are broken rn, use browser auth. switch when fixed
 discord rich presence
 queue reordering
@@ -13,8 +26,5 @@ volume standardizer?
 remove toasts, and have a dedicated status/pending message location (left of Vol?)
 find places where my simple request actually takes much implementation to do - might reduce
 lyrics
-play inconsistencies still?
 color themes (simple file)
-actually USE downloaded tracks if seen. e.g. playing track, and no need for 'fetching' anymore
-x/p or d/p, y/p.
 better key label tips, e.g. m/o/+, etc should only be on Library
