@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from yt_collate.services.player import (
+from services.player import (
     FakeMpvTransport,
     PlayerService,
     build_mpv_args,

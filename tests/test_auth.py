@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from yt_collate.services.music import MusicService, track_from_song
+from services.music import MusicService, track_from_song
 
 
 def test_verify_auth_without_file(tmp_path: Path) -> None:

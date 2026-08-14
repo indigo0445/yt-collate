@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from yt_collate.models.music import Artist, Track
-from yt_collate.services.config import ConfigService
-from yt_collate.services.player import FakeMpvTransport, PlayerService
-from yt_collate.state import AppState
+from models.track import Artist, Track
+from services.config import ConfigService
+from services.player import FakeMpvTransport, PlayerService
+from state import AppState
 
 
 def _t(i: int) -> Track:

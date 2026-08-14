@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from yt_collate.models.config import RepeatMode
-from yt_collate.models.music import Artist, Track
-from yt_collate.services.queue import QueueService
+from models.config import RepeatMode
+from models.track import Artist, Track
+from services.queue import QueueService
 
 
 def _t(i: int) -> Track:

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from yt_collate.services.stream import cookies_and_user_agent, write_netscape_cookies
+from services.stream import cookies_and_user_agent, write_netscape_cookies
 
 
 def test_write_netscape_cookies(tmp_path: Path) -> None:

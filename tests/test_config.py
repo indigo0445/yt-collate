@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from yt_collate.services.config import ConfigService, get_config_dir
+from services.config import ConfigService, get_config_dir
 
 
 def test_config_dir_env_override(tmp_path: Path, monkeypatch) -> None:
@@ -55,7 +55,7 @@ def test_default_volume_is_100(tmp_path: Path) -> None:
 
 
 def test_library_visibility_defaults() -> None:
-    from yt_collate.models.config import AppConfig
+    from models.config import AppConfig
 
     cfg = AppConfig()
     assert cfg.show_episodes_for_later is False

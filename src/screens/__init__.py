@@ -1,12 +1,12 @@
-from yt_collate.screens.discovery import DiscoveryScreen
-from yt_collate.screens.explore import ExploreScreen
-from yt_collate.screens.help import HelpScreen
-from yt_collate.screens.history import HistoryScreen
-from yt_collate.screens.home import HomeScreen
-from yt_collate.screens.library import LibraryScreen
-from yt_collate.screens.search import SearchScreen
-from yt_collate.screens.settings import SettingsScreen
-from yt_collate.screens.stub import StubScreen
+from screens.discovery import DiscoveryScreen
+from screens.explore import ExploreScreen
+from screens.help import HelpScreen
+from screens.history import HistoryScreen
+from screens.home import HomeScreen
+from screens.library import LibraryScreen
+from screens.search import SearchScreen
+from screens.settings import SettingsScreen
+from screens.stub import StubScreen
 
 __all__ = [
     "DiscoveryScreen",

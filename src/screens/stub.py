@@ -6,7 +6,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Label
 
-from yt_collate.screens.base import ContentView
+from screens.base import ContentView
 
 
 class StubScreen(ContentView):

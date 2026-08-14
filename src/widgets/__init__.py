@@ -15,9 +15,9 @@ from textual.strip import Strip
 from textual.widgets import Input, Label, OptionList, Static
 from textual.widgets.option_list import Option
 
-from yt_collate.keyhints import PLAYBACK_CHROME, STATUS_KEYS
-from yt_collate.models.music import Track
-from yt_collate.utils import clip_list_label, format_time, progress_bar, truncate
+from keyhints import PLAYBACK_CHROME, STATUS_KEYS
+from models.track import Track
+from utils import clip_list_label, format_time, progress_bar, truncate
 
 # Vim-style lines kept above/below the cursor when the list must scroll.
 SCROLL_OFF = 5

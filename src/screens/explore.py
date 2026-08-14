@@ -1,6 +1,6 @@
 """Explore — new albums, videos, trending, top songs, moods."""
 
-from yt_collate.screens.catalog import CatalogScreen
+from screens.catalog import CatalogScreen
 
 
 class ExploreScreen(CatalogScreen):

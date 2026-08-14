@@ -38,7 +38,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    from yt_collate.app import YtCollateApp
+    from app import YtCollateApp
 
     app = YtCollateApp()
     app.run()

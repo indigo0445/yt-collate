@@ -6,10 +6,10 @@ import random
 from collections.abc import Sequence
 from pathlib import Path
 
-from yt_collate.models.config import RepeatMode
-from yt_collate.models.player_state import PlayerStateFile
-from yt_collate.models.music import Track
-from yt_collate.services.config import _read_model, _write_model
+from models.config import RepeatMode
+from models.player_state import PlayerStateFile
+from models.track import Track
+from services.config import _read_model, _write_model
 
 
 class QueueService:

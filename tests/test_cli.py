@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from yt_collate.cli import check_dependencies
+from cli import check_dependencies
 
 
 def test_check_dependencies_finds_mpv_ytdlp() -> None:

@@ -6,9 +6,9 @@ from textual import work
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 
-from yt_collate.models.music import Track
-from yt_collate.screens.base import ContentView
-from yt_collate.widgets import PanelHeader, TrackList
+from models.track import Track
+from screens.base import ContentView
+from widgets import PanelHeader, TrackList
 
 _HISTORY_LIMIT = 50
 

@@ -5,9 +5,9 @@ from __future__ import annotations
 import threading
 import time
 
-from yt_collate.models.music import Artist, PlaylistSummary, Track
-from yt_collate.services.library_jobs import LibraryJobQueue
-from yt_collate.services.music import AddResult, LibraryTarget, PlaylistWriteResult
+from models.track import Artist, PlaylistSummary, Track
+from services.library_jobs import LibraryJobQueue
+from services.music import AddResult, LibraryTarget, PlaylistWriteResult
 
 
 def _song(video_id: str) -> Track:
@@ -54,7 +54,7 @@ def test_library_jobs_run_serially() -> None:
 
 
 def test_library_jobs_retries_conflict_then_succeeds(monkeypatch) -> None:  # noqa: ANN001
-    monkeypatch.setattr("yt_collate.services.library_jobs._CONFLICT_WAIT", 0.01)
+    monkeypatch.setattr("services.library_jobs._CONFLICT_WAIT", 0.01)
     calls = {"n": 0}
     got: list[AddResult] = []
     done = threading.Event()

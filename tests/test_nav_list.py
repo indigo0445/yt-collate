@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from yt_collate.widgets import NavListView, make_row, vim_center_row
+from widgets import NavListView, make_row, vim_center_row
 
 
 def test_vim_center_row() -> None:

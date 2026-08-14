@@ -8,7 +8,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from yt_collate.models.config import AppConfig
+from models.config import AppConfig
 
 APP_DIR_NAME = "yt-collate"
 LEGACY_DIR_NAME = "youtube-music-lite"

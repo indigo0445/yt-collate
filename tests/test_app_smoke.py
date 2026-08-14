@@ -9,23 +9,23 @@ import pytest
 from textual.containers import Horizontal
 from textual.widgets import Input
 
-from yt_collate.app import YtCollateApp
-from yt_collate.models.music import Artist, Track
-from yt_collate.screens.explore import ExploreScreen
-from yt_collate.screens.help import HelpScreen
-from yt_collate.screens.history import HistoryScreen
-from yt_collate.screens.home import HomeScreen
-from yt_collate.screens.library import LibraryScreen
-from yt_collate.screens.search import SearchScreen
-from yt_collate.screens.settings import SettingsScreen
-from yt_collate.services.music import CatalogItem, CatalogShelf
-from yt_collate.widgets import NavListView, Sidebar, TrackList
+from app import YtCollateApp
+from models.track import Artist, Track
+from screens.explore import ExploreScreen
+from screens.help import HelpScreen
+from screens.history import HistoryScreen
+from screens.home import HomeScreen
+from screens.library import LibraryScreen
+from screens.search import SearchScreen
+from screens.settings import SettingsScreen
+from services.music import CatalogItem, CatalogShelf
+from widgets import NavListView, Sidebar, TrackList
 
 
 @pytest.fixture
 def stub_home(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_home",
+        "services.music.MusicService.get_home",
         lambda self, limit=5: [],
     )
 
@@ -186,7 +186,7 @@ async def test_catalog_restores_focus_on_back(
         for i in range(8)
     ]
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_explore",
+        "services.music.MusicService.get_explore",
         lambda self: [CatalogShelf(title="Moods & genres", items=moods)],
     )
     monkeypatch.setenv("YT_COLLATE_CONFIG", str(tmp_path / "cfg"))
@@ -545,7 +545,7 @@ async def test_sidebar_fetching_while_explore_loads(
         return []
 
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_explore",
+        "services.music.MusicService.get_explore",
         slow_explore,
     )
     monkeypatch.setenv("YT_COLLATE_CONFIG", str(tmp_path / "cfg"))
@@ -586,7 +586,7 @@ async def test_home_fetching_on_startup(
         return []
 
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_home",
+        "services.music.MusicService.get_home",
         slow_home,
     )
     monkeypatch.setenv("YT_COLLATE_CONFIG", str(tmp_path / "cfg"))
@@ -619,11 +619,11 @@ async def test_trending_focuses_list_before_load(
         return []
 
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_charts_tracks",
+        "services.music.MusicService.get_charts_tracks",
         slow_charts,
     )
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.search_songs",
+        "services.music.MusicService.search_songs",
         lambda self, *a, **k: [],
     )
     monkeypatch.setenv("YT_COLLATE_CONFIG", str(tmp_path / "cfg"))
@@ -640,14 +640,14 @@ async def test_trending_focuses_list_before_load(
 async def test_library_mark_prefix_and_plus_not_volume(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stub_home: None
 ) -> None:
-    from yt_collate.models.music import PlaylistSummary
-    from yt_collate.screens.library import library_num_prefix
+    from models.track import PlaylistSummary
+    from screens.library import library_num_prefix
 
     assert library_num_prefix(12, marked=True) == "12* "
     assert library_num_prefix(12, marked=False) == "12. "
 
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_library_playlists",
+        "services.music.MusicService.get_library_playlists",
         lambda self, limit=100, show_episodes_for_later=True: [
             PlaylistSummary(playlist_id="PLreal", title="Real Mix", track_count=3)
         ],
@@ -705,7 +705,7 @@ async def test_library_mark_prefix_and_plus_not_volume(
 
         def fake_add(self, track, target):  # noqa: ANN001
             added.append((track.video_id, target.kind))
-            from yt_collate.services.music import AddResult
+            from services.music import AddResult
 
             return AddResult(True, f"Added to {target.title}: {track.title}")
 
@@ -715,7 +715,7 @@ async def test_library_mark_prefix_and_plus_not_volume(
             toasts.append((message, severity, title))
 
         monkeypatch.setattr(
-            "yt_collate.services.music.MusicService.add_song_to_target",
+            "services.music.MusicService.add_song_to_target",
             fake_add,
         )
         monkeypatch.setattr(type(app), "notify", capture_notify)
@@ -754,7 +754,7 @@ async def test_library_mark_prefix_and_plus_not_volume(
 async def test_library_marked_before_fetching(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stub_home: None
 ) -> None:
-    from yt_collate.models.music import PlaylistSummary
+    from models.track import PlaylistSummary
 
     release = threading.Event()
 
@@ -763,13 +763,13 @@ async def test_library_marked_before_fetching(
         return []
 
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_library_playlists",
+        "services.music.MusicService.get_library_playlists",
         lambda self, limit=100, show_episodes_for_later=True: [
             PlaylistSummary(playlist_id="PLreal", title="Real Mix", track_count=3)
         ],
     )
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_collection_tracks",
+        "services.music.MusicService.get_collection_tracks",
         slow_tracks,
     )
     monkeypatch.setenv("YT_COLLATE_CONFIG", str(tmp_path / "cfg"))
@@ -802,7 +802,7 @@ async def test_library_marked_before_fetching(
 async def test_library_delete_keeps_focus_index(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stub_home: None
 ) -> None:
-    from yt_collate.models.music import PlaylistSummary
+    from models.track import PlaylistSummary
 
     songs = [
         Track(video_id="a", title="One", artists=[Artist(name="A")]),
@@ -810,13 +810,13 @@ async def test_library_delete_keeps_focus_index(
         Track(video_id="c", title="Three", artists=[Artist(name="A")]),
     ]
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_library_playlists",
+        "services.music.MusicService.get_library_playlists",
         lambda self, limit=100, show_episodes_for_later=True: [
             PlaylistSummary(playlist_id="PLreal", title="Real Mix", track_count=3)
         ],
     )
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_collection_tracks",
+        "services.music.MusicService.get_collection_tracks",
         lambda self, playlist_id, limit=200: list(songs),
     )
     monkeypatch.setenv("YT_COLLATE_CONFIG", str(tmp_path / "cfg"))
@@ -860,8 +860,8 @@ async def test_library_delete_keeps_focus_index(
 async def test_library_compose_playlist_and_refetch_order(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stub_home: None
 ) -> None:
-    from yt_collate.models.music import PlaylistSummary
-    from yt_collate.services.music import PlaylistWriteResult
+    from models.track import PlaylistSummary
+    from services.music import PlaylistWriteResult
 
     library = [PlaylistSummary(playlist_id="PLold", title="Old Mix", track_count=1)]
 
@@ -875,11 +875,11 @@ async def test_library_compose_playlist_and_refetch_order(
         return PlaylistWriteResult(True, f"Created playlist: {title}", playlist_id="PLnew")
 
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_library_playlists",
+        "services.music.MusicService.get_library_playlists",
         fake_get,
     )
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.create_playlist",
+        "services.music.MusicService.create_playlist",
         fake_create,
     )
     monkeypatch.setenv("YT_COLLATE_CONFIG", str(tmp_path / "cfg"))
@@ -927,11 +927,11 @@ async def test_library_compose_playlist_and_refetch_order(
 async def test_library_delete_playlist_always_confirms(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stub_home: None
 ) -> None:
-    from yt_collate.models.music import PlaylistSummary
-    from yt_collate.services.music import PlaylistWriteResult
+    from models.track import PlaylistSummary
+    from services.music import PlaylistWriteResult
 
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.get_library_playlists",
+        "services.music.MusicService.get_library_playlists",
         lambda self, limit=100, show_episodes_for_later=True: [
             PlaylistSummary(playlist_id="PLreal", title="Real Mix", track_count=3),
             PlaylistSummary(playlist_id="PLtwo", title="Second", track_count=1),
@@ -946,7 +946,7 @@ async def test_library_delete_playlist_always_confirms(
         )
 
     monkeypatch.setattr(
-        "yt_collate.services.music.MusicService.delete_playlist",
+        "services.music.MusicService.delete_playlist",
         fake_delete,
     )
     monkeypatch.setenv("YT_COLLATE_CONFIG", str(tmp_path / "cfg"))

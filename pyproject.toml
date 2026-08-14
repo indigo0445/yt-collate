@@ -18,27 +18,22 @@ dependencies = [
 discord = ["pypresence>=4.3.0"]
 
 [project.scripts]
-ytc = "yt_collate.cli:main"
-yt-collate = "yt_collate.cli:main"
+ytc = "cli:main"
+yt-collate = "cli:main"
 
 [build-system]
 requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = [
-    "yt_collate",
-    "yt_collate.models",
-    "yt_collate.screens",
-    "yt_collate.services",
-    "yt_collate.widgets",
-]
+package-dir = {"" = "src"}
+py-modules = ["app", "cli", "keyhints", "state", "utils"]
 
-[tool.setuptools.package-dir]
-yt_collate = "src"
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.package-data]
-yt_collate = ["themes/*.tcss"]
+"*" = ["themes/*.tcss"]
 
 [dependency-groups]
 dev = [
@@ -50,15 +45,31 @@ dev = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+pythonpath = ["src"]
 
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
 pythonVersion = "3.12"
+extraPaths = ["src"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+src = ["src"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "app",
+    "cli",
+    "keyhints",
+    "models",
+    "screens",
+    "services",
+    "state",
+    "utils",
+    "widgets",
+]

@@ -1,6 +1,6 @@
 """Home — start page: YouTube Music home shelves."""
 
-from yt_collate.screens.catalog import CatalogScreen
+from screens.catalog import CatalogScreen
 
 
 class HomeScreen(CatalogScreen):

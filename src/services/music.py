@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
-from yt_collate.models.music import Artist, PlaylistSummary, Track
-from yt_collate.utils import youtube_video_id
+from models.track import Artist, PlaylistSummary, Track
+from utils import youtube_video_id
 
 
 def _parse_duration(raw: Any) -> int | None:

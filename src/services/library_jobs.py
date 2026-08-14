@@ -9,8 +9,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Literal
 
-from yt_collate.models.music import PlaylistSummary, Track
-from yt_collate.services.music import (
+from models.track import PlaylistSummary, Track
+from services.music import (
     AddResult,
     LibraryTarget,
     MusicService,

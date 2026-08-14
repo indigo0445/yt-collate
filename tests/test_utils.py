@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from rich.text import Text
 
-from yt_collate.utils import (
+from utils import (
     clip_list_label,
     display_duration,
     display_position,

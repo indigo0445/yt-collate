@@ -14,8 +14,8 @@ from textual.notifications import SeverityLevel
 from textual.widget import Widget
 from textual.widgets import Input, Label, OptionList, Static
 
-from yt_collate.models.music import PlaylistSummary, Track
-from yt_collate.screens import (
+from models.track import PlaylistSummary, Track
+from screens import (
     DiscoveryScreen,
     HelpScreen,
     HistoryScreen,
@@ -23,20 +23,20 @@ from yt_collate.screens import (
     SettingsScreen,
     StubScreen,
 )
-from yt_collate.screens.catalog import CatalogScreen
-from yt_collate.screens.explore import ExploreScreen
-from yt_collate.screens.home import HomeScreen
-from yt_collate.screens.library import LibraryScreen
-from yt_collate.services.download import DownloadBatchResult
-from yt_collate.services.music import (
+from screens.catalog import CatalogScreen
+from screens.explore import ExploreScreen
+from screens.home import HomeScreen
+from screens.library import LibraryScreen
+from services.download import DownloadBatchResult
+from services.music import (
     AddResult,
     LibraryTarget,
     PlaylistWriteResult,
     is_user_playlist,
 )
-from yt_collate.state import RANDOM_QUERIES, AppState
-from yt_collate.utils import display_duration, display_position
-from yt_collate.widgets import (
+from state import RANDOM_QUERIES, AppState
+from utils import display_duration, display_position
+from widgets import (
     FilterLeaveDown,
     ListFilterDismissed,
     ListFilterRequested,

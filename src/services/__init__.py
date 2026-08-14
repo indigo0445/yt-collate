@@ -1,7 +1,7 @@
-from yt_collate.services.config import ConfigService, get_config_dir
-from yt_collate.services.music import MusicService
-from yt_collate.services.player import FakeMpvTransport, PlayerService
-from yt_collate.services.queue import QueueService
+from services.config import ConfigService, get_config_dir
+from services.music import MusicService
+from services.player import FakeMpvTransport, PlayerService
+from services.queue import QueueService
 
 __all__ = [
     "ConfigService",

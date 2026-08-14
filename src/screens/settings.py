@@ -7,9 +7,9 @@ from textual.binding import Binding
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Input, Label
 
-from yt_collate.keyhints import SETTINGS
-from yt_collate.screens.base import ContentView
-from yt_collate.widgets import NavListView, PanelHeader
+from keyhints import SETTINGS
+from screens.base import ContentView
+from widgets import NavListView, PanelHeader
 
 
 def _yn(value: bool) -> str:

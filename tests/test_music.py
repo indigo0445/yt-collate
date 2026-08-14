@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from yt_collate.services.music import track_from_song
+from services.music import track_from_song
 
 
 def test_track_from_song_basic() -> None:
@@ -54,7 +54,7 @@ class _FakeExploreClient:
 
 
 def test_get_explore_builds_shelves() -> None:
-    from yt_collate.services.music import MusicService
+    from services.music import MusicService
 
     music = MusicService()
     music._yt = _FakeExploreClient(
@@ -93,7 +93,7 @@ def test_get_explore_builds_shelves() -> None:
 
 
 def test_catalog_item_classifies_mixed_row() -> None:
-    from yt_collate.services.music import catalog_item_from_content
+    from services.music import catalog_item_from_content
 
     song = catalog_item_from_content(
         {
@@ -150,7 +150,7 @@ def test_catalog_item_classifies_mixed_row() -> None:
 
 
 def test_get_home_and_home_tracks() -> None:
-    from yt_collate.services.music import MusicService
+    from services.music import MusicService
 
     class FakeHome:
         def get_home(self, limit: int = 5) -> list:
@@ -187,8 +187,8 @@ def test_get_home_and_home_tracks() -> None:
 
 
 def test_anonymous_skips_history_api() -> None:
-    from yt_collate.models.music import Artist, Track
-    from yt_collate.services.music import MusicService
+    from models.track import Artist, Track
+    from services.music import MusicService
 
     class Forbidden:
         def get_history(self) -> list:
@@ -210,8 +210,8 @@ def test_anonymous_skips_history_api() -> None:
 
 
 def test_get_history_collapses_consecutive_and_add_uses_same_client() -> None:
-    from yt_collate.models.music import Artist, Track
-    from yt_collate.services.music import MusicService
+    from models.track import Artist, Track
+    from services.music import MusicService
 
     class FakeHistory:
         def __init__(self) -> None:
@@ -244,7 +244,7 @@ def test_get_history_collapses_consecutive_and_add_uses_same_client() -> None:
 
 
 def test_get_library_playlists_skips_liked_music_row() -> None:
-    from yt_collate.services.music import (
+    from services.music import (
         LIKED_PLAYLIST_ID,
         SAVED_SONGS_PLAYLIST_ID,
         MusicService,
@@ -284,7 +284,7 @@ def test_get_library_playlists_skips_liked_music_row() -> None:
 
 
 def test_get_library_playlists_hides_episodes_for_later() -> None:
-    from yt_collate.services.music import MusicService
+    from services.music import MusicService
 
     class FakeLib:
         def get_library_playlists(self, limit: int = 50) -> list:
@@ -303,8 +303,8 @@ def test_get_library_playlists_hides_episodes_for_later() -> None:
 
 
 def test_library_target_for_kinds() -> None:
-    from yt_collate.models.music import PlaylistSummary
-    from yt_collate.services.music import (
+    from models.track import PlaylistSummary
+    from services.music import (
         LIKED_PLAYLIST_ID,
         SAVED_SONGS_PLAYLIST_ID,
         is_user_playlist,
@@ -340,14 +340,15 @@ def test_library_target_for_kinds() -> None:
 
 
 def test_add_song_to_target_routes() -> None:
-    from yt_collate.models.music import Artist, Track
-    from yt_collate.services.music import (
+    from ytmusicapi.models.content.enums import LikeStatus
+
+    from models.track import Artist, Track
+    from services.music import (
         LIKED_PLAYLIST_ID,
         SAVED_SONGS_PLAYLIST_ID,
         LibraryTarget,
         MusicService,
     )
-    from ytmusicapi.models.content.enums import LikeStatus
 
     class FakeAdd:
         def __init__(self) -> None:
@@ -426,8 +427,8 @@ def test_add_song_to_target_routes() -> None:
 
 
 def test_add_song_to_target_requires_auth() -> None:
-    from yt_collate.models.music import Artist, Track
-    from yt_collate.services.music import LibraryTarget, MusicService
+    from models.track import Artist, Track
+    from services.music import LibraryTarget, MusicService
 
     music = MusicService()
     music._authenticated = False
@@ -441,8 +442,8 @@ def test_add_song_to_target_requires_auth() -> None:
 
 
 def test_add_to_playlist_duplicate_and_other_error() -> None:
-    from yt_collate.models.music import Artist, Track
-    from yt_collate.services.music import LibraryTarget, MusicService
+    from models.track import Artist, Track
+    from services.music import LibraryTarget, MusicService
 
     song = Track(video_id="vid1", title="Song", artists=[Artist(name="A")])
     target = LibraryTarget("playlist", "PLreal", "Real Mix")
@@ -472,8 +473,8 @@ def test_add_to_playlist_duplicate_and_other_error() -> None:
 
 
 def test_liked_and_saved_duplicate() -> None:
-    from yt_collate.models.music import Artist, Track
-    from yt_collate.services.music import (
+    from models.track import Artist, Track
+    from services.music import (
         LIKED_PLAYLIST_ID,
         SAVED_SONGS_PLAYLIST_ID,
         LibraryTarget,
@@ -524,14 +525,15 @@ def test_liked_and_saved_duplicate() -> None:
 
 
 def test_remove_song_from_target_routes() -> None:
-    from yt_collate.models.music import Artist, Track
-    from yt_collate.services.music import (
+    from ytmusicapi.models.content.enums import LikeStatus
+
+    from models.track import Artist, Track
+    from services.music import (
         LIKED_PLAYLIST_ID,
         SAVED_SONGS_PLAYLIST_ID,
         LibraryTarget,
         MusicService,
     )
-    from ytmusicapi.models.content.enums import LikeStatus
 
     class FakeRemove:
         def __init__(self) -> None:
@@ -602,8 +604,8 @@ def test_remove_song_from_target_routes() -> None:
 
 
 def test_create_and_delete_playlist() -> None:
-    from yt_collate.models.music import PlaylistSummary
-    from yt_collate.services.music import (
+    from models.track import PlaylistSummary
+    from services.music import (
         LIKED_PLAYLIST_ID,
         SAVED_SONGS_PLAYLIST_ID,
         MusicService,
@@ -664,8 +666,8 @@ def test_create_and_delete_playlist() -> None:
 
 
 def test_delete_playlist_innertube_payload_is_success() -> None:
-    from yt_collate.models.music import PlaylistSummary
-    from yt_collate.services.music import MusicService
+    from models.track import PlaylistSummary
+    from services.music import MusicService
 
     payload = {
         "responseContext": {"serviceTrackingParams": []},
@@ -694,8 +696,8 @@ def test_delete_playlist_innertube_payload_is_success() -> None:
 
 
 def test_delete_playlist_unknown_blob_is_short_error() -> None:
-    from yt_collate.models.music import PlaylistSummary
-    from yt_collate.services.music import MusicService
+    from models.track import PlaylistSummary
+    from services.music import MusicService
 
     class FakeDelete:
         def delete_playlist(self, playlistId: str) -> dict:

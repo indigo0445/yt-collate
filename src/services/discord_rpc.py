@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Any
 
-from yt_collate.models.music import Track
+from models.track import Track
 
 log = logging.getLogger(__name__)
 

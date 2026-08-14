@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from yt_collate.app import YtCollateApp
-from yt_collate.keyhints import PLAYBACK_CHROME, QUEUE, STATUS_KEYS
-from yt_collate.screens.help import HELP_MD
+from app import YtCollateApp
+from keyhints import PLAYBACK_CHROME, QUEUE, STATUS_KEYS
+from screens.help import HELP_MD
 
 SRC = Path(__file__).resolve().parents[1] / "src"
 

@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
-from yt_collate.models.music import Track
+from models.track import Track
 
 _YTDL_MUSIC_CLIENT = "youtube:player_client=web_music"
 

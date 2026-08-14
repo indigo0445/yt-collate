@@ -10,10 +10,10 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Input, Label
 
-from yt_collate.keyhints import LIBRARY
-from yt_collate.models.music import PlaylistSummary, Track
-from yt_collate.screens.base import ContentView
-from yt_collate.services.music import (
+from keyhints import LIBRARY
+from models.track import PlaylistSummary, Track
+from screens.base import ContentView
+from services.music import (
     LIKED_PLAYLIST_ID,
     SAVED_SONGS_PLAYLIST_ID,
     LibraryTarget,
@@ -22,8 +22,8 @@ from yt_collate.services.music import (
     is_user_playlist,
     library_target_for,
 )
-from yt_collate.utils import clip_list_label
-from yt_collate.widgets import NavListView, PanelHeader, TrackList
+from utils import clip_list_label
+from widgets import NavListView, PanelHeader, TrackList
 
 SAVED_SONGS_ICON = "🎵"
 

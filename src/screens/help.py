@@ -7,8 +7,8 @@ from textual.binding import Binding
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Label, Markdown
 
-from yt_collate.screens.base import ContentView
-from yt_collate.widgets import PanelEdge
+from screens.base import ContentView
+from widgets import PanelEdge
 
 HELP_MD = """
 # yt-collate help

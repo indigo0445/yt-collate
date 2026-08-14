@@ -8,19 +8,19 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from yt_collate.models.music import Track
-from yt_collate.services.config import ConfigService
-from yt_collate.services.discord_rpc import DiscordPresence
-from yt_collate.services.download import (
+from models.track import Track
+from services.config import ConfigService
+from services.discord_rpc import DiscordPresence
+from services.download import (
     DownloadJobQueue,
     DownloadService,
     default_download_dir,
 )
-from yt_collate.services.library_jobs import LibraryJobQueue
-from yt_collate.services.music import LibraryTarget, MusicService
-from yt_collate.services.player import PlayerService, PlayerSnapshot
-from yt_collate.services.queue import QueueService
-from yt_collate.services.stream import cookies_and_user_agent
+from services.library_jobs import LibraryJobQueue
+from services.music import LibraryTarget, MusicService
+from services.player import PlayerService, PlayerSnapshot
+from services.queue import QueueService
+from services.stream import cookies_and_user_agent
 
 Listener = Callable[[], None]
 

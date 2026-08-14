@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from yt_collate.models.config import RepeatMode
-from yt_collate.models.music import Track
+from models.config import RepeatMode
+from models.track import Track
 
 
 class PlayerStateFile(BaseModel):

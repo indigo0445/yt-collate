@@ -7,13 +7,13 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Input, Label, LoadingIndicator
 
-from yt_collate.keyhints import SEARCH
-from yt_collate.models.music import Track
-from yt_collate.screens.base import ContentView
-from yt_collate.screens.catalog import CatalogRow
-from yt_collate.services.music import CatalogItem
-from yt_collate.utils import clip_list_label
-from yt_collate.widgets import (
+from keyhints import SEARCH
+from models.track import Track
+from screens.base import ContentView
+from screens.catalog import CatalogRow
+from services.music import CatalogItem
+from utils import clip_list_label
+from widgets import (
     LeaveInputDown,
     NavListView,
     PanelHeader,

@@ -6,8 +6,8 @@ import subprocess
 import threading
 from pathlib import Path
 
-from yt_collate.models.music import Artist, Track
-from yt_collate.services.download import (
+from models.track import Artist, Track
+from services.download import (
     DownloadJobQueue,
     DownloadService,
     default_download_dir,

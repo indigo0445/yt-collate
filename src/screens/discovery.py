@@ -7,9 +7,9 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Label, LoadingIndicator
 
-from yt_collate.keyhints import DISCOVERY
-from yt_collate.screens.base import ContentView
-from yt_collate.widgets import PanelHeader, TrackList
+from keyhints import DISCOVERY
+from screens.base import ContentView
+from widgets import PanelHeader, TrackList
 
 
 class DiscoveryScreen(ContentView):

@@ -5,8 +5,8 @@ from __future__ import annotations
 from rich.text import Text
 from textual.widgets import Static
 
-from yt_collate.utils import row_activity_prompt
-from yt_collate.widgets import NavListView
+from utils import row_activity_prompt
+from widgets import NavListView
 
 
 class ContentView(Static):

@@ -10,12 +10,12 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Label
 
-from yt_collate.keyhints import CATALOG
-from yt_collate.models.music import Track
-from yt_collate.screens.base import ContentView
-from yt_collate.services.music import CatalogItem, CatalogShelf
-from yt_collate.utils import clip_list_label
-from yt_collate.widgets import NavListView, PanelHeader, TrackList
+from keyhints import CATALOG
+from models.track import Track
+from screens.base import ContentView
+from services.music import CatalogItem, CatalogShelf
+from utils import clip_list_label
+from widgets import NavListView, PanelHeader, TrackList
 
 
 @dataclass
