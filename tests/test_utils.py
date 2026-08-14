@@ -1,4 +1,4 @@
-"""Formatting helpers."""
+"""formatting helpers"""
 
 from __future__ import annotations
 
@@ -54,7 +54,7 @@ def test_row_activity_prompt_download_then_fetching() -> None:
 
 
 def test_display_duration_keeps_catalog_when_player_is_slightly_short() -> None:
-    # Loading uses catalog 4:14; mpv often reports 253.7s which used to show 4:13.
+    # loading uses catalog 4:14; mpv often reports 253.7s which used to show 4:13
     assert display_duration(player=0.0, catalog=254) == 254.0
     assert display_duration(player=253.7, catalog=254) == 254.0
     assert format_time(display_duration(player=253.7, catalog=254)) == "4:14"

@@ -1,4 +1,4 @@
-"""Reusable widgets."""
+"""reusable widgets"""
 
 from __future__ import annotations
 
@@ -19,26 +19,19 @@ from keyhints import PLAYBACK_CHROME, STATUS_KEYS
 from models.track import Track
 from utils import clip_list_label, format_time, progress_bar, truncate
 
-# Vim-style lines kept above/below the cursor when the list must scroll.
+# vim-style lines kept above/below the cursor when the list must scroll
 SCROLL_OFF = 5
 
 
-def vim_center_row(viewport_h: int) -> int:
-    """0-indexed viewport row for vim zz. Even height uses the upper middle."""
-    if viewport_h <= 0:
-        return 0
-    return (viewport_h - 1) // 2
-
-
 class NavOption(Option):
-    """Option with filter text and a stable source index (survives / filter)."""
+    # option w/ filter text and overall source index (for filtering)
 
     def __init__(
         self,
         prompt: str | Text,
         *,
         id: str | None = None,
-        search: str | None = None,
+        search: str | None = None,  # searchable text - diff than prompt if e.g. song-artist truncated
         source_index: int = 0,
     ) -> None:
         super().__init__(prompt, id=id)
@@ -51,13 +44,8 @@ class NavOption(Option):
         self.source_index = source_index
 
 
-def make_row(text: str, *, id: str | None = None, search: str | None = None) -> NavOption:
-    """Build a list row. Highlight is OptionList CSS, not a child widget."""
-    return NavOption(text, id=id, search=search)
-
-
 class PanelEdge(Message):
-    """Emitted when hjkl should leave this list toward another panel."""
+    # emitted when hjkl should leave this list toward another panel
 
     def __init__(self, direction: str, list_id: str) -> None:
         self.direction = direction  # h/j/k/l
@@ -66,7 +54,7 @@ class PanelEdge(Message):
 
 
 class ListFilterRequested(Message):
-    """Focused list wants in-place / filter."""
+    # focused list wants in-place / filter
 
     def __init__(self, list_id: str) -> None:
         self.list_id = list_id
@@ -74,19 +62,22 @@ class ListFilterRequested(Message):
 
 
 class ListFilterDismissed(Message):
-    """Empty / filter: Backspace should close it."""
+    # empty / filter: Backspace should close it
+    pass
 
 
 class LeaveInputDown(Message):
-    """Down-arrow from a field that sits above a list: leave the textbox."""
+    # down-arrow from a field that sits above a list: leave the textbox
+    pass
 
 
 class FilterLeaveDown(Message):
-    """Down from / filter: focus the first visible row, keep the query."""
+    # down from / filter: focus the first visible row, keep the query
+    pass
 
 
 class FilterInput(Input):
-    """Inline header filter; Backspace/Ctrl+W on empty query exits."""
+    # inline header filter; Backspace/Ctrl+W on empty query exits
 
     BINDINGS = [
         Binding("down", "leave_down", "To list", show=False),
@@ -109,7 +100,7 @@ class FilterInput(Input):
 
 
 class SearchQueryInput(Input):
-    """Inline Search \\\"…\\\" field; caret sits on the closing quote."""
+    # inline Search "…" field
 
     BINDINGS = [
         Binding("down", "leave_down", "Results", show=False),
@@ -132,7 +123,7 @@ class SearchQueryInput(Input):
             self.post_message(LeaveInputDown())
 
     async def _on_key(self, event: events.Key) -> None:
-        # Input stops printable keys before app bindings; intercept q ourselves.
+        # Input stops printable keys before app bindings; intercept q ourselves
         if self.results_active and (event.key == "q" or event.character == "q"):
             event.prevent_default()
             event.stop()
@@ -178,7 +169,7 @@ class SearchQueryInput(Input):
 
 
 class PanelHeader(Horizontal):
-    """Panel title with optional Search \\\"…\\\" query, then /filter on the same row."""
+    # panel title with optional Search "…" query, then /filter on the same row
 
     def __init__(self, title: str, *, with_query: bool = False, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -215,8 +206,8 @@ class PanelHeader(Horizontal):
 
     def set_filter_visible(self, *, focused: bool) -> None:
         inp = self.filter_input
-        # Keep a bare "/" visible while the filter session is open (OS blur
-        # unfocuses the input but must not hide an empty query).
+        # keep a bare "/" visible while the filter session is open (OS blur
+        # unfocuses the input but must not hide an empty query)
         show = focused or bool(inp.value) or self._filter_open
         inp.display = show
         self.query_one(".panel-filter-prefix", Label).display = show
@@ -230,7 +221,7 @@ class PanelHeader(Horizontal):
 
 
 class NavListView(OptionList):
-    """OptionList with vim j/k/g/G. h/l (and arrows) move between side-by-side panels."""
+    # OptionList with custom bindings
 
     BINDINGS = [
         Binding("j", "cursor_down", "Down", show=False),
@@ -257,7 +248,7 @@ class NavListView(OptionList):
 
     @property
     def index(self) -> int | None:
-        """Source-row index (stable across / filter)."""
+        # source-row index (stable across / filter)
         opt = self.highlighted_option
         if isinstance(opt, NavOption):
             return opt.source_index
@@ -300,7 +291,7 @@ class NavListView(OptionList):
 
     def _rebuild_visible(self, keep_source: int | None = None) -> None:
         visible = [row for row in self._rows if self._matches(row)]
-        self.set_options(visible)
+        self.set_options(visible) # loses track of index; below finds/focuses it again
         if not visible:
             return
         if keep_source is not None:
@@ -320,7 +311,7 @@ class NavListView(OptionList):
         self._rebuild_visible(keep_source=keep)
 
     def highlight_first_visible(self) -> bool:
-        """Move highlight to the first filtered row. False if the list is empty."""
+        # move highlight to the first filtered row. False if the list is empty
         if not self._options:
             return False
         self.highlighted = 0
@@ -338,7 +329,7 @@ class NavListView(OptionList):
         self.highlighted = nxt
 
     def try_cursor_down(self) -> bool:
-        """Move down one row if possible. Does not leave the list."""
+        # move down one row if possible. Does not leave the list
         if not self._options:
             return False
         nxt = _widget_navigation.find_next_enabled_no_wrap(
@@ -369,8 +360,15 @@ class NavListView(OptionList):
     def action_nav_right(self) -> None:
         self.post_message(PanelEdge("l", self.id or ""))
 
+    @staticmethod
+    def vim_center_row(viewport_h: int) -> int:
+        # offset from viewport top for vim's zz; odd height uses the upper middle
+        if viewport_h <= 0:
+            return 0
+        return (viewport_h - 1) // 2
+
     def action_center_cursor(self) -> None:
-        """Vim zz: put the highlighted row at the center of the viewport."""
+        # Vim zz: put the highlighted row at the center of the viewport
         highlighted = self.highlighted
         if highlighted is None or not self.is_mounted:
             return
@@ -383,7 +381,7 @@ class NavListView(OptionList):
         if viewport_h <= 0:
             return
         self.scroll_to(
-            y=y - vim_center_row(viewport_h),
+            y=y - self.vim_center_row(viewport_h),
             animate=False,
             immediate=True,
             force=True,
@@ -412,7 +410,7 @@ class NavListView(OptionList):
 
 
 class Sidebar(Static):
-    """Main Selection sidebar."""
+    # Main Selection sidebar
 
     can_focus = False
 
@@ -435,7 +433,7 @@ class Sidebar(Static):
         ("settings", "⚙️ Settings"),
         ("help", "❓ Help"),
     ]
-    # Hidden from Main Selection; LINKS + navigate handlers stay for later.
+    # hidden from Main Selection; LINKS + navigate handlers stay for later
     _HIDDEN = frozenset({"radio", "live", "mood"})
 
     def __init__(self, **kwargs) -> None:
@@ -486,7 +484,7 @@ class Sidebar(Static):
         lv = self.query_one("#sidebar-list", NavListView)
         current = highlighted if highlighted is not None else (lv.index or 0)
         links = self._visible_links()
-        lv.set_rows([make_row(label, id=f"nav-{key}") for key, label in links])
+        lv.set_rows([NavOption(label, id=f"nav-{key}") for key, label in links])
         if links:
             lv.index = max(0, min(current, len(links) - 1))
 
@@ -498,7 +496,7 @@ class Sidebar(Static):
 
 
 class TrackList(NavListView):
-    """Numbered track list."""
+    # numbered track list
 
     class PlayRequested(Message):
         def __init__(self, track: Track, index: int, *, list_id: str | None = None) -> None:
@@ -534,9 +532,11 @@ class TrackList(NavListView):
         keep = self.index
         self.set_rows(
             [
-                make_row(
+                NavOption(
                     self._line(i, track),
-                    search=f"{track.title} {track.artist_str}",
+                    # allows searching by track number, perhaps inconsistent with vim's line jumping
+                    # since / is not supposed to jump to line #s, oh well
+                    search=f"{i + 1} {track.title} {track.artist_str}",
                 )
                 for i, track in enumerate(self.tracks)
             ]
@@ -560,7 +560,7 @@ class TrackList(NavListView):
         self.tracks = list(tracks)
         self.set_rows(
             [
-                make_row(
+                NavOption(
                     self._line(i, track),
                     search=f"{track.title} {track.artist_str}",
                 )
@@ -590,7 +590,7 @@ class TrackList(NavListView):
 
 
 class StatusBar(Static):
-    """Combined now-playing + key hints."""
+    # combined now-playing + key hints
 
     def compose(self) -> ComposeResult:
         with Vertical():
@@ -617,7 +617,7 @@ class StatusBar(Static):
         if finished and title and title != "Nothing playing":
             label = f"Finished: {truncate(title, 56)}"
         else:
-            # Action-style icon: Pause while playing, Play while paused
+            # action-style icon: Pause while playing, Play while paused
             icon = "⏸" if playing else "▶"
             state = "Playing" if playing else "Paused"
             if title == "Nothing playing" or not title:

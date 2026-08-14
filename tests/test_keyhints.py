@@ -1,4 +1,4 @@
-"""Help strings must match the live App / list bindings."""
+"""help strings must match the live App / list bindings"""
 
 from __future__ import annotations
 

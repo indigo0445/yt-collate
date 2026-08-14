@@ -1,4 +1,4 @@
-"""On-screen key hints. Keep in sync with App.BINDINGS and NavListView.BINDINGS."""
+"""on-screen key hints. Keep in sync with App.BINDINGS and NavListView.BINDINGS"""
 
 QUEUE = "i play next · a queue"
 NAV_BACK = "h Main Selection · Esc/q back"

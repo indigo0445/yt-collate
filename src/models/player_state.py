@@ -1,4 +1,4 @@
-"""Queue state representation - preserves queue on exit"""
+"""queue state representation - preserves queue on exit"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Settings — Enter edits the auth path in-place or toggles a yes/no option."""
+"""Settings — Enter edits the auth path in-place or toggles a yes/no option"""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ def _yn(value: bool) -> str:
 
 
 class AuthPathInput(Input):
-    """Auth path field; Down leaves to the next settings row."""
+    # auth path field; Down leaves to the next settings row
 
     BINDINGS = [
         Binding("down", "leave_down", "Down", show=False, priority=True),
@@ -64,14 +64,14 @@ class SettingsScreen(ContentView):
         self.query_one("#settings-nav", NavListView).focus()
 
     def handle_back(self) -> bool:
-        """Cancel in-line auth edit first. Returns True if handled locally."""
+        # cancel in-line auth edit first. Returns True if handled locally
         if self._editing_auth:
             self._stop_auth_edit(select_index=0)
             return True
         return False
 
     def leave_auth_edit_down(self) -> None:
-        """Revert unsaved path and focus the setting below Auth file."""
+        # revert unsaved path and focus the setting below Auth file
         if self._editing_auth:
             self._stop_auth_edit(select_index=1)
 

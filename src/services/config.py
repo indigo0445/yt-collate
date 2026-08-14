@@ -1,4 +1,4 @@
-"""Config directory and JSON persistence helpers."""
+"""config directory and JSON persistence helpers"""
 
 from __future__ import annotations
 

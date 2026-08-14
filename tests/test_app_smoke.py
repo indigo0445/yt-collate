@@ -1,4 +1,4 @@
-"""Textual app smoke test with pilot."""
+"""Textual app smoke test with pilot"""
 
 from __future__ import annotations
 
@@ -66,7 +66,7 @@ async def test_app_opens_home(
         assert app.focused is not None
         assert app.focused.id == "sidebar-list"
 
-        # Bare "/" stays visible after the input loses focus (OS window switch).
+        # bare "/" stays visible after the input loses focus (OS window switch)
         await pilot.press("slash")
         await pilot.pause()
         assert filt.display is True

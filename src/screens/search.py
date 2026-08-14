@@ -1,4 +1,4 @@
-"""Search view — default catalog search (artists, songs, videos)."""
+"""Search view — default catalog search (artists, songs, videos)"""
 
 from __future__ import annotations
 
@@ -63,7 +63,7 @@ class SearchScreen(ContentView):
         self._show_result_index(focus=True)
 
     def query_escape_to_results(self) -> bool:
-        """Esc/q from the query field returns to result #1 after a search."""
+        # Esc/q from the query field returns to result #1 after a search
         return self._committed_query is not None
 
     def _set_query_results_active(self, active: bool) -> None:

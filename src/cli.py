@@ -1,4 +1,4 @@
-"""CLI entrypoint."""
+"""CLI entrypoint"""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import sys
 
 
 def check_dependencies() -> list[str]:
-    """Return names of missing required binaries."""
+    # return names of missing required binaries
     missing: list[str] = []
     for name in ("mpv", "yt-dlp"):
         if shutil.which(name) is None:

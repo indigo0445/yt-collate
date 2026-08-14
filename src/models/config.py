@@ -1,4 +1,4 @@
-"""App configuration models."""
+"""app configuration models"""
 
 from __future__ import annotations
 

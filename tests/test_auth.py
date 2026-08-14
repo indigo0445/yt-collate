@@ -1,4 +1,4 @@
-"""Auth helper unit tests."""
+"""auth helper unit tests"""
 
 from __future__ import annotations
 

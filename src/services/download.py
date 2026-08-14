@@ -1,4 +1,4 @@
-"""Download audio into a flat ~/Music/yt-collate dump, named by video id."""
+"""download audio into a flat ~/Music/yt-collate dump, named by video id"""
 
 from __future__ import annotations
 
@@ -184,7 +184,7 @@ class _DownloadJob:
 
 
 class DownloadJobQueue:
-    """One background thread; playlist batches stay a single job."""
+    # one background thread; playlist batches stay a single job
 
     def __init__(self, service: DownloadService) -> None:
         self._service = service

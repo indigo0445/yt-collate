@@ -1,4 +1,4 @@
-"""PlayerService pause contract tests."""
+"""PlayerService pause contract tests"""
 
 from __future__ import annotations
 

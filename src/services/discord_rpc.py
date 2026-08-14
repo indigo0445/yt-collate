@@ -1,4 +1,4 @@
-"""Optional Discord Rich Presence."""
+"""optional Discord Rich Presence"""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from models.track import Track
 
 log = logging.getLogger(__name__)
 
-# Public Discord application id placeholder — users can override.
+# public Discord application id placeholder — users can override
 DEFAULT_CLIENT_ID = "1400000000000000000"
 
 

@@ -1,4 +1,4 @@
-"""Home — start page: YouTube Music home shelves."""
+"""Home — start page: YouTube Music home shelves"""
 
 from screens.catalog import CatalogScreen
 

@@ -1,4 +1,4 @@
-"""Turn browser auth headers into a Netscape cookie file for mpv/yt-dlp."""
+"""turn browser auth headers into a Netscape cookie file for mpv/yt-dlp"""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ def headers_from_auth_file(path: Path) -> dict[str, object] | None:
 
 
 def write_netscape_cookies(cookie_header: str, dest: Path) -> Path:
-    """Write a Cookie request header as a Netscape cookie file for yt-dlp."""
+    # write a Cookie request header as a Netscape cookie file for yt-dlp
     lines = [
         "# Netscape HTTP Cookie File",
         "# Generated from YouTube Music browser headers",
@@ -51,7 +51,7 @@ def cookies_and_user_agent(
     auth_headers_path: Path | None,
     dest: Path,
 ) -> tuple[Path | None, str | None]:
-    """Build yt-dlp cookies + User-Agent from headers_auth.json if present."""
+    # build yt-dlp cookies + User-Agent from headers_auth.json if present
     if auth_headers_path is None:
         return None, None
     headers = headers_from_auth_file(auth_headers_path)

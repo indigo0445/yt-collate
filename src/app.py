@@ -1,4 +1,4 @@
-"""Textual application — fullscreen alternate-screen TUI."""
+"""Textual application — fullscreen alternate-screen TUI"""
 
 from __future__ import annotations
 
@@ -48,8 +48,8 @@ from widgets import (
     TrackList,
 )
 
-# Horizontal strips only: sidebar | content [| extra].
-# History is the one 3-pane page: sidebar | queue | recently played.
+# horizontal strips only: sidebar | content [| extra]
+# history is the one 3-pane page: sidebar | queue | recently played
 
 
 @dataclass
@@ -60,7 +60,7 @@ class _PendingDelete:
 
 
 class YtCollateApp(App[None]):
-    """Shell stays mounted; pages swap in #content. Start page: Home."""
+    # shell stays mounted; pages swap in #content. Start page: Home
 
     TITLE = "yt-collate"
     CSS_PATH = Path(__file__).parent / "themes" / "app.tcss"
@@ -118,7 +118,7 @@ class YtCollateApp(App[None]):
         timeout: float | None = None,
         markup: bool = False,
     ) -> None:
-        """Toasts are plain text — API payloads and song titles break markup."""
+        # toasts are plain text — API payloads and song titles break markup
         super().notify(
             message, title=title, severity=severity, timeout=timeout, markup=markup
         )
@@ -135,7 +135,7 @@ class YtCollateApp(App[None]):
         self.state.subscribe(self._on_state_change)
         self.set_interval(0.5, self._on_state_change)
         self._on_state_change()
-        # Always land focus somewhere so hjkl/Enter work immediately
+        # always land focus somewhere so hjkl/Enter work immediately
         try:
             self.query_one("#sidebar-list", NavListView).focus()
         except Exception:  # noqa: BLE001
@@ -220,7 +220,7 @@ class YtCollateApp(App[None]):
         self._focus_main_selection()
 
     def _focus_main_selection(self) -> None:
-        """Focus the sidebar row for the current screen. No-op if already there."""
+        # focus the sidebar row for the current screen. No-op if already there
         try:
             lv = self.query_one("#sidebar-list", NavListView)
         except Exception:  # noqa: BLE001
@@ -300,7 +300,7 @@ class YtCollateApp(App[None]):
         if not event.input.value:
             self._close_list_filter(clear=True)
             return
-        # Keep the filter, return focus to the list
+        # keep the filter, return focus to the list
         target = self._filter_list
         header = event.input.parent
         if isinstance(header, PanelHeader):
@@ -704,7 +704,7 @@ class YtCollateApp(App[None]):
         )
 
     def _prepare_delete_ui(self, track: Track, target: LibraryTarget) -> int | None:
-        """Drop/advance immediately so spam d/x hits the next song, not the same one."""
+        # drop/advance immediately so spam d/x hits the next song, not the same one
         if self.view_name == "library":
             try:
                 return self.query_one(LibraryScreen).drop_matching(track)
@@ -786,13 +786,13 @@ class YtCollateApp(App[None]):
         return None
 
     def action_seek_back(self) -> None:
-        """Jump back 30s. Unbound; keep for a future keymap."""
+        # jump back 30s. Unbound; keep for a future keymap
         if self._input_focused():
             return
         self.state.seek_relative(-30)
 
     def action_seek_forward(self) -> None:
-        """Jump forward 30s. Unbound; keep for a future keymap."""
+        # jump forward 30s. Unbound; keep for a future keymap
         if self._input_focused():
             return
         self.state.seek_relative(30)

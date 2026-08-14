@@ -1,4 +1,4 @@
-"""Queue & history view."""
+"""Queue & history view"""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ class HistoryScreen(ContentView):
         self.workers.cancel_all()
 
     def refresh_lists(self) -> None:
-        """Queue always; recently played is optimistic while this page stays mounted."""
+        # Queue always; recently played is optimistic while this page stays mounted
         state = self.app.state  # type: ignore[attr-defined]
         self.query_one("#queue-title", PanelHeader).set_title("📋 Queue")
         self.query_one("#queue-list", TrackList).set_tracks(state.queue.upcoming())

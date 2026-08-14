@@ -1,4 +1,4 @@
-"""Formatting helpers."""
+"""formatting helpers"""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ _YT_HOST_HINTS = ("youtube.com", "youtu.be")
 
 
 def youtube_video_id(value: str) -> str | None:
-    """Extract a video id from a YouTube watch URL, or None if this is not one."""
+    # extract a video id from a YouTube watch URL, or None if this is not one
     raw = value.strip()
     if not raw:
         return None
@@ -52,11 +52,9 @@ def format_time(seconds: float | int | None) -> str:
 
 
 def display_duration(*, player: float, catalog: int | None) -> float:
-    """Length shown in the UI.
-
-    Catalog metadata is whole seconds. mpv's float is often just under that
-    (e.g. 253.7 vs 254), and truncating it makes the total drop 1s on load.
-    """
+    # length shown in the UI
+    # catalog metadata is whole seconds. mpv's float is often just under that
+    # (e.g. 253.7 vs 254), and truncating it makes the total drop 1s on load
     if catalog and catalog > 0:
         return float(catalog)
     if player > 0:
@@ -67,12 +65,10 @@ def display_duration(*, player: float, catalog: int | None) -> float:
 def display_position(
     position: float, duration: float, *, complete: bool = False
 ) -> float:
-    """Position shown in the UI.
-
-    mpv's time-pos is often ~1s behind the catalog/rounded duration when the
-    track has actually ended (EOF / next loading). Snap to duration so the
-    clock and bar match.
-    """
+    # position shown in the UI
+    # mpv's time-pos is often ~1s behind the catalog/rounded duration when the
+    # track has actually ended (EOF / next loading). Snap to duration so the
+    # clock and bar match
     if duration <= 0:
         return 0.0
     if complete:
@@ -103,12 +99,14 @@ def progress_bar(position: float, duration: float, width: int) -> str:
 
 
 def clip_list_label(widget: object, prefix: str, text: str, *, suffix: str = "") -> str:
-    """Fit a numbered row to the list's current width (no halfway cut on wide panes)."""
+    # fit a row to the list's current width
+    # each item # should be 1-line only
+    # bug: does not work for special characters, e.g. CJK - songs could still take 2 lines
     size = getattr(widget, "size", None)
     width = int(getattr(size, "width", 0) or 0)
     if width <= 1:
         return prefix + text + suffix
-    body = max(8, width - len(prefix) - len(suffix))
+    body = max(8, width - len(prefix) - len(suffix) - 5)
     return prefix + truncate(text, body) + suffix
 
 
@@ -118,7 +116,7 @@ def row_activity_prompt(
     downloading: tuple[int, int] | None = None,
     fetching: bool = False,
 ) -> str | Text:
-    """Append italic (Downloading... n/m) then (Fetching...) after the row label."""
+    # append italic (Downloading... n/m) then (Fetching...) after the row label
     if downloading is None and not fetching:
         return base
     prompt = Text(base)

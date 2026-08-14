@@ -1,4 +1,4 @@
-"""Explore — new albums, videos, trending, top songs, moods."""
+"""Explore — new albums, videos, trending, top songs, moods"""
 
 from screens.catalog import CatalogScreen
 

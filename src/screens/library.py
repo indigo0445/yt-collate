@@ -1,4 +1,4 @@
-"""My Library — playlists, Saved Songs, Liked Songs, Episodes for Later."""
+"""My Library — playlists, Saved Songs, Liked Songs, Episodes for Later"""
 
 from __future__ import annotations
 
@@ -55,7 +55,7 @@ class LibRow:
 
 
 class LibraryScreen(ContentView):
-    """Account library: playlists and songs. Esc/q undrills playlist via app."""
+    # account library: playlists and songs. Esc/q undrills playlist via app
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -72,14 +72,14 @@ class LibraryScreen(ContentView):
     def compose(self) -> ComposeResult:
         with Vertical(classes="content-panel"):
             yield PanelHeader("📚 My Library", id="lib-title")
-            yield NavListView(id="lib-list")
-            with Horizontal(id="lib-compose"):
+            yield NavListView(id="lib-list") # top-level playlists
+            with Horizontal(id="lib-compose"): # new playlist row; initially hidden
                 yield Label("", id="lib-compose-prefix", classes="muted")
                 yield Input(id="lib-compose-name", classes="lib-compose-input")
             yield Vertical(id="lib-compose-fill")
-            yield TrackList(id="lib-tracks")
+            yield TrackList(id="lib-tracks") # track listing of playlist; initially hidden
             yield Label(LIBRARY, id="lib-hint", classes="muted")
-            yield Label("Loading…", id="lib-status", classes="muted")
+            yield Label("Loading…", id="lib-status", classes="muted") # is this visible?
 
     async def on_mount(self) -> None:
         self.query_one("#lib-tracks", TrackList).display = False
@@ -99,7 +99,7 @@ class LibraryScreen(ContentView):
         self.reload()
 
     def handle_back(self) -> bool:
-        """Cancel compose or undrill playlist. Returns True if handled."""
+        # cancel compose or undrill playlist. Returns True if handled
         if self.cancel_compose():
             return True
         if self._drilled:
@@ -266,7 +266,7 @@ class LibraryScreen(ContentView):
         )
 
     def mark_focused(self) -> None:
-        """Toggle mark on a playlist / Saved Songs / Liked Songs row."""
+        # toggle mark on a playlist / Saved Songs / Liked Songs row
         if self._drilled or self._opening:
             return
         lv = self.query_one("#lib-list", NavListView)
@@ -353,7 +353,7 @@ class LibraryScreen(ContentView):
         self.query_one("#lib-status", Label).update(f"{len(tracks)} tracks · Esc/q back")
 
     def open_target(self) -> LibraryTarget | None:
-        """Collection currently drilled into, if markable (or a normal playlist)."""
+        # collection currently drilled into, if markable (or a normal playlist)
         if not self._drilled or self._open_playlist is None:
             return None
         return library_target_for(self._open_playlist) or LibraryTarget(
@@ -366,7 +366,7 @@ class LibraryScreen(ContentView):
         self.drop_matching(Track(video_id=video_id, title=""))
 
     def drop_matching(self, track: Track) -> int | None:
-        """Remove one matching row. Returns the index it left, or None."""
+        # remove one matching row. Returns the index it left, or None
         if not self._drilled:
             return None
         tv = self.query_one("#lib-tracks", TrackList)
@@ -389,7 +389,7 @@ class LibraryScreen(ContentView):
         return remove_at
 
     def restore_track(self, track: Track, index: int) -> None:
-        """Put a failed delete back where it was, without stealing focus."""
+        # put a failed delete back where it was, without stealing focus
         if not self._drilled:
             return
         tv = self.query_one("#lib-tracks", TrackList)
@@ -403,7 +403,7 @@ class LibraryScreen(ContentView):
         tv.set_tracks(tracks, highlight=min(keep, len(tracks) - 1))
 
     def focused_index_playlist(self) -> PlaylistSummary | None:
-        """Playlist row on the library index, if any."""
+        # playlist row on the library index, if any
         if self._drilled or self._opening or self._composing:
             return None
         lv = self.query_one("#lib-list", NavListView)
@@ -439,7 +439,7 @@ class LibraryScreen(ContentView):
         self._rebuild_list(highlight)
 
     def start_compose(self) -> bool:
-        """Show the dimmed new-playlist row. Returns False if not on the index."""
+        # show the dimmed new-playlist row. Returns False if not on the index
         if self._drilled or self._opening or self._composing:
             return False
         state = self.app.state  # type: ignore[attr-defined]
@@ -529,7 +529,7 @@ class LibraryScreen(ContentView):
         self.app.state.play_tracks(tv.tracks, start_index=event.index)  # type: ignore[attr-defined]
 
     def queue_selection(self, *, play_next: bool) -> None:
-        """i / a from the library index or an open playlist."""
+        # i / a from the library index or an open playlist
         if self._opening:
             return
         if self._drilled:

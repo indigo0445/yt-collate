@@ -1,4 +1,4 @@
-"""Serialize library writes. YouTube rejects overlapping playlist edits with HTTP 409."""
+"""serialize library writes. YouTube rejects overlapping playlist edits with HTTP 409"""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ class _Job:
 
 
 class LibraryJobQueue:
-    """One background thread that runs add/delete/create in order."""
+    # one background thread that runs add/delete/create in order
 
     def __init__(self, music: MusicService) -> None:
         self._music = music

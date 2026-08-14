@@ -1,4 +1,4 @@
-"""AppState snapshot should always reflect live mpv position."""
+"""AppState snapshot should always reflect live mpv position"""
 
 from __future__ import annotations
 

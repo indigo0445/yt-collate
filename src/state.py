@@ -1,4 +1,4 @@
-"""Central app runtime wiring player, queue, music, and persistence."""
+"""central app runtime wiring player, queue, music, and persistence"""
 
 from __future__ import annotations
 
@@ -62,7 +62,7 @@ class AppState:
             cookies_from_browser=cfg.cookies_from_browser,
         )
         auth_path = self.config.auth_headers_path
-        # Load path only — never network-probe here (blocks TUI startup).
+        # load path only — never network-probe here (blocks TUI startup)
         self.music = MusicService(auth_headers_path=auth_path if auth_path.exists() else None)
         self.queue = QueueService(self.config.player_state_path)
         self.discord = DiscordPresence(enabled=cfg.discord_rpc)
@@ -91,7 +91,7 @@ class AppState:
         # Discord connect deferred — can block if Discord isn't running
 
     def play_restored_current(self) -> None:
-        """Start the persisted current track from 0 if nothing is loaded yet."""
+        # start the persisted current track from 0 if nothing is loaded yet
         if self.current_track is not None and not self.player.snapshot().url:
             self._start_current()
 
@@ -108,7 +108,7 @@ class AppState:
     def _on_player_update(self, snap: PlayerSnapshot) -> None:
         prev = self._last_snap
         self._last_snap = snap
-        # Skip per-tick progress emits (status bar polls). Pause/track changes still push.
+        # skip per-tick progress emits (status bar polls). Pause/track changes still push
         if (
             prev is not None
             and prev.paused == snap.paused
@@ -144,7 +144,7 @@ class AppState:
 
     @property
     def snapshot(self) -> PlayerSnapshot:
-        # Always read live mpv state — _last_snap is only for change detection.
+        # always read live mpv state — _last_snap is only for change detection
         return self.player.snapshot()
 
     @property
@@ -160,12 +160,12 @@ class AppState:
         self._start_current()
 
     def play_upcoming(self, upcoming_index: int) -> None:
-        """Jump within the current playback order (does not rebuild the queue)."""
+        # jump within the current playback order (does not rebuild the queue)
         if self.queue.skip_to_upcoming(upcoming_index) is not None:
             self._start_current()
 
     def _refresh_playback_cookies(self) -> None:
-        """Give mpv the same YouTube cookies as the Music API (from headers_auth)."""
+        # give mpv the same YouTube cookies as the Music API (from headers_auth)
         cfg = self.config
         if cfg.config.cookies_file:
             path: str | None = str(Path(cfg.config.cookies_file).expanduser())
@@ -203,7 +203,7 @@ class AppState:
         self._emit()
 
     def _push_history(self, track: Track) -> None:
-        """Record a started play on the YouTube account. Anonymous: skip entirely."""
+        # record a started play on the YouTube account. Anonymous: skip entirely
         if not self.music.authenticated:
             return
         if self._history_pushed_id == track.video_id:
@@ -224,7 +224,7 @@ class AppState:
         if self.current_track is None:
             return
         if not self.player.snapshot().url:
-            # Queue restored on launch, but nothing is loaded yet — start from 0.
+            # queue restored on launch, but nothing is loaded yet — start from 0
             self._start_current()
             return
         self.player.toggle_pause()
@@ -241,7 +241,7 @@ class AppState:
             self._emit()
 
     def previous(self) -> None:
-        # Restart if >3s into track, else previous
+        # restart if >3s into track, else previous
         snap = self.snapshot
         if snap.position > 3 and self.current_track:
             if self.queue_finished or snap.eof:
@@ -257,7 +257,7 @@ class AppState:
             self._start_current()
 
     def _resume_from(self, position: float) -> None:
-        """Seek back into the current track. keep-open leaves it loaded after EOF."""
+        # seek back into the current track. keep-open leaves it loaded after EOF
         track = self.queue.current
         if track is None:
             return
@@ -282,10 +282,8 @@ class AppState:
         self._emit()
 
     def seek_relative(self, delta: float) -> None:
-        """Skip by `delta` seconds. Past end with a next track → next; otherwise clamp.
-
-        30-second jumps are implemented here but currently unbound.
-        """
+        # skip by `delta` seconds. Past end with a next track → next; otherwise clamp
+        # 30-second jumps are implemented here but currently unbound
         if self.current_track is None or self.player.loading:
             return
         snap = self.snapshot
@@ -316,7 +314,7 @@ class AppState:
         self._emit()
 
     def seek_tenth(self, tenth: int) -> None:
-        """Jump to n/10 of the track (YouTube 0–9: 0% … 90%)."""
+        # jump to n/10 of the track (YouTube 0–9: 0% … 90%)
         if self.current_track is None or self.player.loading:
             return
         snap = self.snapshot
@@ -402,7 +400,7 @@ class AppState:
         self.play_track(random.choice(tracks))
 
     def set_auth_headers(self, path: str | None) -> tuple[bool, str]:
-        """Load auth from path, or disconnect when empty/missing/invalid."""
+        # load auth from path, or disconnect when empty/missing/invalid
         if path is None or str(path).strip() == "":
             self.config.update(auth_headers_path=None)
             self.music.reload_auth(None)

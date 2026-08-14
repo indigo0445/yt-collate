@@ -1,4 +1,4 @@
-"""MusicService normalization tests."""
+"""MusicService normalization tests"""
 
 from __future__ import annotations
 

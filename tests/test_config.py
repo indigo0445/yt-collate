@@ -1,4 +1,4 @@
-"""Config dir helpers."""
+"""config dir helpers"""
 
 from __future__ import annotations
 

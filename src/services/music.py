@@ -1,4 +1,4 @@
-"""YouTube Music API façade via ytmusicapi."""
+"""YouTube Music API façade via ytmusicapi"""
 
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ _ATV = "MUSIC_VIDEO_TYPE_ATV"
 
 
 def _item_is_video(item: dict[str, Any], *, default: bool = False) -> bool:
-    """True for YouTube videos that are not YouTube Music catalog songs."""
+    # true for YouTube videos that are not YouTube Music catalog songs
     result_type = str(item.get("resultType") or "").casefold()
     if result_type == "video":
         return True
@@ -110,7 +110,7 @@ def track_from_song(item: Any) -> Track | None:
 
 
 def track_from_player(payload: Any) -> Track | None:
-    """Normalize ytmusicapi ``get_song`` (player) metadata into a Track."""
+    # normalize ytmusicapi ``get_song`` (player) metadata into a Track
     if not isinstance(payload, dict):
         return None
     details = payload.get("videoDetails")
@@ -149,7 +149,7 @@ AddReason = Literal["success", "duplicate", "error"]
 
 @dataclass(frozen=True)
 class LibraryTarget:
-    """Playlist / Saved Songs / Liked Songs chosen with m in My Library."""
+    # playlist / Saved Songs / Liked Songs chosen with m in My Library
 
     kind: LibraryTargetKind
     playlist_id: str
@@ -183,7 +183,7 @@ def _playlist_add_succeeded(result: object) -> bool:
 
 
 def _playlist_delete_succeeded(result: object) -> bool:
-    """ytmusicapi often returns the full Innertube payload (no status string)."""
+    # ytmusicapi often returns the full Innertube payload (no status string)
     if _playlist_add_succeeded(result):
         return True
     text = str(result)
@@ -203,7 +203,7 @@ def _is_api_blob(result: object) -> bool:
 
 
 def _short_failure(result: object, fallback: str) -> str:
-    """User-facing error; never dump Innertube JSON (breaks toast markup)."""
+    # user-facing error; never dump Innertube JSON (breaks toast markup)
     if isinstance(result, dict):
         for key in ("status", "error", "message"):
             value = result.get(key)
@@ -230,7 +230,7 @@ def _looks_like_duplicate(result: object) -> bool:
 
 
 def _looks_like_already_gone(result: object) -> bool:
-    """Stale playlist edit: item already removed (HTTP 400 precondition)."""
+    # stale playlist edit: item already removed (HTTP 400 precondition)
     text = str(result).casefold()
     return "precondition" in text or "not found" in text
 
@@ -240,7 +240,7 @@ def _playlist_error_message(result: object, title: str) -> str:
 
 
 def library_target_for(playlist: PlaylistSummary) -> LibraryTarget | None:
-    """Markable library folders only: user playlists, Saved Songs, Liked Songs."""
+    # markable library folders only: user playlists, Saved Songs, Liked Songs
     if is_episodes_for_later(playlist.title):
         return None
     if playlist.playlist_id == SAVED_SONGS_PLAYLIST_ID:
@@ -251,7 +251,7 @@ def library_target_for(playlist: PlaylistSummary) -> LibraryTarget | None:
 
 
 def is_user_playlist(playlist: PlaylistSummary) -> bool:
-    """Normal account playlist — not Liked, Saved, or Episodes for Later."""
+    # normal account playlist — not Liked, Saved, or Episodes for Later
     target = library_target_for(playlist)
     return target is not None and target.kind == "playlist"
 
@@ -375,7 +375,7 @@ def _catalog_subtitle(item: dict[str, Any], *keys: str) -> str | None:
 
 
 def _search_row_item(raw: Any) -> CatalogItem | None:
-    """Keep artists / songs / videos from a default search row; drop other types."""
+    # keep artists / songs / videos from a default search row; drop other types
     if not isinstance(raw, dict):
         return None
     result_type = str(raw.get("resultType") or "").casefold()
@@ -398,7 +398,7 @@ def _search_row_item(raw: Any) -> CatalogItem | None:
 
 
 def catalog_item_from_content(item: Any) -> CatalogItem | None:
-    """Classify a mixed catalog entry (song, album, playlist, artist, or mood)."""
+    # classify a mixed catalog entry (song, album, playlist, artist, or mood)
     if not isinstance(item, dict):
         return None
     title = item.get("title") or item.get("artist") or item.get("name")
@@ -459,7 +459,7 @@ class MusicService:
     def __init__(self, auth_headers_path: Path | None = None) -> None:
         self._auth_headers_path = auth_headers_path
         self._yt = None
-        # Optimistic: file present ⇒ treat as authed; first API call validates.
+        # optimistic: file present ⇒ treat as authed; first API call validates
         self._authenticated = (
             auth_headers_path is not None and auth_headers_path.exists()
         )
@@ -501,11 +501,9 @@ class MusicService:
         return tracks
 
     def search_songs_and_artists(self, query: str, *, limit: int = 30) -> list[CatalogItem]:
-        """Default (unfiltered) search. Artists, songs, and videos in API order.
-
-        Songs and videos are both playable `song` rows. A YouTube watch URL
-        resolves to a single result via ``get_song``.
-        """
+        # default (unfiltered) search. Artists, songs, and videos in API order
+        # songs and videos are both playable `song` rows. A YouTube watch URL
+        # resolves to a single result via ``get_song``
         query = query.strip()
         if not query:
             return []
@@ -592,7 +590,7 @@ class MusicService:
         return tracks
 
     def get_home(self, limit: int = 5) -> list[CatalogShelf]:
-        """Titled home rows (songs, albums, playlists, artists mixed)."""
+        # titled home rows (songs, albums, playlists, artists mixed)
         try:
             rows = self._client().get_home(limit=limit)
         except Exception:  # noqa: BLE001
@@ -608,7 +606,7 @@ class MusicService:
         return shelves
 
     def get_home_tracks(self, limit: int = 5) -> list[Track]:
-        """Playable songs from the first `limit` home rows."""
+        # playable songs from the first `limit` home rows
         tracks: list[Track] = []
         for shelf in self.get_home(limit=limit):
             for item in shelf.items:
@@ -653,7 +651,7 @@ class MusicService:
         return tracks
 
     def get_explore(self) -> list[CatalogShelf]:
-        """Explore shelves: new albums, new videos, trending, top songs, moods."""
+        # Explore shelves: new albums, new videos, trending, top songs, moods
         try:
             data = self._client().get_explore()
         except Exception:  # noqa: BLE001
@@ -701,7 +699,7 @@ class MusicService:
         return tracks
 
     def get_history(self, limit: int = 50) -> list[Track]:
-        """Account play history. No-op (empty) when anonymous — never calls the API."""
+        # account play history. No-op (empty) when anonymous — never calls the API
         if not self.authenticated:
             return []
         items = self._client().get_history()
@@ -718,7 +716,7 @@ class MusicService:
         return tracks
 
     def add_history_item(self, track: Track) -> None:
-        """Tell YouTube this track was played. No-op when anonymous — never calls the API."""
+        # tell YouTube this track was played. No-op when anonymous — never calls the API
         if not self.authenticated or not track.video_id:
             return
         client = self._client()
@@ -755,7 +753,7 @@ class MusicService:
         return self.get_playlist_tracks(playlist_id, limit=limit)
 
     def add_song_to_target(self, track: Track, target: LibraryTarget) -> AddResult:
-        """Add a song to the marked library collection."""
+        # add a song to the marked library collection
         if not self.authenticated:
             return AddResult(False, "Sign in (Settings) to add to library", "error")
         if not track.video_id:
@@ -806,7 +804,7 @@ class MusicService:
         return AddResult(False, _playlist_error_message(result, target.title), "error")
 
     def remove_song_from_target(self, track: Track, target: LibraryTarget) -> AddResult:
-        """Remove a song from the marked or open library collection."""
+        # remove a song from the marked or open library collection
         if not self.authenticated:
             return AddResult(False, "Sign in (Settings) to remove from library", "error")
         if not track.video_id:
@@ -860,7 +858,7 @@ class MusicService:
             return AddResult(False, str(exc) or f"Could not delete from {target.title}", "error")
 
     def create_playlist(self, title: str) -> PlaylistWriteResult:
-        """Create an empty private playlist. Description is left blank."""
+        # create an empty private playlist. Description is left blank
         if not self.authenticated:
             return PlaylistWriteResult(False, "Sign in (Settings) to create a playlist")
         name = title.strip()
@@ -877,7 +875,7 @@ class MusicService:
         return PlaylistWriteResult(False, _short_failure(result, "Could not create playlist"))
 
     def delete_playlist(self, playlist: PlaylistSummary) -> PlaylistWriteResult:
-        """Delete a normal user playlist (not Liked / Saved / Episodes for Later)."""
+        # delete a normal user playlist (not Liked / Saved / Episodes for Later)
         if not self.authenticated:
             return PlaylistWriteResult(False, "Sign in (Settings) to delete a playlist")
         if not is_user_playlist(playlist):
@@ -934,7 +932,7 @@ class MusicService:
     def get_library_playlists(
         self, limit: int = 50, *, show_episodes_for_later: bool = False
     ) -> list[PlaylistSummary]:
-        """User library playlists (includes private) when authenticated."""
+        # user library playlists (includes private) when authenticated
         if not self.authenticated:
             return []
         items = self._client().get_library_playlists(limit=limit)
@@ -969,17 +967,17 @@ class MusicService:
         return out
 
     def verify_auth(self) -> tuple[bool, str]:
-        """Probe the authenticated client. Returns (ok, message)."""
+        # probe the authenticated client. Returns (ok, message)
         if self._auth_headers_path is None or not self._auth_headers_path.exists():
             return False, "No auth file — set path in Settings"
         try:
-            # Force rebuild client from file
+            # force rebuild client from file
             self._yt = None
             self._authenticated = False
             client = self._client()
             if not self.authenticated:
                 return False, "Auth file present but client is anonymous"
-            # Stale cookies often 200 with an empty library instead of 401.
+            # stale cookies often 200 with an empty library instead of 401
             playlists = client.get_library_playlists(limit=5) or []
             songs = client.get_library_songs(limit=5) or []
         except Exception as exc:  # noqa: BLE001

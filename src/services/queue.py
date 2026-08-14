@@ -1,4 +1,4 @@
-"""Playback queue management with persistence."""
+"""playback queue management with persistence"""
 
 from __future__ import annotations
 
@@ -49,14 +49,14 @@ class QueueService:
         return self.queue[self.index]
 
     def upcoming(self) -> list[Track]:
-        """Now playing, then the rest of the queue."""
+        # now playing, then the rest of the queue
         self.hydrate()
         if not self.queue:
             return []
         return list(self.queue[self.index :])
 
     def skip_to_upcoming(self, upcoming_index: int) -> Track | None:
-        """Jump to the Nth upcoming track (0 = current)."""
+        # jump to the Nth upcoming track (0 = current)
         self.hydrate()
         target = self.index + upcoming_index
         if upcoming_index < 0 or target >= len(self.queue):
@@ -87,7 +87,7 @@ class QueueService:
         return self.current
 
     def insert_next(self, tracks: Sequence[Track]) -> None:
-        """Insert tracks immediately after the current song (play-next)."""
+        # insert tracks immediately after the current song (play-next)
         self.hydrate()
         items = list(tracks)
         if not items:
@@ -101,7 +101,7 @@ class QueueService:
         self.save()
 
     def append(self, tracks: Sequence[Track]) -> None:
-        """Append tracks to the end of the queue."""
+        # append tracks to the end of the queue
         self.hydrate()
         items = list(tracks)
         if not items:
@@ -119,7 +119,7 @@ class QueueService:
         self.insert_next([track])
 
     def shuffle_remaining(self) -> bool:
-        """Keep the current track; shuffle everything after it. True if changed."""
+        # keep the current track; shuffle everything after it. True if changed
         self.hydrate()
         rest = self.queue[self.index + 1 :]
         if len(rest) < 2:
@@ -137,7 +137,7 @@ class QueueService:
         return self.repeat
 
     def has_next(self) -> bool:
-        """True if next_track() would return a song (including repeat wrap/loop)."""
+        # true if next_track() would return a song (including repeat wrap/loop)
         self.hydrate()
         if not self.queue:
             return False

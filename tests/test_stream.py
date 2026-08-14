@@ -1,4 +1,4 @@
-"""yt-dlp stream helpers."""
+"""yt-dlp stream helpers"""
 
 from __future__ import annotations
 

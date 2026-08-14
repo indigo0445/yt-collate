@@ -1,4 +1,4 @@
-"""Library mutation queue runs writes one at a time."""
+"""library mutation queue runs writes one at a time"""
 
 from __future__ import annotations
 

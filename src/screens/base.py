@@ -1,4 +1,4 @@
-"""Shared content-view helpers (mounted inside the app shell, not overlays)."""
+"""shared in-line activity indicators - fetching, downloading, - but not marked"""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from widgets import NavListView
 
 
 class ContentView(Static):
-    """A page shown in #content; Esc/q is handled by the app (show_home)."""
+    # a page shown in #content; Esc/q is handled by the app (show_home)
 
     DEFAULT_CSS = """
     ContentView {

@@ -1,4 +1,4 @@
-"""Stub views for radio / live / mood."""
+"""stub views for radio / live / mood"""
 
 from __future__ import annotations
 

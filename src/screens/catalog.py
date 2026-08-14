@@ -1,4 +1,4 @@
-"""Shared shelf UI for Home and Explore (sectioned catalog rows)."""
+"""shared shelf UI for Home and Explore (sectioned catalog rows)"""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ class CatalogRow:
 
 
 class CatalogScreen(ContentView):
-    """Sectioned catalog: songs play; albums/playlists/artists/moods drill in."""
+    # sectioned catalog: songs play; albums/playlists/artists/moods drill in
 
     PREFIX = "catalog"
     TITLE = "Catalog"

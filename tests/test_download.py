@@ -1,4 +1,4 @@
-"""Download service writes a flat dump named by video id."""
+"""download service writes a flat dump named by video id"""
 
 from __future__ import annotations
 

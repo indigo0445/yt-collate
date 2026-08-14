@@ -1,4 +1,4 @@
-/* No custom page fill — inherit the terminal background */
+/* no custom page fill — inherit the terminal background */
 
 $ytc-primary: #f5a9c5;
 $ytc-secondary: #9ec9f5;
@@ -269,7 +269,7 @@ OptionList > .option-list--option {
     padding: 0 1;
 }
 
-/* Unfocused: no cursor bar — only the focused list lights up */
+/* unfocused: no cursor bar — only the focused list lights up */
 OptionList > .option-list--option-highlighted {
     background: transparent;
     color: $ytc-text;

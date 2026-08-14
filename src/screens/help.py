@@ -1,4 +1,4 @@
-"""Help view."""
+"""Help view"""
 
 from __future__ import annotations
 
@@ -61,7 +61,7 @@ Use **My Library** for playlists, Saved Songs (YouTube library, not likes), and 
 
 
 class HelpBody(VerticalScroll):
-    """Focus target for the Help panel (pink border); h returns to Main Selection."""
+    # focus target for the Help panel (pink border); h returns to Main Selection
 
     BINDINGS = [
         Binding("h", "nav_left", "Left", show=False),

@@ -1,7 +1,7 @@
-"""mpv IPC playback service.
+"""mpv IPC playback service
 
-Play/pause contract: Space only toggles mpv `pause`. Never call loadfile on resume.
-`is_playing` is derived from mpv pause + having a current URL.
+play/pause contract: Space only toggles mpv `pause`. Never call loadfile on resume
+`is_playing` is derived from mpv pause + having a current URL
 """
 
 from __future__ import annotations
@@ -37,12 +37,12 @@ class PlayerSnapshot:
 Observer = Callable[[PlayerSnapshot], None]
 EofHandler = Callable[[], None]
 
-# YouTube InnerTube "player clients" are which app yt-dlp pretends to be.
+# YouTube InnerTube "player clients" are which app yt-dlp pretends to be
 # `web_music` is YouTube Music (catalog songs). Plain YouTube videos are
 # "Video unavailable" on that client. Cookies must stay off those videos
 # too: signed-in TV/web clients return googlevideo URLs that ffmpeg/mpv
 # fetches as HTTP 403. Commas are avoided because mpv splits
-# --ytdl-raw-options on commas.
+# --ytdl-raw-options on commas
 _YTDL_MUSIC_CLIENT = "youtube:player_client=web_music"
 
 
@@ -100,7 +100,7 @@ def build_mpv_args(
 
 @dataclass
 class PlayerService:
-    """Controls an idle mpv process over a JSON IPC unix socket."""
+    # controls an idle mpv process over a JSON IPC unix socket
 
     volume: int = 100
     cookies_file: str | None = None
@@ -128,7 +128,7 @@ class PlayerService:
     _loading: bool = field(default=False, init=False, repr=False)
     _pending_seek: float | None = field(default=None, init=False, repr=False)
     _stderr_tail: list[str] = field(default_factory=list, init=False, repr=False)
-    # For tests: inject a fake transport instead of real mpv
+    # for tests: inject a fake transport instead of real mpv
     _transport: Any | None = field(default=None, init=False, repr=False)
 
     @property
@@ -379,7 +379,7 @@ class PlayerService:
     def play(
         self, url: str, *, start: float | None = None, music_client: bool = True
     ) -> int:
-        """Load a new URL. Returns generation id for this play request."""
+        # load a new URL. Returns generation id for this play request
         self.start()
         with self._lock:
             self._generation += 1
@@ -407,7 +407,7 @@ class PlayerService:
             }
         )
         # loadfile replace already aborts the previous item. An extra stop can
-        # race and cancel the new ytdl load (song appears to never start).
+        # race and cancel the new ytdl load (song appears to never start)
         self._send({"command": ["loadfile", url, "replace"]})
         self._send({"command": ["set_property", "pause", False]})
         self._send({"command": ["set_property", "volume", self.volume]})
@@ -417,7 +417,7 @@ class PlayerService:
         return generation == self._generation
 
     def toggle_pause(self) -> None:
-        """Toggle pause only — never reload the file."""
+        # toggle pause only — never reload the file
         if not self._current_url:
             return
         self.start()
@@ -501,7 +501,7 @@ class PlayerService:
 
 
 class _IpcTransport:
-    """Test double interface."""
+    # test double interface
 
     def start(self, player: PlayerService) -> None:  # noqa: ARG002
         raise NotImplementedError
@@ -514,7 +514,7 @@ class _IpcTransport:
 
 
 class FakeMpvTransport(_IpcTransport):
-    """In-memory mpv stand-in for unit tests."""
+    # in-memory mpv stand-in for unit tests
 
     def __init__(self) -> None:
         self.commands: list[list[Any]] = []
