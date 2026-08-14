@@ -189,6 +189,13 @@ Input#auth-path {
     background: transparent;
 }
 
+#np-rate {
+    width: 6;
+    content-align: right middle;
+    color: $ytc-muted;
+    background: transparent;
+}
+
 #np-vol {
     width: 10;
     content-align: right middle;

@@ -8,7 +8,7 @@ Built with **Python**, **Textual** (fullscreen alternate screen), **mpv**, and *
 
 - Python 3.12+
 - [mpv](https://mpv.io/)
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) (nightly; yt-dlp --update-to nightly)
 
 ## Install
 

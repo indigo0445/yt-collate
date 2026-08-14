@@ -51,6 +51,12 @@ def format_time(seconds: float | int | None) -> str:
     return f"{m}:{s:02d}"
 
 
+def format_bitrate(bps: float | int | None) -> str:
+    if bps is None or bps <= 0:
+        return ""
+    return f"{int(round(float(bps) / 1000))}kbps"
+
+
 def display_duration(*, player: float, catalog: int | None) -> float:
     # length shown in the UI
     # catalog metadata is whole seconds. mpv's float is often just under that

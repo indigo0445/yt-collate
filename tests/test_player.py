@@ -165,6 +165,26 @@ def test_eof_pins_position_to_duration() -> None:
     assert player.snapshot().eof is True
 
 
+def test_audio_bitrate_updates_snapshot_without_notifying() -> None:
+    transport = FakeMpvTransport()
+    player = PlayerService()
+    player._transport = transport
+    notified: list[object] = []
+    player.on_update(notified.append)
+    player.play("https://www.youtube.com/watch?v=1")
+    notified.clear()
+    player._loading = False
+
+    player._handle_message(
+        {"event": "property-change", "name": "audio-bitrate", "data": 129632}
+    )
+    assert player.snapshot().audio_bitrate == 129632
+    assert notified == []
+
+    player.play("https://www.youtube.com/watch?v=2")
+    assert player.snapshot().audio_bitrate is None
+
+
 def test_time_pos_updates_snapshot_without_notifying() -> None:
     transport = FakeMpvTransport()
     player = PlayerService()

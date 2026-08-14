@@ -8,6 +8,7 @@ from utils import (
     clip_list_label,
     display_duration,
     display_position,
+    format_bitrate,
     format_time,
     row_activity_prompt,
     youtube_video_id,
@@ -26,6 +27,13 @@ def test_format_time() -> None:
     assert format_time(0) == "0:00"
     assert format_time(254) == "4:14"
     assert format_time(253.7) == "4:13"
+
+
+def test_format_bitrate() -> None:
+    assert format_bitrate(None) == ""
+    assert format_bitrate(0) == ""
+    assert format_bitrate(129632) == "130k"
+    assert format_bitrate(251000) == "251k"
 
 
 def test_clip_list_label_uses_widget_width() -> None:

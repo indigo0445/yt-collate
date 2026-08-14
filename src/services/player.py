@@ -28,6 +28,7 @@ class PlayerSnapshot:
     volume: int = 100
     eof: bool = False
     loading: bool = False
+    audio_bitrate: float | None = None
 
     @property
     def is_playing(self) -> bool:
@@ -57,7 +58,7 @@ def ytdl_raw_options(
         "format-sort": "abr",
     }
     if music_client:
-        opts["extractor-args"] = _YTDL_MUSIC_CLIENT
+        opts["extractor-args"] = f"{_YTDL_MUSIC_CLIENT};formats=missing_pot"
         if cookies_file:
             opts["cookies"] = cookies_file
         elif cookies_from_browser:
@@ -130,6 +131,7 @@ class PlayerService:
     _started: bool = field(default=False, init=False, repr=False)
     _loading: bool = field(default=False, init=False, repr=False)
     _pending_seek: float | None = field(default=None, init=False, repr=False)
+    _audio_bitrate: float | None = field(default=None, init=False, repr=False)
     _stderr_tail: list[str] = field(default_factory=list, init=False, repr=False)
     # for tests: inject a fake transport instead of real mpv
     _transport: Any | None = field(default=None, init=False, repr=False)
@@ -160,6 +162,7 @@ class PlayerService:
             volume=self.volume,
             eof=self._eof,
             loading=self._loading,
+            audio_bitrate=None if self._loading else self._audio_bitrate,
         )
 
     def _notify(self) -> None:
@@ -225,7 +228,10 @@ class PlayerService:
         raise RuntimeError(f"Failed to connect to mpv IPC: {last_err}")
 
     def _observe_properties(self) -> None:
-        for i, prop in enumerate(("time-pos", "duration", "pause", "eof-reached"), start=1):
+        for i, prop in enumerate(
+            ("time-pos", "duration", "pause", "eof-reached", "audio-bitrate"),
+            start=1,
+        ):
             self._send({"command": ["observe_property", i, prop]})
 
     def _send(self, payload: dict[str, Any], wait: bool = False) -> Any:
@@ -379,6 +385,13 @@ class PlayerService:
                     self._hit_eof()
                 elif data is False:
                     self._eof = False
+            elif name == "audio-bitrate":
+                if self._loading:
+                    return
+                if isinstance(data, (int, float)) and data > 0:
+                    self._audio_bitrate = float(data)
+                else:
+                    self._audio_bitrate = None
 
     def play(
         self, url: str, *, start: float | None = None, music_client: bool = True
@@ -395,6 +408,7 @@ class PlayerService:
             self._eof = False
             self._loading = True
             self._pending_seek = start
+            self._audio_bitrate = None
             self._stderr_tail.clear()
         self._notify()
         self._send(
@@ -456,6 +470,7 @@ class PlayerService:
             self._eof = False
             self._loading = False
             self._pending_seek = None
+            self._audio_bitrate = None
         if self._started:
             self._send({"command": ["stop"]})
         self._notify()

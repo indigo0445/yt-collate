@@ -14,6 +14,7 @@ analyze how cookie file is actually used / what we actually need
 other:
 
 oauth credentials are broken rn, use browser auth. switch when fixed
+premium subscription audio quality. yt is doing funny stuff rn, struggling to get it to work
 discord rich presence
 queue reordering
 queue unshuffle (unlikely / doesn't even make sense)

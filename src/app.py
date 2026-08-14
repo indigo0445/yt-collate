@@ -355,6 +355,7 @@ class YtCollateApp(App[None]):
             duration=duration or 0.0,
             status=self.state.status_message,
             volume=self.state.player.volume,
+            audio_bitrate=snap.audio_bitrate,
             width=width,
             finished=finished,
         )

@@ -17,7 +17,7 @@ from textual.widgets.option_list import Option
 
 from keyhints import PLAYBACK_CHROME, STATUS_KEYS
 from models.track import Track
-from utils import clip_list_label, format_time, progress_bar, truncate
+from utils import clip_list_label, format_bitrate, format_time, progress_bar, truncate
 
 # vim-style lines kept above/below the cursor when the list must scroll
 SCROLL_OFF = 5
@@ -596,6 +596,7 @@ class StatusBar(Static):
         with Vertical():
             with Horizontal():
                 yield Label("▶ Nothing playing", id="np-title")
+                yield Label("", id="np-rate")
                 yield Label("Vol 100%", id="np-vol")
                 yield Label("0:00 / 0:00", id="np-time")
             yield Label("─" * 40, id="np-bar")
@@ -611,6 +612,7 @@ class StatusBar(Static):
         duration: float,
         status: str = "",
         volume: int = 100,
+        audio_bitrate: float | None = None,
         width: int = 40,
         finished: bool = False,
     ) -> None:
@@ -628,6 +630,7 @@ class StatusBar(Static):
         self.query_one("#np-time", Label).update(
             f"{format_time(position)} / {format_time(duration)}"
         )
+        self.query_one("#np-rate", Label).update(format_bitrate(audio_bitrate))
         self.query_one("#np-vol", Label).update(f"Vol {volume}%")
         bar_width = max(10, width)
         self.query_one("#np-bar", Label).update(progress_bar(position, duration, bar_width))
