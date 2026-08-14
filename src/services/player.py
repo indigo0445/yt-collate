@@ -44,6 +44,7 @@ EofHandler = Callable[[], None]
 # fetches as HTTP 403. Commas are avoided because mpv splits
 # --ytdl-raw-options on commas
 _YTDL_MUSIC_CLIENT = "youtube:player_client=web_music"
+_YTDL_VIDEO_CLIENT = "youtube:player_client=visionos"
 
 
 def ytdl_raw_options(
@@ -61,6 +62,8 @@ def ytdl_raw_options(
             opts["cookies"] = cookies_file
         elif cookies_from_browser:
             opts["cookies-from-browser"] = cookies_from_browser
+    else:
+        opts["extractor-args"] = _YTDL_VIDEO_CLIENT
     return opts
 
 
@@ -295,6 +298,7 @@ class PlayerService:
         return self._stderr_tail[-1]
 
     def _mark_loaded(self) -> None:
+        # disambiguity: not the same as 'marking' a playlist
         if not self._loading:
             return
         self._loading = False

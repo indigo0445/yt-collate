@@ -1,4 +1,4 @@
-"""YouTube Music API façade via ytmusicapi"""
+"""YouTube Music API facade via ytmusicapi"""
 
 from __future__ import annotations
 

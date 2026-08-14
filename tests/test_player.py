@@ -24,12 +24,12 @@ def test_ytdl_raw_options_switch_client() -> None:
     assert music["extractor-args"] == "youtube:player_client=web_music"
     assert music["cookies"] == "/tmp/c.txt"
     web = ytdl_raw_options(music_client=False, cookies_file="/tmp/c.txt")
-    assert "extractor-args" not in web
+    assert web["extractor-args"] == "youtube:player_client=visionos"
     assert "cookies" not in web
     assert web["format-sort"] == "abr"
 
 
-def test_play_sets_web_client_before_loadfile() -> None:
+def test_play_sets_video_client_before_loadfile() -> None:
     transport = FakeMpvTransport()
     player = PlayerService(cookies_file="/tmp/c.txt")
     player._transport = transport
@@ -39,7 +39,7 @@ def test_play_sets_web_client_before_loadfile() -> None:
         for c in transport.commands
         if c[:2] == ["set_property", "ytdl-raw-options"]
     )
-    assert "extractor-args" not in opts
+    assert opts["extractor-args"] == "youtube:player_client=visionos"
     assert "cookies" not in opts
     load_at = next(i for i, c in enumerate(transport.commands) if c and c[0] == "loadfile")
     set_at = next(

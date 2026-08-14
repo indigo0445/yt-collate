@@ -1,8 +1,10 @@
 priority:
 
-actually USE downloaded tracks if seen. e.g. playing track, and no need for 'fetching' anymore
 play inconsistencies still?
+    - fixed by using ytdlp nightly visionos, changing ytdl vid client to visionos for non-song vidoes
+actually USE downloaded tracks if seen. e.g. playing track, and no need for 'fetching' anymore
 x/p or d/p, y/p.
+analyze how cookie file is actually used / what we actually need
 
 
 
