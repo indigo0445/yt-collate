@@ -1,0 +1,304 @@
+/* No custom page fill — inherit the terminal background */
+
+$ytc-primary: #f5a9c5;
+$ytc-secondary: #9ec9f5;
+$ytc-filter: #9edcc8;
+$ytc-query: #f0c07a;
+$ytc-border: #3a3a48;
+$ytc-text: #e8e6ef;
+$ytc-muted: #8a8798;
+
+Screen {
+    color: $ytc-text;
+    background: transparent;
+}
+
+#header {
+    dock: top;
+    height: 3;
+    background: transparent;
+    border: heavy $ytc-primary;
+    content-align: center middle;
+    color: $ytc-primary;
+    text-style: bold;
+}
+
+#body {
+    height: 1fr;
+    background: transparent;
+}
+
+#sidebar {
+    width: 38;
+    height: 1fr;
+    background: transparent;
+    border: round $ytc-border;
+    padding: 0 1;
+}
+
+#content {
+    width: 1fr;
+    height: 1fr;
+    background: transparent;
+}
+
+#content > ContentView,
+#content > #home {
+    height: 1fr;
+    width: 1fr;
+}
+
+#home {
+    height: 1fr;
+    background: transparent;
+}
+
+#home-panels {
+    background: transparent;
+    height: 1fr;
+}
+
+.content-panel {
+    height: 1fr;
+    border: round $ytc-border;
+    background: transparent;
+    padding: 0 1;
+    margin: 0 0 0 1;
+}
+
+.content-panel:focus-within {
+    border: round $ytc-primary;
+}
+
+#sidebar:focus-within {
+    border: round $ytc-primary;
+}
+
+.panel-header {
+    height: 1;
+    width: 1fr;
+    background: transparent;
+}
+
+.panel-title {
+    width: auto;
+    height: 1;
+    color: $ytc-secondary;
+    text-style: bold;
+    background: transparent;
+}
+
+.panel-filter-prefix {
+    width: auto;
+    height: 1;
+    color: $ytc-filter;
+    text-style: bold;
+    padding: 0 0 0 1;
+    background: transparent;
+}
+
+Input.panel-filter {
+    width: 1fr;
+    height: 1;
+    border: none;
+    padding: 0;
+    background: transparent;
+    color: $ytc-filter;
+    text-style: bold;
+}
+
+.panel-query-chrome {
+    width: auto;
+    height: 1;
+    color: $ytc-query;
+    text-style: bold;
+    background: transparent;
+}
+
+Input.panel-query {
+    width: auto;
+    height: 1;
+    min-width: 1;
+    border: none;
+    padding: 0;
+    background: transparent;
+    color: $ytc-query;
+    text-style: bold;
+}
+
+Input.panel-query > .input--placeholder {
+    color: $ytc-query;
+    text-style: bold;
+}
+
+#auth-edit-row {
+    height: 1;
+    width: 1fr;
+    padding: 0 1;
+    background: $ytc-primary;
+}
+
+#auth-edit-prefix {
+    width: auto;
+    height: 1;
+    color: #0b0b12;
+    text-style: bold;
+    background: $ytc-primary;
+}
+
+#auth-edit-prefix {
+    width: auto;
+    height: 1;
+    color: #0b0b12;
+    text-style: bold;
+    background: $ytc-primary;
+}
+
+Input#auth-path {
+    width: 1fr;
+    height: 1;
+    border: none;
+    padding: 0;
+    background: $ytc-primary;
+    color: #0b0b12;
+    text-style: bold;
+}
+
+#status-bar {
+    dock: bottom;
+    height: 5;
+    background: transparent;
+    border: round $ytc-border;
+    padding: 0 1;
+}
+
+#status-bar > Vertical {
+    height: auto;
+}
+
+#np-title {
+    width: 1fr;
+    color: $ytc-text;
+    background: transparent;
+}
+
+#np-time {
+    width: 16;
+    content-align: right middle;
+    color: $ytc-muted;
+    background: transparent;
+}
+
+#np-vol {
+    width: 10;
+    content-align: right middle;
+    color: $ytc-muted;
+    background: transparent;
+}
+
+#np-bar {
+    width: 1fr;
+    color: $ytc-primary;
+    height: 1;
+    background: transparent;
+}
+
+#status-keys {
+    color: $ytc-muted;
+    height: 1;
+    background: transparent;
+}
+
+#status-line {
+    color: $ytc-secondary;
+    height: 1;
+    background: transparent;
+}
+
+OptionList {
+    height: 1fr;
+    background: transparent !important;
+    border: none;
+    padding: 0;
+    scrollbar-background: transparent;
+    scrollbar-color: $ytc-border;
+    scrollbar-size: 1 1;
+}
+
+#lib-list.composing {
+    height: auto;
+    max-height: 1fr;
+}
+
+#lib-compose {
+    height: 1;
+    width: 1fr;
+    padding: 0 1;
+    background: transparent;
+}
+
+#lib-compose-prefix {
+    width: auto;
+    height: 1;
+    color: $ytc-muted;
+    background: transparent;
+}
+
+Input.lib-compose-input {
+    width: 1fr;
+    height: 1;
+    border: none;
+    padding: 0;
+    background: transparent;
+    color: $ytc-muted;
+}
+
+#lib-compose-fill {
+    height: 1fr;
+    background: transparent;
+}
+
+OptionList:focus {
+    background: transparent !important;
+    border: none;
+}
+
+OptionList > .option-list--option {
+    color: $ytc-text;
+    background: transparent;
+    padding: 0 1;
+}
+
+/* Unfocused: no cursor bar — only the focused list lights up */
+OptionList > .option-list--option-highlighted {
+    background: transparent;
+    color: $ytc-text;
+    text-style: none;
+}
+
+OptionList:focus > .option-list--option-highlighted {
+    background: $ytc-primary;
+    color: #0b0b12;
+    text-style: bold;
+}
+
+.muted {
+    color: $ytc-muted;
+}
+
+Input {
+    border: tall $ytc-border;
+    background: transparent;
+}
+
+Button {
+    margin: 0 1 0 0;
+}
+
+Footer {
+    display: none;
+}
+
+Vertical, Horizontal, Static {
+    background: transparent;
+}

@@ -1,0 +1,64 @@
+[project]
+name = "yt-collate"
+version = "0.1.0"
+description = "Terminal YouTube Music player (Textual + mpv + yt-dlp)"
+readme = "README.md"
+authors = [
+    { name = "Ryan Wu", email = "ryanwusd@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "textual>=2.0.0",
+    "ytmusicapi>=1.10.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+]
+
+[project.optional-dependencies]
+discord = ["pypresence>=4.3.0"]
+
+[project.scripts]
+ytc = "yt_collate.cli:main"
+yt-collate = "yt_collate.cli:main"
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = [
+    "yt_collate",
+    "yt_collate.models",
+    "yt_collate.screens",
+    "yt_collate.services",
+    "yt_collate.widgets",
+]
+
+[tool.setuptools.package-dir]
+yt_collate = "src"
+
+[tool.setuptools.package-data]
+yt_collate = ["themes/*.tcss"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.9.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+pythonVersion = "3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
