@@ -25,3 +25,5 @@ lyrics
 color themes (simple file)
 better key label tips, e.g. m/o/+, etc should only be on Library
 track listing truncation broken not keeping on 1 line for special e.g. cjk chars
+simplify keyhints.py
+add little visual indicating a song is downloaded? (e.g. a '↓' symbol at end of line)
