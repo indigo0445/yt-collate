@@ -13,6 +13,7 @@ from textual.widgets import Input, Label
 from keyhints import LIBRARY
 from models.track import PlaylistSummary, Track
 from screens.base import ContentView
+from services.local_library import emoji_for_library_id
 from services.music import (
     LIKED_PLAYLIST_ID,
     SAVED_SONGS_PLAYLIST_ID,
@@ -28,14 +29,6 @@ from widgets import NavListView, PanelHeader, TrackList
 
 def library_num_prefix(num: int, *, marked: bool) -> str:
     return f"{num}* " if marked else f"{num}. "
-
-
-def _folder_icon(playlist_id: str) -> str:
-    if playlist_id == LIKED_PLAYLIST_ID:
-        return "❤️"
-    if playlist_id == SAVED_SONGS_PLAYLIST_ID:
-        return "🎵"
-    return "📁"
 
 
 def _same_library_row(item: Track, track: Track) -> bool:
@@ -348,7 +341,7 @@ class LibraryScreen(ContentView):
         tv.display = True
         tv.set_tracks(tracks)
         tv.focus()
-        icon = _folder_icon(pl.playlist_id)
+        icon = emoji_for_library_id(pl.playlist_id)
         self.query_one("#lib-title", PanelHeader).set_title(f"{icon} {pl.title}")
         self.query_one("#lib-status", Label).update(f"{len(tracks)} tracks · Esc/q back")
 
@@ -608,6 +601,7 @@ class LibraryScreen(ContentView):
         self.app.download_tracks(  # type: ignore[attr-defined]
             tracks,
             collection=pl.title,
+            emoji=emoji_for_library_id(pl.playlist_id),
             on_progress=lambda c, t, i=row_index: self._set_download_progress(
                 i, c, t, "lib-list"
             ),

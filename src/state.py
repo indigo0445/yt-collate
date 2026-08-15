@@ -12,7 +12,7 @@ from models.track import Track
 from services.config import ConfigService
 from services.discord_rpc import DiscordPresence
 from services.download import (
-    DOWNLOAD_DIR,
+    SONGS_DIR,
     DownloadJobQueue,
     DownloadService,
     existing_download,
@@ -187,7 +187,7 @@ class AppState:
 
     def _playback_source(self, track: Track) -> str:
         # prioritize local audio file, else YouTube URL
-        local = existing_download(DOWNLOAD_DIR, track.video_id)
+        local = existing_download(SONGS_DIR, track.video_id)
         if local is not None:
             return str(local)
         return track.watch_url

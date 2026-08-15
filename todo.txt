@@ -7,25 +7,15 @@ x/p or d/p, y/p.
 analyze how cookie file is actually used / what we actually need
 
 
-downloads:
-verify that if add new song in fully downloaded list, new download is fast
-locals should work when offline.
-
-
 
 
 other:
 
-oauth credentials are broken rn, use browser auth. switch when fixed
-premium subscription audio quality. yt is doing funny stuff rn, struggling to get it to work
+oauth credentials are broken rn, use browser auth. switch to oauth when fixed
 discord rich presence
 queue reordering
 queue unshuffle (unlikely / doesn't even make sense)
-fix audio failing to play. happens randomly (?)
-    - solved by passing cookies to mpv, so still unresolved for anonymous
-yt-dlp premium bitrate bonus? probably works but loading is a lot longer
 when escaping search or whatever, the resulting scroll/position of focused: if before the / we were focused on row 200 and the search result we focused on was row 100, and we escape, it should appears as if we simply spammed k to get to focus on row 100. so just make scrolling consistent to if we had manually navigated there 
-download?
 custom window layouts, to make better use of hjkl idea
 dont autoplay on app open, wait for space (?)
 volume standardizer?
@@ -34,3 +24,4 @@ find places where my simple request actually takes much implementation to do - m
 lyrics
 color themes (simple file)
 better key label tips, e.g. m/o/+, etc should only be on Library
+track listing truncation broken not keeping on 1 line for special e.g. cjk chars

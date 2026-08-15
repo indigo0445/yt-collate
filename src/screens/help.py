@@ -19,6 +19,7 @@ HELP_MD = """
 - **g / G** — First / last row
 - Start page is **Home** (YouTube Music shelves: songs, albums, playlists, artists)
 - **My Library** — playlists, then Saved Songs, Liked Songs, and Episodes for Later (visibility is in Settings)
+- **Local** — downloaded playlists from `~/Music/yt-collate` (offline; same drill-in as My Library)
 - **Explore** — new albums, new videos, trending, top songs, moods & genres
 - **Enter** — Select / play
 - **/** — Filter the focused list (Esc clears; **↓** keeps it and focuses the list)
@@ -42,8 +43,9 @@ HELP_MD = """
 - **r** — Cycle repeat
 - **i** — Insert as play-next (song, or album/playlist/artist from Home/Explore/Search, or playlist from My Library)
 - **a** — Append to the end of the queue (song, or album/playlist/artist from Home/Explore/Search, or playlist from My Library)
-- **w** — Download to `~/Music/yt-collate` (filename is the video id).
-  A playlist/album/artist row bulk-downloads every song into that same folder
+- **w** — Download audio to `~/Music/yt-collate/Songs/` (filename is the video id).
+  A playlist/album/artist/Liked/Saved row also writes `~/Music/yt-collate/{name}.json`
+  (emoji + tracks) so **Local** can open it like a library playlist
 
 ## Library
 - **m** — Mark a playlist, Saved Songs, or Liked Songs (My Library index). Marked row uses `*` instead of `.` (`12* `) and ends with `— marked`

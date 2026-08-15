@@ -28,6 +28,7 @@ def test_help_and_status_match_queue_bindings() -> None:
     assert "- **i** — Insert" in HELP_MD
     assert "- **a** — Append" in HELP_MD
     assert "- **w** — Download" in HELP_MD
+    assert "**Local**" in HELP_MD
     assert "- **A** — Append" not in HELP_MD
     assert QUEUE.startswith("i play next")
     assert "i/a queue" in STATUS_KEYS

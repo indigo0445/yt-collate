@@ -10,14 +10,16 @@ from textual.containers import Horizontal
 from textual.widgets import Input
 
 from app import YtCollateApp
-from models.track import Artist, Track
+from models.track import Artist, LocalPlaylist, Track
 from screens.explore import ExploreScreen
 from screens.help import HelpScreen
 from screens.history import HistoryScreen
 from screens.home import HomeScreen
 from screens.library import LibraryScreen
+from screens.local import LocalScreen
 from screens.search import SearchScreen
 from screens.settings import SettingsScreen
+from services.local_library import save_local_playlist
 from services.music import CatalogItem, CatalogShelf
 from widgets import NavListView, Sidebar, TrackList
 
@@ -1004,3 +1006,45 @@ async def test_library_delete_playlist_always_confirms(
         await pilot.pause()
         assert deleted == ["PLreal"]
         assert any("cannot be deleted" in msg for msg in toasts)
+
+
+@pytest.mark.asyncio
+async def test_local_lists_saved_playlist(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stub_home: None
+) -> None:
+    root = tmp_path / "yt-collate"
+    monkeypatch.setattr("services.download.DOWNLOAD_DIR", root)
+    save_local_playlist(
+        LocalPlaylist(
+            emoji="❤️",
+            title="Liked Songs",
+            tracks=[
+                Track(
+                    video_id="aaaaaaaaaaa",
+                    title="One",
+                    artists=[Artist(name="A")],
+                )
+            ],
+        ),
+        root=root,
+    )
+    monkeypatch.setenv("YT_COLLATE_CONFIG", str(tmp_path / "cfg"))
+    app = YtCollateApp()
+    async with app.run_test(size=(120, 40)) as pilot:
+        await app.show_local()
+        await pilot.pause()
+        assert app.view_name == "local"
+        screen = app.query_one(LocalScreen)
+        titles = [
+            row.playlist.title for row in screen._rows if row.playlist is not None
+        ]
+        assert titles == ["Liked Songs"]
+        lv = app.query_one("#local-list", NavListView)
+        lv.focus()
+        lv.index = 0
+        await pilot.press("enter")
+        await pilot.pause()
+        assert screen._drilled
+        tv = app.query_one("#local-tracks", TrackList)
+        assert [t.title for t in tv.tracks] == ["One"]
+

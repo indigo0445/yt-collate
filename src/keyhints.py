@@ -8,6 +8,7 @@ LIBRARY = (
     f"Enter open/play · {QUEUE} · w download · m mark · + add · o new · d/x delete · "
     f"{NAV_BACK}"
 )
+LOCAL = f"Enter open/play · {QUEUE} · {NAV_BACK}"
 SEARCH = (
     "j/k move · k/#1 → query · Esc/q/↓ query → #1 · Enter play · i/a queue · "
     "w download · \\ query"

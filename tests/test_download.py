@@ -1,4 +1,4 @@
-"""download service writes a flat dump named by video id"""
+"""download service writes audio into Songs/, named by video id"""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from pathlib import Path
 from models.track import Artist, Track
 from services.download import (
     DOWNLOAD_DIR,
+    SONGS_DIR,
     DownloadJobQueue,
     DownloadService,
     existing_download,
@@ -148,13 +149,7 @@ def test_song_jobs_callback_per_track(tmp_path: Path) -> None:
         jobs.shutdown()
 
 
-def test_migrates_legacy_download_dir(tmp_path: Path, monkeypatch) -> None:
-    home = tmp_path / "home"
-    legacy = home / "Music" / "ymlite"
-    legacy.mkdir(parents=True)
-    (legacy / "aaaaaaaaaaa.opus").write_bytes(b"ok")
-    monkeypatch.setenv("HOME", str(home))
-    dest = DOWNLOAD_DIR
-    assert dest == home / "Music" / "yt-collate"
-    assert (dest / "aaaaaaaaaaa.opus").exists()
-    assert not legacy.exists()
+def test_default_dest_is_songs_dir() -> None:
+    svc = DownloadService(run=lambda *_args, **_kwargs: None)  # type: ignore[arg-type]
+    assert svc.dest == SONGS_DIR
+    assert SONGS_DIR == DOWNLOAD_DIR / "Songs"

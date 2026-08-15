@@ -27,7 +27,7 @@ Short alias: `uv run ytc`.
 - Playlists, liked songs, trending, new releases
 - Shuffle / repeat / related-track autoplay
 - Browser-header auth for library / liked songs
-- Download songs (and playlist contents) to `~/Music/yt-collate`
+- Download songs to `~/Music/yt-collate/Songs/`; playlists as `{name}.json` beside it
 - Optional Discord Rich Presence (`uv sync --extra discord`)
 
 ## Keybindings
@@ -39,7 +39,7 @@ Short alias: `uv run ytc`.
 | `\` | Jump to Search |
 | Enter | Select / play |
 | `i` / `a` | Play next / append to queue |
-| `w` | Download song or playlist to `~/Music/yt-collate` |
+| `w` | Download song to `~/Music/yt-collate/Songs/`; playlists also write `{name}.json` |
 | Space | Play / pause |
 | `n` / `b` | Next / previous |
 | `0`–`9` | Jump to 0% … 90% |
@@ -56,7 +56,7 @@ Short alias: `uv run ytc`.
 
 Data lives under `~/.config/yt-collate/` (override with `YT_COLLATE_CONFIG`).
 
-On first run, `~/.config/youtube-music-lite/` is renamed if present. Downloads go to `~/Music/yt-collate/` (renamed from `~/Music/ymlite/` if present).
+On first run, `~/.config/youtube-music-lite/` is renamed if present. Audio files go to `~/Music/yt-collate/Songs/`; downloaded playlists are `{name}.json` in `~/Music/yt-collate/`.
 
 ## Development
 

@@ -14,7 +14,7 @@ from textual.notifications import SeverityLevel
 from textual.widget import Widget
 from textual.widgets import Input, Label, OptionList, Static
 
-from models.track import PlaylistSummary, Track
+from models.track import LocalPlaylist, PlaylistSummary, Track
 from screens import (
     DiscoveryScreen,
     HelpScreen,
@@ -27,7 +27,9 @@ from screens.catalog import CatalogScreen
 from screens.explore import ExploreScreen
 from screens.home import HomeScreen
 from screens.library import LibraryScreen
+from screens.local import LocalScreen
 from services.download import DownloadBatchResult
+from services.local_library import save_local_playlist
 from services.music import (
     AddResult,
     LibraryTarget,
@@ -188,6 +190,19 @@ class YtCollateApp(App[None]):
             except Exception:  # noqa: BLE001
                 pass
 
+    async def show_local(self) -> None:
+        await self.show_view(LocalScreen(id="local"), "local")
+        self._focus_local_content()
+
+    def _focus_local_content(self) -> None:
+        try:
+            self.query_one("#local-list", NavListView).focus()
+        except Exception:  # noqa: BLE001
+            try:
+                self.query_one("#sidebar-list", NavListView).focus()
+            except Exception:  # noqa: BLE001
+                pass
+
     async def action_go_back(self) -> None:
         if self._cancel_pending_delete():
             return
@@ -202,6 +217,12 @@ class YtCollateApp(App[None]):
         elif self.view_name == "library":
             try:
                 if self.query_one(LibraryScreen).handle_back():
+                    return
+            except Exception:  # noqa: BLE001
+                pass
+        elif self.view_name == "local":
+            try:
+                if self.query_one(LocalScreen).handle_back():
                     return
             except Exception:  # noqa: BLE001
                 pass
@@ -376,6 +397,7 @@ class YtCollateApp(App[None]):
             "home": "home-list",
             "explore": "explore-list",
             "library": "lib-list",
+            "local": "local-list",
             "trending": "disc-results",
             "search": "search-list",
             "history": "queue-list",
@@ -404,6 +426,13 @@ class YtCollateApp(App[None]):
                 tracks = self.query_one("#lib-tracks", NavListView)
                 if tracks.display:
                     return "lib-tracks"
+            except Exception:  # noqa: BLE001
+                pass
+        if self.view_name == "local":
+            try:
+                tracks = self.query_one("#local-tracks", NavListView)
+                if tracks.display:
+                    return "local-tracks"
             except Exception:  # noqa: BLE001
                 pass
         if self.view_name == "search":
@@ -475,6 +504,8 @@ class YtCollateApp(App[None]):
             await self.show_home()
         elif key == "library":
             await self.show_library()
+        elif key == "local":
+            await self.show_local()
         elif key == "explore":
             await self.show_explore()
         elif key == "search":
@@ -822,11 +853,20 @@ class YtCollateApp(App[None]):
         tracks: list[Track],
         *,
         collection: str | None = None,
+        emoji: str | None = None,
         on_progress: Callable[[int, int], None] | None = None,
         on_finished: Callable[[], None] | None = None,
     ) -> None:
         if not tracks:
             return
+        if collection:
+            save_local_playlist(
+                LocalPlaylist(
+                    emoji=emoji or "📁",
+                    title=collection,
+                    tracks=tracks,
+                )
+            )
 
         def progress(current: int, total: int) -> None:
             self.call_from_thread(
@@ -967,6 +1007,14 @@ class YtCollateApp(App[None]):
             if focused is not None and focused.id in {"lib-list", "lib-tracks"}:
                 try:
                     self.query_one(LibraryScreen).queue_selection(play_next=play_next)
+                except Exception:  # noqa: BLE001
+                    pass
+            return
+        if self.view_name == "local":
+            focused = self.focused
+            if focused is not None and focused.id in {"local-list", "local-tracks"}:
+                try:
+                    self.query_one(LocalScreen).queue_selection(play_next=play_next)
                 except Exception:  # noqa: BLE001
                     pass
             return

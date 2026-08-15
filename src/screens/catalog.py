@@ -13,6 +13,7 @@ from textual.widgets import Label
 from keyhints import CATALOG
 from models.track import Track
 from screens.base import ContentView
+from services.local_library import emoji_for_catalog_kind
 from services.music import CatalogItem, CatalogShelf
 from utils import clip_list_label
 from widgets import NavListView, PanelHeader, TrackList
@@ -397,6 +398,7 @@ class CatalogScreen(ContentView):
         self.app.download_tracks(  # type: ignore[attr-defined]
             tracks,
             collection=item.title,
+            emoji=emoji_for_catalog_kind(item.kind),
             on_progress=lambda c, t, i=row_index: self._set_download_progress(
                 i, c, t, list_id
             ),

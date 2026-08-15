@@ -1,4 +1,4 @@
-"""download audio into a flat ~/Music/yt-collate dump, named by video id"""
+"""download audio into ~/Music/yt-collate/Songs; playlist metadata download in local_library.py"""
 
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ from models.track import Track
 _YTDL_MUSIC_CLIENT = "youtube:player_client=web_music"
 
 DOWNLOAD_DIR = Path.home() / "Music" / "yt-collate"
+SONGS_DIR = DOWNLOAD_DIR / "Songs"
 _SAFE_ID = re.compile(r"[A-Za-z0-9_-]+")
 _SKIP_SUFFIXES = {".part", ".ytdl", ".temp", ".tmp"}
 _AUDIO_SUFFIXES = {".mp3", ".opus", ".ogg", ".m4a", ".aac", ".flac", ".wav"}
@@ -88,7 +89,7 @@ class DownloadService:
         cookies_from_browser: BrowserFn | None = None,
         run: RunFn | None = None,
     ) -> None:
-        self.dest = dest or DOWNLOAD_DIR
+        self.dest = dest or SONGS_DIR
         self._cookies = cookies or (lambda: None)
         self._cookies_from_browser = cookies_from_browser or (lambda: None)
         self._run = run or subprocess.run
@@ -172,7 +173,7 @@ class _DownloadJob:
 
 
 class DownloadJobQueue:
-    # one background thread; playlist batches stay a single job
+    # one background worker to manage a queue of downloads
 
     def __init__(self, service: DownloadService) -> None:
         self._service = service

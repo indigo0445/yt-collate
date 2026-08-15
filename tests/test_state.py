@@ -276,16 +276,16 @@ def test_previous_at_queue_head_does_not_restore_playlist_prefix(
 
 
 def test_play_prefers_local_download(tmp_path: Path, monkeypatch) -> None:
-    dest = tmp_path / "yt-collate"
-    dest.mkdir()
+    songs = tmp_path / "yt-collate" / "Songs"
+    songs.mkdir(parents=True)
     track = Track(
         video_id="aaaaaaaaaaa",
         title="Local",
         artists=[Artist(name="A")],
     )
-    path = dest / "aaaaaaaaaaa.opus"
+    path = songs / "aaaaaaaaaaa.opus"
     path.write_bytes(b"ok")
-    monkeypatch.setattr("state.DOWNLOAD_DIR", dest)
+    monkeypatch.setattr("state.SONGS_DIR", songs)
     state = _state(tmp_path)
     state.play_track(track)
     transport = state.player._transport

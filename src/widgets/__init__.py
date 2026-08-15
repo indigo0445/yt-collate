@@ -430,6 +430,7 @@ class Sidebar(Static):
         ("mood", "🎭 Mood Radio"),
         ("history", "🕒 Queue & History"),
         ("random", "🎲 Play Random Song"),
+        ("local", "📂 Local"),
         ("settings", "⚙️ Settings"),
         ("help", "❓ Help"),
     ]
