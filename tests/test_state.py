@@ -275,6 +275,26 @@ def test_previous_at_queue_head_does_not_restore_playlist_prefix(
     assert [t.video_id for t in state.queue.upcoming()] == ["v2", "v3"]
 
 
+def test_play_prefers_local_download(tmp_path: Path, monkeypatch) -> None:
+    dest = tmp_path / "yt-collate"
+    dest.mkdir()
+    track = Track(
+        video_id="aaaaaaaaaaa",
+        title="Local",
+        artists=[Artist(name="A")],
+    )
+    path = dest / "aaaaaaaaaaa.opus"
+    path.write_bytes(b"ok")
+    monkeypatch.setattr("state.DOWNLOAD_DIR", dest)
+    state = _state(tmp_path)
+    state.play_track(track)
+    transport = state.player._transport
+    assert transport is not None
+    load = next(c for c in transport.commands if c and c[0] == "loadfile")
+    assert load[1] == str(path)
+    assert not any(c[:2] == ["set_property", "ytdl-raw-options"] for c in transport.commands)
+
+
 def test_play_restored_current_starts_unloaded_queue(tmp_path: Path) -> None:
     state = _state(tmp_path)
     state.queue.play_all([_t(1), _t(2)], start_index=0)

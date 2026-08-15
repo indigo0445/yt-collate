@@ -8,9 +8,9 @@ from pathlib import Path
 
 from models.track import Artist, Track
 from services.download import (
+    DOWNLOAD_DIR,
     DownloadJobQueue,
     DownloadService,
-    default_download_dir,
     existing_download,
     safe_video_id,
 )
@@ -154,7 +154,7 @@ def test_migrates_legacy_download_dir(tmp_path: Path, monkeypatch) -> None:
     legacy.mkdir(parents=True)
     (legacy / "aaaaaaaaaaa.opus").write_bytes(b"ok")
     monkeypatch.setenv("HOME", str(home))
-    dest = default_download_dir()
+    dest = DOWNLOAD_DIR
     assert dest == home / "Music" / "yt-collate"
     assert (dest / "aaaaaaaaaaa.opus").exists()
     assert not legacy.exists()

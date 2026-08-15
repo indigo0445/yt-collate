@@ -1,8 +1,4 @@
-"""mpv IPC playback service
-
-play/pause contract: Space only toggles mpv `pause`. Never call loadfile on resume
-`is_playing` is derived from mpv pause + having a current URL
-"""
+"""mpv IPC playback service"""
 
 from __future__ import annotations
 
@@ -19,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 
+# player info for external access
 @dataclass
 class PlayerSnapshot:
     url: str | None = None
@@ -44,10 +41,11 @@ EofHandler = Callable[[], None]
 # too: signed-in TV/web clients return googlevideo URLs that ffmpeg/mpv
 # fetches as HTTP 403. Commas are avoided because mpv splits
 # --ytdl-raw-options on commas
-_YTDL_MUSIC_CLIENT = "youtube:player_client=web_music"
-_YTDL_VIDEO_CLIENT = "youtube:player_client=visionos"
+_YTDL_MUSIC_CLIENT = "youtube:player_client=web_music" # official yt catalog songs
+_YTDL_VIDEO_CLIENT = "youtube:player_client=visionos" # if web_music as well, fails ~50% of the time
 
 
+# yt-dlp is NOT directly called, these are passed to mpv on every play
 def ytdl_raw_options(
     *,
     music_client: bool,
@@ -58,6 +56,8 @@ def ytdl_raw_options(
         "format-sort": "abr",
     }
     if music_client:
+        # ';formats=missing_pot' is needed to get enhanced bitrate for yt subscribers
+        # spent hours figuring that out omg
         opts["extractor-args"] = f"{_YTDL_MUSIC_CLIENT};formats=missing_pot"
         if cookies_file:
             opts["cookies"] = cookies_file
@@ -68,6 +68,7 @@ def ytdl_raw_options(
     return opts
 
 
+# args for building permanent mpv process once
 def build_mpv_args(
     *,
     ipc_path: str,
@@ -114,7 +115,6 @@ class PlayerService:
     _sock: socket.socket | None = field(default=None, init=False, repr=False)
     _request_id: int = field(default=0, init=False, repr=False)
     _lock: threading.RLock = field(default_factory=threading.RLock, init=False, repr=False)
-    _generation: int = field(default=0, init=False, repr=False)
     _current_url: str | None = field(default=None, init=False, repr=False)
     _paused: bool = field(default=True, init=False, repr=False)
     _position: float = field(default=0.0, init=False, repr=False)
@@ -150,6 +150,7 @@ class PlayerService:
         self._error_handlers.append(handler)
 
     def snapshot(self) -> PlayerSnapshot:
+        # other classes can fetch at will
         duration = self._duration
         position = 0.0 if self._loading else self._position
         if duration > 0:
@@ -166,6 +167,7 @@ class PlayerService:
         )
 
     def _notify(self) -> None:
+        # sends observers an updated snapshot. currently only 1 observer: AppState._on_player_update
         snap = self.snapshot()
         for obs in list(self._observers):
             try:
@@ -174,8 +176,10 @@ class PlayerService:
                 pass
 
     def start(self) -> None:
+        # only runs once. 
         if self._started:
             return
+        # for tests: use a fake transport instead of real mpv
         if self._transport is not None:
             self._started = True
             self._transport.start(self)
@@ -395,12 +399,13 @@ class PlayerService:
 
     def play(
         self, url: str, *, start: float | None = None, music_client: bool = True
-    ) -> int:
-        # load a new URL. Returns generation id for this play request
+    ) -> None:
+        # load either a local file or a YouTube URL
+        # if local file, music_client param is ignored
+        # only called from _start_current and _resume_from in AppState
         self.start()
+
         with self._lock:
-            self._generation += 1
-            gen = self._generation
             self._current_url = url
             self._paused = False
             self._position = 0.0
@@ -411,28 +416,26 @@ class PlayerService:
             self._audio_bitrate = None
             self._stderr_tail.clear()
         self._notify()
-        self._send(
-            {
-                "command": [
-                    "set_property",
-                    "ytdl-raw-options",
-                    ytdl_raw_options(
-                        music_client=music_client,
-                        cookies_file=self.cookies_file,
-                        cookies_from_browser=self.cookies_from_browser,
-                    ),
-                ]
-            }
-        )
+        if url.startswith("http://") or url.startswith("https://"):
+            self._send(
+                {
+                    "command": [
+                        "set_property",
+                        "ytdl-raw-options",
+                        ytdl_raw_options(
+                            music_client=music_client,
+                            cookies_file=self.cookies_file,
+                            cookies_from_browser=self.cookies_from_browser,
+                        ),
+                    ]
+                }
+            )
         # loadfile replace already aborts the previous item. An extra stop can
         # race and cancel the new ytdl load (song appears to never start)
+        # actually that was not the problem (?) still dont really know
         self._send({"command": ["loadfile", url, "replace"]})
         self._send({"command": ["set_property", "pause", False]})
         self._send({"command": ["set_property", "volume", self.volume]})
-        return gen
-
-    def is_generation_current(self, generation: int) -> bool:
-        return generation == self._generation
 
     def toggle_pause(self) -> None:
         # toggle pause only — never reload the file
@@ -462,7 +465,6 @@ class PlayerService:
 
     def stop(self) -> None:
         with self._lock:
-            self._generation += 1
             self._current_url = None
             self._paused = True
             self._position = 0.0

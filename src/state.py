@@ -12,9 +12,10 @@ from models.track import Track
 from services.config import ConfigService
 from services.discord_rpc import DiscordPresence
 from services.download import (
+    DOWNLOAD_DIR,
     DownloadJobQueue,
     DownloadService,
-    default_download_dir,
+    existing_download,
 )
 from services.library_jobs import LibraryJobQueue
 from services.music import LibraryTarget, MusicService
@@ -68,8 +69,7 @@ class AppState:
         self.discord = DiscordPresence(enabled=cfg.discord_rpc)
         self.library_jobs = LibraryJobQueue(self.music)
         self.downloads = DownloadJobQueue(
-            DownloadService(
-                default_download_dir(),
+            DownloadService( # default download dir
                 cookies=lambda: self.player.cookies_file,
                 cookies_from_browser=lambda: self.player.cookies_from_browser,
             )
@@ -185,15 +185,20 @@ class AppState:
         self.status_message = "Playback finished"
         self._emit()
 
+    def _playback_source(self, track: Track) -> str:
+        # prioritize local audio file, else YouTube URL
+        local = existing_download(DOWNLOAD_DIR, track.video_id)
+        if local is not None:
+            return str(local)
+        return track.watch_url
+
     def _start_current(self) -> None:
         track = self.queue.current
         if track is None:
             return
         self.queue_finished = False
         try:
-            self.player.play(
-                track.watch_url, music_client=not track.is_video
-            )
+            self.player.play(self._playback_source(track), music_client=not track.is_video)
         except Exception as exc:  # noqa: BLE001
             self.status_message = f"Playback failed: {exc}"
             self._emit()
@@ -270,7 +275,7 @@ class AppState:
             return
         try:
             self.player.play(
-                track.watch_url,
+                self._playback_source(track),
                 start=max(0.0, position),
                 music_client=not track.is_video,
             )

@@ -64,6 +64,15 @@ def test_play_keeps_cookies_for_music_client() -> None:
     assert opts["cookies"] == "/tmp/c.txt"
 
 
+def test_play_local_file_skips_ytdl_options() -> None:
+    transport = FakeMpvTransport()
+    player = PlayerService(cookies_file="/tmp/c.txt")
+    player._transport = transport
+    player.play("/home/rjwu/Music/yt-collate/aaaaaaaaaaa.opus")
+    assert not any(c[:2] == ["set_property", "ytdl-raw-options"] for c in transport.commands)
+    assert transport.commands[0][:2] == ["loadfile", "/home/rjwu/Music/yt-collate/aaaaaaaaaaa.opus"]
+
+
 def test_toggle_pause_does_not_reload() -> None:
     transport = FakeMpvTransport()
     player = PlayerService(volume=50)
@@ -95,18 +104,6 @@ def test_resume_does_not_loadfile() -> None:
     player.resume()
     assert transport.loadfile_count() == 1
     assert any(c[:2] == ["set_property", "pause"] for c in transport.commands)
-
-
-def test_play_increments_generation() -> None:
-    transport = FakeMpvTransport()
-    player = PlayerService()
-    player._transport = transport
-
-    g1 = player.play("https://www.youtube.com/watch?v=1")
-    g2 = player.play("https://www.youtube.com/watch?v=2")
-    assert g2 == g1 + 1
-    assert player.is_generation_current(g2)
-    assert not player.is_generation_current(g1)
 
 
 def test_stop_clears_current() -> None:

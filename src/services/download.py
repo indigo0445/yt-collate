@@ -15,8 +15,7 @@ from models.track import Track
 
 _YTDL_MUSIC_CLIENT = "youtube:player_client=web_music"
 
-DOWNLOAD_SUBDIR = Path("Music") / "yt-collate"
-LEGACY_DOWNLOAD_SUBDIR = Path("Music") / "ymlite"
+DOWNLOAD_DIR = Path.home() / "Music" / "yt-collate"
 _SAFE_ID = re.compile(r"[A-Za-z0-9_-]+")
 _SKIP_SUFFIXES = {".part", ".ytdl", ".temp", ".tmp"}
 _AUDIO_SUFFIXES = {".mp3", ".opus", ".ogg", ".m4a", ".aac", ".flac", ".wav"}
@@ -27,18 +26,6 @@ DownloadStatus = Literal["ok", "skipped", "error"]
 RunFn = Callable[..., subprocess.CompletedProcess[str]]
 CookiesFn = Callable[[], str | None]
 BrowserFn = Callable[[], str | None]
-
-
-def default_download_dir() -> Path:
-    dest = Path.home() / DOWNLOAD_SUBDIR
-    legacy = Path.home() / LEGACY_DOWNLOAD_SUBDIR
-    if not dest.exists() and legacy.is_dir():
-        try:
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            legacy.rename(dest)
-        except OSError:
-            return legacy
-    return dest
 
 
 def safe_video_id(video_id: str) -> str | None:
@@ -100,7 +87,7 @@ class DownloadService:
         cookies_from_browser: BrowserFn | None = None,
         run: RunFn | None = None,
     ) -> None:
-        self.dest = dest or default_download_dir()
+        self.dest = dest or DOWNLOAD_DIR
         self._cookies = cookies or (lambda: None)
         self._cookies_from_browser = cookies_from_browser or (lambda: None)
         self._run = run or subprocess.run
