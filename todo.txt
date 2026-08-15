@@ -3,11 +3,13 @@ priority:
 play inconsistencies still?
     - fixed by using ytdlp nightly visionos, changing ytdl vid client to visionos for non-song vidoes
     -what it still failed, e.g. molly love again ???
-actually USE downloaded tracks if seen. e.g. playing track, and no need for 'fetching' anymore
 x/p or d/p, y/p.
 analyze how cookie file is actually used / what we actually need
 
 
+downloads:
+verify that if add new song in fully downloaded list, new download is fast
+locals should work when offline.
 
 
 

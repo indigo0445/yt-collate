@@ -110,7 +110,7 @@ class PlayerService:
     volume: int = 100
     cookies_file: str | None = None
     cookies_from_browser: str | None = None
-    _process: subprocess.Popen[bytes] | None = field(default=None, init=False, repr=False)
+    _process: subprocess.Popen[str] | None = field(default=None, init=False, repr=False)
     _socket_path: str | None = field(default=None, init=False, repr=False)
     _sock: socket.socket | None = field(default=None, init=False, repr=False)
     _request_id: int = field(default=0, init=False, repr=False)
@@ -198,7 +198,7 @@ class PlayerService:
             cookies_from_browser=self.cookies_from_browser,
         )
 
-        self._process = subprocess.Popen(
+        self._process = subprocess.Popen[str](
             args,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,

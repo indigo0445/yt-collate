@@ -13,6 +13,7 @@ from typing import Literal
 
 from models.track import Track
 
+# works for both yt catalog songs and regular videos
 _YTDL_MUSIC_CLIENT = "youtube:player_client=web_music"
 
 DOWNLOAD_DIR = Path.home() / "Music" / "yt-collate"
@@ -143,7 +144,7 @@ class DownloadService:
             out,
         ]
         if not track.is_video:
-            cmd.extend(["--extractor-args", _YTDL_MUSIC_CLIENT])
+            cmd.extend(["--extractor-args", f"{_YTDL_MUSIC_CLIENT};formats=missing_pot"])
             cookies = self._cookies()
             browser = self._cookies_from_browser()
             if cookies:
