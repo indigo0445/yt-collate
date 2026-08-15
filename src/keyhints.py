@@ -1,25 +1,17 @@
-"""on-screen key hints. Keep in sync with App.BINDINGS and NavListView.BINDINGS"""
+"""on-screen key hints. Should match App.BINDINGS and NavListView.BINDINGS"""
 
-QUEUE = "i play next · a queue"
-NAV_BACK = "h Main Selection · Esc/q back"
+CATALOG = "" # removed; kept here if needed later
+LIBRARY = " · ".join(["m mark", "+ add", "o new", "x delete"])
+SEARCH = ""
+DISCOVERY = ""
+LOCAL = ""
+SETTINGS = "Enter to edit paths or toggle flags"
 
-CATALOG = f"Enter open/play · {QUEUE} · d download · {NAV_BACK}"
-LIBRARY = (
-    f"Enter open/play · {QUEUE} · d download · m mark · + add · o new · x delete · "
-    f"{NAV_BACK}"
-)
-LOCAL = f"Enter open/play · {QUEUE} · {NAV_BACK}"
-SEARCH = (
-    "j/k move · k/#1 → query · Esc/q/↓ query → #1 · Enter play · i/a queue · "
-    "d download · \\ query"
-)
-DISCOVERY = f"Enter play · {QUEUE} · d download · {NAV_BACK}"
-SETTINGS = "h Main Selection · Enter edits auth path or toggles · Esc/q cancel · ↓ next"
-
-STATUS_KEYS = (
-    "hjkl/arrows move · -/= vol · 0-9 jump · / filter · \\ search · "
-    "m mark · + add · o new · w dl · x del · Enter play · i/a queue · "
-    "Space pause · n/b next/prev · s/r shuffle/repeat · Esc/q back · Ctrl+Q quit"
+STATUS_KEYS = " · ".join(
+    ["hjkl/arrows move", "Enter open/play", "Esc/q back", "/ filter", 
+    "\\ search", "a queue", "d download", "Ctrl+Q quit"]
 )
 
-PLAYBACK_CHROME = "▶/⏸ [Space]  |◀ [B]  ▶| [N]  ⇄ [S]  ↺ [R]  [-/=]"
+PLAYBACK_CHROME = " · ".join(
+    ["Space play/pause", "n next", "b prev", "0-9 jump", "s shuffle", "r repeat", "-/= vol"]
+)

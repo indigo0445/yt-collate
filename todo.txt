@@ -5,6 +5,8 @@ play inconsistencies still?
     -what it still failed, e.g. molly love again ???
 x/p or d/p, y/p.
 analyze how cookie file is actually used / what we actually need
+playback_chrome/status not showing?
+update/refactor help screen
 
 
 
