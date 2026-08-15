@@ -7,7 +7,6 @@ from screens.library import LibraryScreen
 from screens.local import LocalScreen
 from screens.search import SearchScreen
 from screens.settings import SettingsScreen
-from screens.stub import StubScreen
 
 __all__ = [
     "DiscoveryScreen",
@@ -19,5 +18,4 @@ __all__ = [
     "LocalScreen",
     "SearchScreen",
     "SettingsScreen",
-    "StubScreen",
 ]

@@ -425,24 +425,16 @@ class Sidebar(Static):
         ("explore", "🧭 Explore"),
         ("search", "🔍 Search"),
         ("trending", "🔥 Trending"),
-        ("radio", "📻 Radio Streams"),
-        ("live", "📡 Live Streams"),
-        ("mood", "🎭 Mood Radio"),
         ("history", "🕒 Queue & History"),
         ("random", "🎲 Play Random Song"),
         ("local", "📂 Local"),
         ("settings", "⚙️ Settings"),
         ("help", "❓ Help"),
     ]
-    # hidden from Main Selection; LINKS + navigate handlers stay for later
-    _HIDDEN = frozenset({"radio", "live", "mood"})
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self._fetching_key: str | None = None
-
-    def _visible_links(self) -> list[tuple[str, str]]:
-        return [(key, label) for key, label in self.LINKS if key not in self._HIDDEN]
 
     def compose(self) -> ComposeResult:
         yield PanelHeader("Main Selection")
@@ -484,7 +476,7 @@ class Sidebar(Static):
     def _refresh_labels(self, highlighted: int | None = None) -> None:
         lv = self.query_one("#sidebar-list", NavListView)
         current = highlighted if highlighted is not None else (lv.index or 0)
-        links = self._visible_links()
+        links = self.LINKS
         lv.set_rows([NavOption(label, id=f"nav-{key}") for key, label in links])
         if links:
             lv.index = max(0, min(current, len(links) - 1))

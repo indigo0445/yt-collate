@@ -21,7 +21,6 @@ from screens import (
     HistoryScreen,
     SearchScreen,
     SettingsScreen,
-    StubScreen,
 )
 from screens.catalog import CatalogScreen
 from screens.explore import ExploreScreen
@@ -403,9 +402,6 @@ class YtCollateApp(App[None]):
             "history": "queue-list",
             "settings": "settings-nav",
             "help": "help-body",
-            "radio": None,
-            "live": None,
-            "mood": None,
         }
         if self.view_name == "home":
             try:
@@ -520,18 +516,6 @@ class YtCollateApp(App[None]):
             await self.show_view(HelpScreen(), "help")
         elif key == "random":
             self.run_worker(self._play_random_worker, thread=True)
-        elif key == "radio":
-            await self.show_view(
-                StubScreen("📻 Radio Streams", "Internet radio catalog coming soon."),
-                "radio",
-            )
-        elif key == "live":
-            await self.show_view(
-                StubScreen("📡 Live Streams", "Live stream catalog coming soon."),
-                "live",
-            )
-        elif key == "mood":
-            await self.show_view(StubScreen("🎭 Mood Radio", "Mood radio coming soon."), "mood")
 
     def _play_random_worker(self) -> None:
         error: str | None = None
