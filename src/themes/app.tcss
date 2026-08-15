@@ -210,14 +210,8 @@ Input#auth-path {
     background: transparent;
 }
 
-#status-keys {
+#playback-keys {
     color: $ytc-muted;
-    height: 1;
-    background: transparent;
-}
-
-#status-line {
-    color: $ytc-secondary;
     height: 1;
     background: transparent;
 }

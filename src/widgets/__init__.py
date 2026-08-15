@@ -15,7 +15,7 @@ from textual.strip import Strip
 from textual.widgets import Input, Label, OptionList, Static
 from textual.widgets.option_list import Option
 
-from keyhints import PLAYBACK_CHROME, STATUS_KEYS
+from keyhints import PLAYBACK_KEYS
 from models.track import Track
 from utils import clip_list_label, format_bitrate, format_time, progress_bar, truncate
 
@@ -593,8 +593,7 @@ class StatusBar(Static):
                 yield Label("Vol 100%", id="np-vol")
                 yield Label("0:00 / 0:00", id="np-time")
             yield Label("─" * 40, id="np-bar")
-            yield Label(STATUS_KEYS, id="status-keys")
-            yield Label("", id="status-line")
+            yield Label("", id="playback-keys")
 
     def update_display(
         self,
@@ -627,5 +626,6 @@ class StatusBar(Static):
         self.query_one("#np-vol", Label).update(f"Vol {volume}%")
         bar_width = max(10, width)
         self.query_one("#np-bar", Label).update(progress_bar(position, duration, bar_width))
-        extra = f"{status}  " if status else ""
-        self.query_one("#status-line", Label).update(f"{extra}{PLAYBACK_CHROME}")
+        # I don't really think 'status' it's necessary, except for errors; unused for now
+        extra = f"  {status}" if status else ""
+        self.query_one("#playback-keys", Label).update(f"{PLAYBACK_KEYS}")
