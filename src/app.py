@@ -595,9 +595,6 @@ class YtCollateApp(App[None]):
                 severity="warning",
             )
             return
-        focused = self.focused
-        if isinstance(focused, NavListView):
-            focused.try_cursor_down()
         self.state.library_jobs.add_song(
             track,
             target,

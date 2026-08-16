@@ -2,10 +2,9 @@ priority:
 
 play inconsistencies still?
     - fixed by using ytdlp nightly visionos, changing ytdl vid client to visionos for non-song vidoes
-    -what it still failed, e.g. molly love again ???
-x/p or d/p, y/p.
+    - could still fail, e.g. 2/280 in my playlist failed to fetch/download
+x/p, y/p.
 analyze how cookie file is actually used / what we actually need
-playback_chrome/status not showing?
 update/refactor help screen
 
 
@@ -17,15 +16,12 @@ oauth credentials are broken rn, use browser auth. switch to oauth when fixed
 discord rich presence
 queue reordering
 queue unshuffle (unlikely / doesn't even make sense)
-when escaping search or whatever, the resulting scroll/position of focused: if before the / we were focused on row 200 and the search result we focused on was row 100, and we escape, it should appears as if we simply spammed k to get to focus on row 100. so just make scrolling consistent to if we had manually navigated there 
 custom window layouts, to make better use of hjkl idea
 dont autoplay on app open, wait for space (?)
 volume standardizer?
 remove toasts, and have a dedicated status/pending message location (left of Vol?)
-find places where my simple request actually takes much implementation to do - might reduce
 lyrics
 color themes (simple file)
-better key label tips, e.g. m/o/+, etc should only be on Library
 track listing truncation broken not keeping on 1 line for special e.g. cjk chars
-simplify keyhints.py
 add little visual indicating a song is downloaded? (e.g. a '↓' symbol at end of line)
+v/V vim highlight commands to select lines in a row/block, x,d on that etc
