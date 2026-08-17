@@ -20,7 +20,6 @@ from services.library_jobs import LibraryJobQueue
 from services.music import LibraryTarget, MusicService
 from services.player import PlayerService, PlayerSnapshot
 from services.queue import QueueService
-from services.random_song import pick_random_song
 from services.stream import cookies_and_user_agent
 from utils import display_user_path
 
@@ -382,19 +381,6 @@ class AppState:
     def replace_register(self, tracks: Track | list[Track]) -> None:
         items = [tracks] if isinstance(tracks, Track) else list(tracks)
         self.register = items
-
-    def play_random(self) -> None:
-        try:
-            track = pick_random_song(self.music)
-        except Exception as exc:  # noqa: BLE001
-            self.status_message = f"Search failed: {exc}"
-            self._emit()
-            return
-        if track is None:
-            self.status_message = "No random tracks found"
-            self._emit()
-            return
-        self.play_track(track)
 
     def set_auth_headers(self, path: str | None) -> tuple[bool, str]:
         # load auth from path, or disconnect when empty/missing/invalid
