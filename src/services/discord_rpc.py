@@ -33,42 +33,52 @@ class DiscordPresence:
         self.client_id = client_id
         self.enabled = enabled
         self._rpc: Presence | None = None
-        self._connected = False
-        self._queue: queue.Queue[tuple[Any, ...]] = queue.Queue()
+        self._connected = False # can't fully maintain this flag, e.g. discord is connected then closed
+        self.prev_update: tuple[Track | None, PlayerSnapshot | None] = (None, None)
+        self._queue: queue.Queue[_Job] = queue.Queue()
         self._thread = threading.Thread(
             target=self._run, name="discord-rpc", daemon=True
         )
         self._thread.start()
+        self._reconnect_thread = threading.Thread(
+            target=self._reconnect_loop, name="reconnect", daemon=True
+        )
+        self._reconnect_thread.start()
 
     def connect(self) -> None:
         if not self.enabled:
             return
-        self._queue.put((_Job.CONNECT,))
+        self._queue.put(_Job.CONNECT)
 
     def update(self, track: Track | None, snap: PlayerSnapshot) -> None:
         if not self.enabled:
             return
-        self._queue.put((_Job.UPDATE, track, snap))
+        self.prev_update = (track, snap)
+        self._queue.put(_Job.UPDATE)
+
+    def update_with_prev(self) -> None:
+        if not self.enabled:
+            return
+        self._queue.put(_Job.UPDATE)
 
     def clear(self) -> None:
-        self._queue.put((_Job.UPDATE, None, None))
+        self._queue.put(_Job.UPDATE)
 
     def close(self, *, join: bool = False) -> None:
-        self._queue.put((_Job.DISCONNECT,))
+        self._queue.put(_Job.DISCONNECT)
         if join:
-            self._queue.put((_Job.STOP,))
+            self._queue.put(_Job.STOP)
             self._thread.join(timeout=2.0)
 
     def _run(self) -> None:
         while True:
             job = self._queue.get()
-            kind = job[0]
             try:
-                match kind:
+                match job:
                     case _Job.CONNECT:
                         self._connect()
                     case _Job.UPDATE:
-                        self._update(job[1], job[2])
+                        self._update()
                     case _Job.DISCONNECT:
                         self._disconnect()
                     case _Job.STOP:
@@ -78,9 +88,8 @@ class DiscordPresence:
                 log.debug("Discord RPC worker failed: %s", exc)
 
     def _connect(self) -> None:
-        if not self.enabled:
+        if not self.enabled or self._connected:
             return
-        self._disconnect()
         try:
             self._rpc = Presence(self.client_id)
             self._rpc.connect()
@@ -90,9 +99,10 @@ class DiscordPresence:
             self._connected = False
             self._rpc = None
 
-    def _update(self, track: Track | None, snap: PlayerSnapshot | None) -> None:
+    def _update(self) -> None:
         if not self.enabled or not self._connected or self._rpc is None:
             return
+        track, snap = self.prev_update
         if track is None or snap is None or snap.paused:
             self._clear()
             return
@@ -116,6 +126,8 @@ class DiscordPresence:
             )
         except Exception as exc:  # noqa: BLE001
             log.debug("Discord RPC update failed: %s", exc)
+            self._connected = False
+            self._rpc = None
 
     def _clear(self) -> None:
         if not self._connected or self._rpc is None:
@@ -123,7 +135,8 @@ class DiscordPresence:
         try:
             self._rpc.clear()
         except Exception:  # noqa: BLE001
-            pass
+            self._connected = False
+            self._rpc = None
 
     def _disconnect(self) -> None:
         self._clear()
@@ -134,3 +147,13 @@ class DiscordPresence:
                 pass
         self._connected = False
         self._rpc = None
+
+    def _reconnect_loop(self) -> None:
+        while True:
+            time.sleep(10)
+            # due to _connected being unmaintainable, if _connected is True but Discord is
+            # actually closed, this won't attempt reconnect until update() or related recognizes
+            # that the connection is lost and correctly sets _connected to False
+            if not self._connected:
+                self.connect()
+                self.update_with_prev()
