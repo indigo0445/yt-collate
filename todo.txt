@@ -1,8 +1,6 @@
 priority:
 
-update/refactor help screen
-write README.md (provide image/video, link inspiration repos, rewrite keybinds, etc)
-pyprescence.pyprecense?
+write README.md (provide image/video, 
 
 
 
@@ -15,7 +13,6 @@ queue unshuffle
 custom window layouts?
 dont autoplay on app open, wait for space (?)
 volume standardizer?
-remove toasts, and have a dedicated status/pending message location (left of Vol?)
 lyrics
 color themes (simple file)
 refactor playlistsummary to just playlist?

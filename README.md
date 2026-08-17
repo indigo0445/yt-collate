@@ -4,14 +4,14 @@ A Terminal User Interface (TUI) music player for YouTube Music.
 
 Originally planned to only focus on gathering/arranging tracks in playlists, Collate has become a full-fledged music client rivaling the ease-of-use of GUI clients while requiring only a fraction of their resources usage.
 
-Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a mix of Vim binds and general binds. Collate is inspired by youtube-music-cli and yazi; check them out!
+Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a mix of Vim binds and general binds for efficient keyboard-only navigation. Collate is inspired by [youtube-music-cli](https://github.com/involvex/youtube-music-cli) and [yazi](https://github.com/sxyazi/yazi); check them out!
 
 ## Prerequisites
 
 - Python 3.12+
 - [mpv](https://mpv.io/)
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp) (nightly; yt-dlp --update-to nightly)
-- [Deno](https://deno.com/) or [node](https://nodejs.org/) or [QuickJS](https://bellard.org/quickjs/) (A JS runtime is needed for yt-dlp to [reliably download](https://github.com/yt-dlp/yt-dlp/wiki/ejs))
+- [yt-dlp (nightly build)](https://github.com/yt-dlp/yt-dlp-nightly-builds) (Certain non-music videos will not play on yt-dlp stable. Can run `yt-dlp --update-to nightly`)
+- [Deno](https://deno.com/) or [Node](https://nodejs.org/) or [QuickJS](https://bellard.org/quickjs/) (A JS runtime is needed for yt-dlp to [reliably fetch](https://github.com/yt-dlp/yt-dlp/wiki/ejs))
 
 ## Install
 
@@ -28,9 +28,9 @@ Short alias: `uv run ytc`.
 - Extremeley fast, lightweight, and responsive
 - Authentication to access your Library and personalized recommendations
 - Includes YouTube Music Home, Explore, Search, and Trending pages
-- Download songs/playlists to local / Automatic audio retrieval from local
 - Smooth playback experience, with a simple dynamic queue
-- Vast set of intuitive keybinds (e.g. `n` for next track, `s` to shuffle, etc.)
+- Download songs/playlists to local / Automatic audio retrieval from local
+- Vast set of intuitive keybinds (e.g. `n` for next track, `d` to download, etc.)
 - Easy management of Library (e.g. `o` to create playlist, `x` to delete song/playlist, etc.)
 - "Marking" playlists to easily add to collection from anywhere
 - YouTube Music subscribers benefit from enhanced audio bitrate (both streams and downloads)
@@ -44,15 +44,15 @@ Short alias: `uv run ytc`.
 - Local filter `/` can jump to line numbers, allowing fast gotos
 - Search screen accepts YouTube URLs, useful if you prefer exploring YouTube on a browser (me)
 - Option to hide "Episodes for Later" in Library, I'm sure many find this annoying (me)
-- Global queue; queue is never tied to a specific playlist; `i/a` adds to 
+- No concept of "unshuffle", `s` reshuffles everytime; I have no use "unshuffling" my queue
 
 ## Usage
 
-Collate uses browser headers to authenticate since OAuth2 currently fails (link sigma67 thing). Follow the steps https://ytmusicapi.readthedocs.io/en/stable/setup/browser.html to create your auth headers file (any POST request should work); do it from a private/incognito window or your cookie might only last a few hours. Supply this file in Settings.
+Collate uses browser headers to authenticate since OAuth2 [currently fails](https://github.com/sigma67/ytmusicapi/issues/813). Follow the steps [here](https://ytmusicapi.readthedocs.io/en/stable/setup/browser.html) to create your auth headers file (any POST request should work); do it from a private/incognito window so your cookie might last a few years. Supply this file in Settings.
 
-Navigating with keys should be intuitive (hjkl supported); mouse is supported as well. 
+Collage is designed for efficient keyboard navigation, but mouse is supported as well. 
 
-Press `?` to view list of all keybinds.
+Press `?` in-app to view list of all keybinds.
 
 ## Config
 

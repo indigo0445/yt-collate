@@ -43,7 +43,7 @@ EofHandler = Callable[[], None]
 # fetches as HTTP 403. Commas are avoided because mpv splits
 # --ytdl-raw-options on commas
 _YTDL_MUSIC_CLIENT = "youtube:player_client=web_music" # official yt catalog songs
-_YTDL_VIDEO_CLIENT = "youtube:player_client=visionos" # if web_music as well, fails ~50% of the time
+_YTDL_VIDEO_CLIENT = "youtube:player_client=visionos" # maybe web_music works for both
 
 
 def detect_ytdlp_js_runtime() -> str | None:
