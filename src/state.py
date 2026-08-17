@@ -28,7 +28,7 @@ from utils import display_user_path
 Listener = Callable[[], None]
 
 RANDOM_QUERIES = [
-    "top hits 2024",
+    "top hits",
     "popular songs",
     "trending music",
     "chill vibes",
@@ -38,6 +38,10 @@ RANDOM_QUERIES = [
     "electronic dance",
     "acoustic favorites",
     "feel good music",
+    "psytrance ambience",
+    "breakcore dreamcore"
+    "intense tech songs",
+    # extend at will
 ]
 
 

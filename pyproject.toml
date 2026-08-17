@@ -16,7 +16,6 @@ dependencies = [
 ]
 
 [project.scripts]
-ytc = "cli:main"
 yt-collate = "cli:main"
 
 [build-system]

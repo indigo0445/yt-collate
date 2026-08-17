@@ -24,22 +24,26 @@ Short alias: `uv run ytc`.
 ## Features
 
 - Clean, minimalistic, fullscreen TUI client for YouTube Music
+- Extremeley fast, lightweight, and responsive
 - Authentication to access your Library and personalized recommendations
 - Includes YouTube Music Home, Explore, Search, and Trending pages
-- Download to local / Play from local
+- Download songs/playlists to local / Automatic audio retrieval from local
 - Smooth playback experience, with a simple dynamic queue
-- Vast set of intuitive keybinds (e.g. `/` for local filter, `0-9` to jump around track, etc.)
-- Easy management of Library (e.g. o to create playlist, x/p to cut/paste tracks, etc.)
+- Vast set of intuitive keybinds (e.g. `n` for next track, `s` to shuffle, etc.)
+- Easy management of Library (e.g. `o` to create playlist, `x` to delete song/playlist, etc.)
 - "Marking" playlists to easily add to collection from anywhere
 - YouTube Music subscribers benefit from enhanced audio bitrate (both streams and downloads)
 - Discord Rich Presence integration
-- Extremeley lightweight; consistently under 100MB RAM
 
-## cool stuff
+## Distinct Touches
 
-- / for line #
-- bitrate
-- 0-9
+- Has Vim's "unnamed register" for `x` (cut), `y` (yank), and `p` (put/paste) for songs
+- `0-9` keys jump around current track, imitating YouTube's playback keybinds
+- Audio bitrate indicator, originally added to verify enhanced premium bitrate
+- Local filter `/` can jump to line numbers, allowing fast gotos
+- Search screen accepts YouTube URLs, useful if you prefer exploring YouTube on a browser (me)
+- Option to hide "Episodes for Later" in Library, I'm sure many find this annoying (me)
+- Global queue; queue is never tied to a specific playlist; `i/a` adds to 
 
 ## Usage
 
@@ -55,7 +59,7 @@ Data lives under `~/.config/yt-collate/` (override with `YT_COLLATE_CONFIG`). Do
 
 ## Development
 
-Contributions are welcome! 
+Contributions are welcome! As a start, consider adding your favorite genre to `RANDOM_QUERIES` in `state.py`.
 
 ```bash
 uv sync --group dev

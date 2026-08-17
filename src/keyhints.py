@@ -1,9 +1,9 @@
 """on-screen key hints. Should match App.BINDINGS and NavListView.BINDINGS"""
 
-CATALOG = "" # removed; kept here if needed later
-LIBRARY = " · ".join(["m mark", "+ add", "o new", "x delete"])
-SEARCH = ""
-DISCOVERY = ""
+CATALOG = " · ".join(["y yank", "+ add"])
+LIBRARY = " · ".join(["o new", "x delete", "y yank", "p paste", "m mark", "+ add"])
+SEARCH = " · ".join(["y yank", "+ add"])
+DISCOVERY = " · ".join(["y yank", "+ add"])
 LOCAL = ""
 SETTINGS = "Enter to edit paths or toggle flags"
 

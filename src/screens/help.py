@@ -11,54 +11,42 @@ from screens.base import ContentView
 from widgets import PanelEdge
 
 HELP_MD = """
-# yt-collate help
 
-## Navigation
-- **h / l** / **← / →** — Move between side-by-side panels (Main Selection, content, and Queue | Recently Played)
-- **j / k** / **↓ / ↑** — Move within the focused list (stay at the first/last row)
-- **g / G** — First / last row
-- Start page is **Home** (YouTube Music shelves: songs, albums, playlists, artists)
-- **My Library** — playlists, then Saved Songs, Liked Songs, and Episodes for Later (visibility is in Settings)
-- **Local** — downloaded playlists from `~/Music/yt-collate` (offline; same drill-in as My Library)
-- **Explore** — new albums, new videos, trending, top songs, moods & genres
-- **Enter** — Select / play
-- **/** — Filter the focused list (Esc clears; **↓** keeps it and focuses the list)
-- **Search** — `🔍 Search \\"query"` (artists, songs, videos). Watch URL → one result.
-  **k** / **↑** on #1 returns to the query.
-  **Esc** / **q** / **↓** from the query restores it and focuses #1
-- **\\** — Jump to Search and focus/select the quoted query (from anywhere)
-- **z** — Center the highlighted row in the list (vim zz)
-- **Esc** / **q** — Close filter, leave a folder, or focus that page’s row in Main Selection.
-  **q** types in text fields except the Search query after results.
-  **↓** leaves Search query, `/` filter, and Settings auth
+## General
+- **hjkl / arrows** — Directional navigation
+- **Enter** — Open, select, or play. When on a song, overrides queue with every song under currently focused.
+- **Esc** / **q** — Back
+- **/** — Filter the focused list (can also jump to a line number)
+- **g / G** — Top / bottom row in any list
+- **z** — Center the highlighted row (Vim zz)
+- **&#92;** — Jump to Search screen from anywhere
+- **H** — Queue & History
+- **,** — Settings
+- **?** — This help
 - **Ctrl+Q** — Quit
-- **Ctrl+C** — Quit (with confirmation)
 
 ## Playback
 - **Space** — Play / pause
-- **n** — Next · **b** — Previous
+- **n** — Next track
+- **b** — Previous track
 - **0–9** — Jump to 0%, 10%, … 90% of the current track (same as YouTube)
-- **- / =** — Volume down / up (in-app, 0–100; saved in config)
-- **s** — Shuffle the remaining queue (keeps the current track first)
+- **- / =** — Volume down / up (separate from system volume)
+- **s** — Shuffle the remaining queue
 - **r** — Cycle repeat
-- **i** — Insert as play-next (song, or album/playlist/artist from Home/Explore/Search, or playlist from My Library)
-- **a** — Append to the end of the queue (song, or album/playlist/artist from Home/Explore/Search, or playlist from My Library)
-- **w** — Download audio to `~/Music/yt-collate/Songs/` (filename is the video id).
-  A playlist/album/artist/Liked/Saved row also writes `~/Music/yt-collate/{name}.json`
-  (emoji + tracks) so **Local** can open it like a library playlist
+- **a** — Append to queue (song, playlist, etc.)
+- **i** — Insert as play-next (song, playlist, etc.)
+- **d** — Download to `~/Music/yt-collate/` (song, playlist, etc.)
 
 ## Library
-- **m** — Mark a playlist, Saved Songs, or Liked Songs (My Library index). Marked row uses `*` instead of `.` (`12* `) and ends with `— marked`
+- **y** — Yank the focused song into register
+- **x** — Delete song/playlist from Library; if song, also yanks into register. If not in Library, deletes song from marked collection
+- **p** — Paste register into currently focused/opened playlist in Library
+- **m** — Mark a playlist, Saved Songs, or Liked Songs in Library
 - **+** — Add the focused song to the marked collection
-- **o** — New playlist (My Library index): dimmed row at the bottom of the list; type a name and Enter. Private, empty description. Esc cancels
-- **d** / **x** — Delete the focused song from the open My Library folder, or from the marked collection (Enter confirms when Settings: Always confirm to delete). On the My Library index, delete a normal playlist (always confirms; not Liked/Saved/Episodes)
-- **Shift+H** — Queue & History
-- **,** — Settings
-- **?** — This help
+- **o** — New private playlist in Library; type name and Enter
 
-Auth: `uv run ytmusicapi browser --file ~/.config/yt-collate/browser.json`
-then Settings → paste path → **Enter**. Empty Enter disconnects. Startup autoloads the saved path.
-Use **My Library** for playlists, Saved Songs (YouTube library, not likes), and Liked Songs.
+## Authentication
+See GitHub README: https://github.com/indigo0445/yt-collate
 """
 
 
