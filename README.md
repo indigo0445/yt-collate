@@ -59,7 +59,7 @@ Data lives under `~/.config/yt-collate/` (override with `YT_COLLATE_CONFIG`). Do
 
 ## Development
 
-Contributions are welcome! As a start, consider adding your favorite genre to `RANDOM_QUERIES` in `state.py`.
+Contributions are welcome! As a start, consider adding your favorite genre to `GENRES` in `src/services/random_song.py`.
 
 ```bash
 uv sync --group dev

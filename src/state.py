@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import random
 import threading
-import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -22,27 +20,11 @@ from services.library_jobs import LibraryJobQueue
 from services.music import LibraryTarget, MusicService
 from services.player import PlayerService, PlayerSnapshot
 from services.queue import QueueService
+from services.random_song import pick_random_song
 from services.stream import cookies_and_user_agent
 from utils import display_user_path
 
 Listener = Callable[[], None]
-
-RANDOM_QUERIES = [
-    "top hits",
-    "popular songs",
-    "trending music",
-    "chill vibes",
-    "rock classics",
-    "indie hits",
-    "hip hop bangers",
-    "electronic dance",
-    "acoustic favorites",
-    "feel good music",
-    "psytrance ambience",
-    "breakcore dreamcore"
-    "intense tech songs",
-    # extend at will
-]
 
 
 @dataclass
@@ -402,18 +384,17 @@ class AppState:
         self.register = items
 
     def play_random(self) -> None:
-        query = random.choice(RANDOM_QUERIES)
         try:
-            tracks = self.music.search_songs(query, limit=10)
+            track = pick_random_song(self.music)
         except Exception as exc:  # noqa: BLE001
             self.status_message = f"Search failed: {exc}"
             self._emit()
             return
-        if not tracks:
+        if track is None:
             self.status_message = "No random tracks found"
             self._emit()
             return
-        self.play_track(random.choice(tracks))
+        self.play_track(track)
 
     def set_auth_headers(self, path: str | None) -> tuple[bool, str]:
         # load auth from path, or disconnect when empty/missing/invalid

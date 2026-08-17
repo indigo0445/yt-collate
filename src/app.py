@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import random
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -34,9 +33,10 @@ from services.music import (
     LibraryTarget,
     PlaylistWriteResult,
     is_user_playlist,
-    library_target_for
+    library_target_for,
 )
-from state import RANDOM_QUERIES, AppState
+from services.random_song import pick_random_song
+from state import AppState
 from utils import display_duration, display_position
 from widgets import (
     FilterLeaveDown,
@@ -523,10 +523,7 @@ class YtCollateApp(App[None]):
         error: str | None = None
         track = None
         try:
-            query = random.choice(RANDOM_QUERIES)
-            tracks = self.state.music.search_songs(query, limit=10)
-            if tracks:
-                track = random.choice(tracks)
+            track = pick_random_song(self.state.music)
         except Exception as exc:  # noqa: BLE001
             error = str(exc)
 
