@@ -863,6 +863,8 @@ async def test_library_delete_keeps_focus_index(
         assert at == 1
         assert [t.video_id for t in tv.tracks] == ["a", "d"]
         assert tv.index == 0
+        assert screen.append_track(extra) is None
+        assert [t.video_id for t in tv.tracks] == ["a", "d"]
         screen.drop_appended(extra, at)
         assert [t.video_id for t in tv.tracks] == ["a"]
         assert tv.index == 0

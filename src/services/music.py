@@ -224,6 +224,36 @@ def _is_liked(status: str | None) -> bool:
     return status.upper().split(".")[-1] == "LIKE"
 
 
+def _apply_library_membership(
+    track: Track, target: LibraryTarget, *, present: bool
+) -> None:
+    # helper to keep Track fields in sync so the next add/remove doesn't use stale like/library
+    if target.kind == "liked":
+        track.like_status = "LIKE" if present else "INDIFFERENT"
+    elif target.kind == "saved":
+        track.in_library = present
+
+
+def _set_video_id_from_add(result: object, video_id: str) -> str | None:
+    # ytmusicapi add_playlist_items returns playlistEditResults with the new row id
+    if not isinstance(result, dict):
+        return None
+    rows = result.get("playlistEditResults") or []
+    fallback: str | None = None
+    for item in rows:
+        if not isinstance(item, dict):
+            continue
+        sid = item.get("setVideoId")
+        if not sid:
+            continue
+        sid = str(sid)
+        vid = item.get("videoId") or item.get("addedVideoId")
+        if vid is None or str(vid) == video_id:
+            return sid
+        fallback = sid
+    return fallback
+
+
 def _looks_like_duplicate(result: object) -> bool:
     text = str(result).casefold()
     return "duplicate" in text or "already exists" in text or "already in" in text
@@ -537,6 +567,19 @@ class MusicService:
                 tracks.append(track)
         return tracks
 
+    def _set_video_id_in_playlist(self, playlist_id: str, video_id: str) -> str | None:
+        # last matching row: a just-pasted copy is usually at the end
+        try:
+            tracks = self.get_playlist_tracks(playlist_id, limit=200)
+        except Exception:  # noqa: BLE001
+            return None
+        matches = [
+            t.set_video_id
+            for t in tracks
+            if t.video_id == video_id and t.set_video_id
+        ]
+        return matches[-1] if matches else None
+
     def get_playlist_summary(self, playlist_id: str) -> PlaylistSummary | None:
         data = self._client().get_playlist(playlist_id, limit=1)
         return PlaylistSummary(
@@ -772,6 +815,7 @@ class MusicService:
                         "error",
                     )
                 self._client().edit_song_library_status([state.add_token])
+                _apply_library_membership(track, target, present=True)
                 return AddResult(True, f"Saved: {track.title}")
             if target.kind == "liked":
                 from ytmusicapi.models.content.enums import LikeStatus
@@ -782,6 +826,7 @@ class MusicService:
                         False, f"Already in {target.title}: {track.title}", "duplicate"
                     )
                 self._client().rate_song(track.video_id, LikeStatus.LIKE)
+                _apply_library_membership(track, target, present=True)
                 return AddResult(True, f"Liked: {track.title}")
             return self._add_to_playlist(track, target)
         except Exception as exc:  # noqa: BLE001
@@ -796,6 +841,9 @@ class MusicService:
             target.playlist_id, videoIds=[track.video_id], duplicates=False
         )
         if _playlist_add_succeeded(result):
+            sid = _set_video_id_from_add(result, track.video_id)
+            if sid:
+                track.set_video_id = sid
             return AddResult(True, f"Added to {target.title}: {track.title}")
         if _looks_like_duplicate(result):
             return AddResult(
@@ -824,6 +872,7 @@ class MusicService:
                         "error",
                     )
                 self._client().edit_song_library_status([token])
+                _apply_library_membership(track, target, present=False)
                 return AddResult(True, f"Removed from {target.title}: {track.title}")
             if target.kind == "liked":
                 from ytmusicapi.models.content.enums import LikeStatus
@@ -834,8 +883,14 @@ class MusicService:
                         False, f"Not in {target.title}: {track.title}", "error"
                     )
                 self._client().rate_song(track.video_id, LikeStatus.INDIFFERENT)
+                _apply_library_membership(track, target, present=False)
                 return AddResult(True, f"Unliked: {track.title}")
-            if not track.set_video_id:
+            ident = track.set_video_id
+            if not ident:
+                ident = self._set_video_id_in_playlist(target.playlist_id, track.video_id)
+                if ident:
+                    track.set_video_id = ident
+            if not ident:
                 return AddResult(
                     False,
                     "Open this playlist in My Library to delete from it",
@@ -843,7 +898,7 @@ class MusicService:
                 )
             result = self._client().remove_playlist_items(
                 target.playlist_id,
-                [{"videoId": track.video_id, "setVideoId": track.set_video_id}],
+                [{"videoId": track.video_id, "setVideoId": ident}],
             )
             if _playlist_add_succeeded(result):
                 return AddResult(True, f"Deleted from {target.title}: {track.title}")

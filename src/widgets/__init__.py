@@ -510,6 +510,7 @@ class TrackList(NavListView):
         self.mark_playing = mark_playing
 
     def _line(self, index: int, track: Track) -> str:
+        # text to display for track in list
         numbered = f"{index + 1}. "
         if self.mark_playing and index == 0:
             prefix = "  >  "
@@ -519,21 +520,20 @@ class TrackList(NavListView):
             self, prefix, f"{track.title} — {track.artist_str}"
         )
 
+    def _option(self, index: int, track: Track) -> NavOption:
+        # NavOption for track in list
+        return NavOption(
+            self._line(index, track),
+            # / filter matches the visible number as well as title/artist
+            # in Vim, / does not match line number, but it makes sense for this app
+            search=f"{index + 1} {track.title} {track.artist_str}",
+        )
+
     def _refresh_lines(self) -> None:
         if not self.tracks:
             return
         keep = self.index
-        self.set_rows(
-            [
-                NavOption(
-                    self._line(i, track),
-                    # allows searching by track number, perhaps inconsistent with vim's line jumping
-                    # since / is not supposed to jump to line #s, oh well
-                    search=f"{i + 1} {track.title} {track.artist_str}",
-                )
-                for i, track in enumerate(self.tracks)
-            ]
-        )
+        self.set_rows([self._option(i, track) for i, track in enumerate(self.tracks)])
         if keep is not None:
             self.index = keep
 
@@ -551,15 +551,7 @@ class TrackList(NavListView):
                 self.index = min(max(0, highlight), len(self.tracks) - 1)
             return
         self.tracks = list(tracks)
-        self.set_rows(
-            [
-                NavOption(
-                    self._line(i, track),
-                    search=f"{track.title} {track.artist_str}",
-                )
-                for i, track in enumerate(self.tracks)
-            ]
-        )
+        self.set_rows([self._option(i, track) for i, track in enumerate(self.tracks)])
         if not self.tracks:
             return
         if highlight is not None:

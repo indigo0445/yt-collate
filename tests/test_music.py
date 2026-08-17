@@ -424,6 +424,73 @@ def test_add_song_to_target_routes() -> None:
     )
     assert added.ok and added.message == "Added to Real Mix: Song"
     assert client.playlists == [("PLreal", ["vid1"], False)]
+    assert song.like_status == "LIKE"
+    assert song.in_library is True
+
+
+def test_liked_saved_membership_updates_for_next_write() -> None:
+    from ytmusicapi.models.content.enums import LikeStatus
+
+    from models.track import Artist, Track
+    from services.music import (
+        LIKED_PLAYLIST_ID,
+        SAVED_SONGS_PLAYLIST_ID,
+        LibraryTarget,
+        MusicService,
+    )
+
+    class Fake:
+        def __init__(self) -> None:
+            self.liked: list[object] = []
+            self.saved: list[list[str]] = []
+
+        def rate_song(self, video_id: str, rating: object) -> dict:
+            self.liked.append(rating)
+            return {}
+
+        def edit_song_library_status(self, tokens: list[str]) -> dict:
+            self.saved.append(tokens)
+            return {}
+
+        def get_watch_playlist(self, videoId: str, limit: int = 5) -> dict:
+            raise AssertionError("should use Track fields after the first write")
+
+    music = MusicService()
+    music._authenticated = True
+    client = Fake()
+    music._yt = client
+    liked_target = LibraryTarget("liked", LIKED_PLAYLIST_ID, "Liked Songs")
+    saved_target = LibraryTarget("saved", SAVED_SONGS_PLAYLIST_ID, "Saved Songs")
+    song = Track(
+        video_id="vid1",
+        title="Song",
+        artists=[Artist(name="A")],
+        like_status="INDIFFERENT",
+        in_library=False,
+        library_add_token="tok_add",
+        library_remove_token="tok_rm",
+    )
+
+    assert music.add_song_to_target(song, liked_target).ok
+    assert song.like_status == "LIKE"
+    again = music.add_song_to_target(song, liked_target)
+    assert again.reason == "duplicate"
+    assert client.liked == [LikeStatus.LIKE]
+
+    assert music.remove_song_from_target(song, liked_target).ok
+    assert song.like_status == "INDIFFERENT"
+    assert music.add_song_to_target(song, liked_target).ok
+    assert client.liked == [LikeStatus.LIKE, LikeStatus.INDIFFERENT, LikeStatus.LIKE]
+
+    assert music.add_song_to_target(song, saved_target).ok
+    assert song.in_library is True
+    saved_again = music.add_song_to_target(song, saved_target)
+    assert saved_again.reason == "duplicate"
+    assert client.saved == [["tok_add"]]
+    assert music.remove_song_from_target(song, saved_target).ok
+    assert song.in_library is False
+    assert music.add_song_to_target(song, saved_target).ok
+    assert client.saved == [["tok_add"], ["tok_rm"], ["tok_add"]]
 
 
 def test_add_song_to_target_requires_auth() -> None:
@@ -461,6 +528,20 @@ def test_add_to_playlist_duplicate_and_other_error() -> None:
     assert dup.reason == "duplicate"
     assert "Already in Real Mix" in dup.message
 
+    class AddClient:
+        def add_playlist_items(self, playlist_id: str, videoIds=None, duplicates=False):
+            return {
+                "status": "STATUS_SUCCEEDED",
+                "playlistEditResults": [
+                    {"videoId": "vid1", "setVideoId": "set_new"},
+                ],
+            }
+
+    music._yt = AddClient()
+    added = music.add_song_to_target(song, target)
+    assert added.ok
+    assert song.set_video_id == "set_new"
+
     class BoomClient:
         def add_playlist_items(self, playlist_id: str, videoIds=None, duplicates=False):
             raise RuntimeError("Server returned HTTP 400: Bad Request")
@@ -470,6 +551,40 @@ def test_add_to_playlist_duplicate_and_other_error() -> None:
     assert not err.ok
     assert err.reason == "error"
     assert "HTTP 400" in err.message
+
+
+def test_remove_playlist_item_resolves_missing_set_video_id() -> None:
+    from models.track import Artist, Track
+    from services.music import LibraryTarget, MusicService
+
+    song = Track(video_id="vid1", title="Song", artists=[Artist(name="A")])
+    target = LibraryTarget("playlist", "PLreal", "Real Mix")
+
+    class Fake:
+        def __init__(self) -> None:
+            self.removed: list[object] = []
+
+        def get_playlist(self, playlist_id: str, limit: int = 100) -> dict:
+            return {
+                "tracks": [
+                    {"videoId": "vid1", "title": "Song", "setVideoId": "set_from_list"},
+                ]
+            }
+
+        def remove_playlist_items(self, playlist_id: str, videos: list) -> str:
+            self.removed.append((playlist_id, videos))
+            return "STATUS_SUCCEEDED"
+
+    music = MusicService()
+    music._authenticated = True
+    client = Fake()
+    music._yt = client
+    result = music.remove_song_from_target(song, target)
+    assert result.ok
+    assert song.set_video_id == "set_from_list"
+    assert client.removed == [
+        ("PLreal", [{"videoId": "vid1", "setVideoId": "set_from_list"}])
+    ]
 
 
 def test_liked_and_saved_duplicate() -> None:

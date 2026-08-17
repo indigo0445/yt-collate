@@ -731,7 +731,7 @@ class YtCollateApp(App[None]):
         )
 
     def _prepare_delete_ui(self, track: Track, target: LibraryTarget) -> int | None:
-        # drop/advance immediately so spam d/x hits the next song, not the same one
+        # drop/advance immediately so spam x hits the next song, not the same one
         if self.view_name == "library":
             try:
                 return self.query_one(LibraryScreen).drop_matching(track)
@@ -854,6 +854,7 @@ class YtCollateApp(App[None]):
             )
 
     def _prepare_paste_ui(self, track: Track, target: LibraryTarget) -> int | None:
+        # visually paste at bottom; this is separate than actually adding to YouTube
         if self.view_name != "library":
             return None
         try:

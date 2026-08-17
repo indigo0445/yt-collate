@@ -400,6 +400,8 @@ class LibraryScreen(ContentView):
         if not self._drilled:
             return None
         tv = self.query_one("#lib-tracks", TrackList)
+        if track.video_id and any(item.video_id == track.video_id for item in tv.tracks):
+            return None
         keep = tv.index if tv.index is not None else 0
         tracks = [*tv.tracks, track]
         tv.set_tracks(tracks, highlight=min(keep, len(tracks) - 1))
