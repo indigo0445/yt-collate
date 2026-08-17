@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 from textual.containers import Horizontal
-from textual.widgets import Input
+from textual.widgets import Input, Label
 
 from app import YtCollateApp
 from models.track import Artist, LocalPlaylist, Track
@@ -846,6 +846,7 @@ async def test_library_delete_keeps_focus_index(
         screen.drop_track("b")
         assert [t.video_id for t in tv.tracks] == ["a", "c"]
         assert tv.index == 1
+        assert app.query_one("#lib-status", Label).content == "2 tracks · Esc/q back"
 
         screen.restore_track(songs[1], 1)
         assert [t.video_id for t in tv.tracks] == ["a", "b", "c"]

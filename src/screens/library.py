@@ -379,6 +379,9 @@ class LibraryScreen(ContentView):
         remaining = [item for i, item in enumerate(tv.tracks) if i != remove_at]
         highlight = min(remove_at, len(remaining) - 1) if remaining else 0
         tv.set_tracks(remaining, highlight=highlight)
+        self.query_one("#lib-status", Label).update(
+            f"{len(remaining)} tracks · Esc/q back"
+        )
         return remove_at
 
     def restore_track(self, track: Track, index: int) -> None:
@@ -394,6 +397,9 @@ class LibraryScreen(ContentView):
         if keep >= at:
             keep += 1
         tv.set_tracks(tracks, highlight=min(keep, len(tracks) - 1))
+        self.query_one("#lib-status", Label).update(
+            f"{len(tracks)} tracks · Esc/q back"
+        )
 
     def append_track(self, track: Track) -> int | None:
         # paste: add at the end without stealing focus
