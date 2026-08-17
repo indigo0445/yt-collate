@@ -25,6 +25,6 @@ htmlcov/
 *.swp
 *~
 
-# Local auth / secrets (never commit)
+# Local auth / secrets
 browser.json
 **/browser.json

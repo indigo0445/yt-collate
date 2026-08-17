@@ -1,9 +1,5 @@
 priority:
 
-discord rich presence
-    - why sometimes when discord alr open, doesnt update anything at all? its connected...
-    - exponent reconnect backoff
-analyze how cookie file is actually used / what we actually need
 update/refactor help screen
 write README.md (provide image/video, link inspiration repos, rewrite keybinds, etc)
 pyprescence.pyprecense?
