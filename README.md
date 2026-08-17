@@ -6,11 +6,13 @@ Originally planned to only focus on gathering/arranging tracks in playlists, Col
 
 Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a mix of Vim binds and general binds for efficient keyboard-only navigation. Collate is inspired by [youtube-music-cli](https://github.com/involvex/youtube-music-cli) and [yazi](https://github.com/sxyazi/yazi); check them out!
 
+![Home](assets/home.png)
+
 ## Prerequisites
 
 - Python 3.12+
 - [mpv](https://mpv.io/)
-- [yt-dlp (nightly build)](https://github.com/yt-dlp/yt-dlp-nightly-builds) (Certain non-music videos will not play on yt-dlp stable. Can run `yt-dlp --update-to nightly`)
+- [yt-dlp (nightly build)](https://github.com/yt-dlp/yt-dlp-nightly-builds) (Certain non-music videos will not play on stable build. Can run `yt-dlp --update-to nightly`)
 - [Deno](https://deno.com/) or [Node](https://nodejs.org/) or [QuickJS](https://bellard.org/quickjs/) (A JS runtime is needed for yt-dlp to [reliably fetch](https://github.com/yt-dlp/yt-dlp/wiki/ejs))
 
 ## Install
@@ -35,6 +37,8 @@ Short alias: `uv run ytc`.
 - "Marking" playlists to easily add to collection from anywhere
 - YouTube Music subscribers benefit from enhanced audio bitrate (both streams and downloads)
 - Discord Rich Presence integration
+
+![Library playlist](assets/playlist.png)
 
 ## Distinct Touches
 
