@@ -1,11 +1,12 @@
 priority:
 
-play inconsistencies still?
-    - fixed by using ytdlp nightly visionos, changing ytdl vid client to visionos for non-song vidoes
-    - could still fail, e.g. 2/280 in my playlist failed to fetch/download
-x/p, y/p.
+x/p, y/p (TODO: TEST)
 analyze how cookie file is actually used / what we actually need
 update/refactor help screen
+write README.md (provide image/video, link inspiration repos, rewrite keybinds, etc)
+rename default auth file name to browser.json
++ doesnt detect duplicates for saved/likes for repeated additions at once
+saved/liked appears to save status when app starts?
 
 
 
@@ -14,14 +15,22 @@ other:
 
 oauth credentials are broken rn, use browser auth. switch to oauth when fixed
 discord rich presence
-queue reordering
-queue unshuffle (unlikely / doesn't even make sense)
+more queue management options: queue reordering, track deletion, etc
+queue unshuffle
+    - unlikely / doesn't even make sense
 custom window layouts, to make better use of hjkl idea
 dont autoplay on app open, wait for space (?)
 volume standardizer?
 remove toasts, and have a dedicated status/pending message location (left of Vol?)
 lyrics
 color themes (simple file)
-track listing truncation broken not keeping on 1 line for special e.g. cjk chars
+refactor playlistsummary to just playlist?
+track listing truncation broken; not keeping on 1 line for special e.g. cjk chars
 add little visual indicating a song is downloaded? (e.g. a '↓' symbol at end of line)
 v/V vim highlight commands to select lines in a row/block, x,d on that etc
+allow managing local playlists, e.g. x to delete from local playlist?
+    - unlikely, locals are only supposed to reflect upstream playlist
+play inconsistencies still?
+    - fixed by using ytdlp nightly visionos, changing ytdl vid client to visionos for non-song vidoes
+    - could still fail, e.g. 2/280 in my playlist failed to fetch/download
+playlist sortBy/reverse

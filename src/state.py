@@ -51,6 +51,7 @@ class AppState:
     status_message: str = ""
     library_mark: LibraryTarget | None = None
     queue_finished: bool = False
+    register: list[Track] = field(default_factory=list) # simulates Vim unnamed register
     _listeners: list[Listener] = field(default_factory=list, init=False, repr=False)
     _last_snap: PlayerSnapshot | None = field(default=None, init=False, repr=False)
     _history_pushed_id: str | None = field(default=None, init=False, repr=False)
@@ -389,6 +390,10 @@ class AppState:
         else:
             self.status_message = f"Queued: {len(items)} tracks"
         self._emit()
+        
+    def replace_register(self, tracks: Track | list[Track]) -> None:
+        items = [tracks] if isinstance(tracks, Track) else list(tracks)
+        self.register = items
 
     def play_random(self) -> None:
         query = random.choice(RANDOM_QUERIES)

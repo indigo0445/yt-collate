@@ -857,6 +857,16 @@ async def test_library_delete_keeps_focus_index(
         assert [t.video_id for t in tv.tracks] == ["a"]
         assert tv.index == 0
 
+        extra = Track(video_id="d", title="D", artists=[Artist(name="A")])
+        tv.index = 0
+        at = screen.append_track(extra)
+        assert at == 1
+        assert [t.video_id for t in tv.tracks] == ["a", "d"]
+        assert tv.index == 0
+        screen.drop_appended(extra, at)
+        assert [t.video_id for t in tv.tracks] == ["a"]
+        assert tv.index == 0
+
 
 @pytest.mark.asyncio
 async def test_library_compose_playlist_and_refetch_order(

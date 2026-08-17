@@ -1,4 +1,4 @@
-"""Textual application — fullscreen alternate-screen TUI"""
+"""app entry / top-level management / global keys handler"""
 
 from __future__ import annotations
 
@@ -34,6 +34,7 @@ from services.music import (
     LibraryTarget,
     PlaylistWriteResult,
     is_user_playlist,
+    library_target_for
 )
 from state import RANDOM_QUERIES, AppState
 from utils import display_duration, display_position
@@ -95,7 +96,9 @@ class YtCollateApp(App[None]):
         Binding("m", "mark_library", "Mark", show=False),
         Binding("plus", "add_to_marked", "Add to marked", show=False),
         Binding("o", "compose_playlist", "New playlist", show=False),
-        Binding("x", "delete_song", "Delete", show=False),
+        Binding("y", "yank_track", "Yank", show=False),
+        Binding("x", "delete_in_library", "Delete", show=False),
+        Binding("p", "paste_in_library", "Paste", show=False),
         Binding("enter", "confirm_or_select", "Enter", show=False, priority=True),
         Binding("minus", "vol_down", "Vol-", show=False),
         Binding("=", "vol_up", "Vol+", show=False),
@@ -558,6 +561,7 @@ class YtCollateApp(App[None]):
         self.state.previous()
 
     def _input_focused(self) -> bool:
+        # useful for ignoring most global keybinds when typing in Input
         return isinstance(self.focused, Input)
 
     def action_vol_up(self) -> None:
@@ -622,9 +626,17 @@ class YtCollateApp(App[None]):
         except Exception:  # noqa: BLE001
             pass
 
-    def action_delete_song(self) -> None:
+    def action_yank_track(self) -> None:
         if self._input_focused():
             return
+        track = self._focused_song()
+        if track is not None:
+            self.state.replace_register(track)
+
+    def action_delete_in_library(self) -> None:
+        if self._input_focused():
+            return
+        # see if focused on playlist in library to attempt playlist delete
         if self.view_name == "library":
             try:
                 screen = self.query_one(LibraryScreen)
@@ -635,6 +647,7 @@ class YtCollateApp(App[None]):
                 if playlist is not None:
                     self._confirm_delete_playlist(playlist)
                     return
+        # see if focused on track anywhere and attempt track delete
         track = self._focused_song()
         if track is None:
             return
@@ -654,6 +667,8 @@ class YtCollateApp(App[None]):
             self._on_state_change()
             return
         self._run_delete(track, target)
+        # regardless if delete worked or not, update register
+        self.state.replace_register(track)
 
     def _confirm_delete_playlist(self, playlist: PlaylistSummary) -> None:
         if not is_user_playlist(playlist):
@@ -796,6 +811,77 @@ class YtCollateApp(App[None]):
             except Exception:  # noqa: BLE001
                 return None
         return None
+
+    def action_paste_in_library(self) -> None:
+        if self._input_focused():
+            return
+        if self.view_name != "library":
+            return
+        try:
+            screen = self.query_one(LibraryScreen)
+        except Exception:  # noqa: BLE001
+            return
+        # see if on top-level, focused on playlist. if so paste in that playlist
+        playlist = screen.focused_index_playlist()
+        if playlist is not None:
+            target = library_target_for(playlist)
+            if target is not None:
+                self.paste_register(target)
+            return
+        # drilled. paste in current playlist
+        try:
+            opened = self.query_one(LibraryScreen).open_target()
+        except Exception:  # noqa: BLE001
+            opened = None
+        if opened is not None:
+            self.paste_register(opened)
+        
+    def paste_register(self, target: LibraryTarget) -> None:
+        if not self.state.register:
+            return
+        for track in self.state.register:
+            restore_at = self._prepare_paste_ui(track, target)
+            self.state.library_jobs.add_song(
+                track,
+                target,
+                on_done=lambda result, t=track, tgt=target, at=restore_at: (
+                    self.call_from_thread(
+                        lambda r=result, tr=t, tg=tgt, idx=at: self._after_add(
+                            r, tr, tg, idx
+                        )
+                    )
+                ),
+            )
+
+    def _prepare_paste_ui(self, track: Track, target: LibraryTarget) -> int | None:
+        if self.view_name != "library":
+            return None
+        try:
+            screen = self.query_one(LibraryScreen)
+            opened = screen.open_target()
+            if opened is None or opened.playlist_id != target.playlist_id:
+                return None
+            return screen.append_track(track)
+        except Exception:  # noqa: BLE001
+            return None
+
+    def _after_add(
+        self,
+        result: AddResult,
+        track: Track,
+        target: LibraryTarget,
+        restore_at: int | None,
+    ) -> None:
+        self._notify_add(result)
+        if result.ok or restore_at is None or self.view_name != "library":
+            return
+        try:
+            screen = self.query_one(LibraryScreen)
+            opened = screen.open_target()
+            if opened is not None and opened.playlist_id == target.playlist_id:
+                screen.drop_appended(track, restore_at)
+        except Exception:  # noqa: BLE001
+            pass
 
     def action_seek_back(self) -> None:
         # jump back 30s. Unbound; keep for a future keymap

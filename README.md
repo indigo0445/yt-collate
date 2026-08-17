@@ -2,7 +2,9 @@
 
 A Terminal User Interface (TUI) music player for YouTube Music.
 
-Built with **Python**, **Textual** (fullscreen alternate screen), **mpv**, and **yt-dlp**. Music metadata via **ytmusicapi**.
+Originally planned to only focus on gathering/arranging tracks in playlists, Collate has become a full-fledged music client rivaling the ease-of-use of GUI clients while requiring only a fraction of their resources usage.
+
+Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a mix of Vim binds and general binds. Collate is inspired by youtube-music-cli and yazi; check them out!
 
 ## Prerequisites
 
@@ -21,44 +23,33 @@ Short alias: `uv run ytc`.
 
 ## Features
 
-- Fullscreen TUI using the terminal alternate screen buffer
-- Search and play YouTube Music tracks
-- Queue, YouTube play history when signed in
-- Playlists, liked songs, trending, new releases
-- Shuffle / repeat / related-track autoplay
-- Browser-header auth for library / liked songs
-- Download songs to `~/Music/yt-collate/Songs/`; playlists as `{name}.json` beside it
-- Optional Discord Rich Presence (`uv sync --extra discord`)
+- Clean, minimalistic, fullscreen TUI client for YouTube Music
+- Authentication to access your Library and personalized recommendations
+- Includes YouTube Music Home, Explore, Search, and Trending pages
+- Download to local / Play from local
+- Smooth playback experience, with a simple dynamic queue
+- Vast set of intuitive keybinds (e.g. `/` for local filter, `0-9` to jump around track, etc.)
+- Easy management of Library (e.g. o to create playlist, x/p to cut/paste tracks, etc.)
+- "Marking" playlists to easily add to collection from anywhere
+- YouTube Music subscribers benefit from enhanced audio bitrate (both streams and downloads)
+- Discord Rich Presence (`uv sync --extra discord`)
+- Extremeley lightweight; consistently under 100MB RAM
 
-## Keybindings
+## Usage
 
-| Key | Action |
-|-----|--------|
-| `h` `j` `k` `l` / arrows | Panels (h/l) and lists (j/k) |
-| `/` | Filter the focused list |
-| `\` | Jump to Search |
-| Enter | Select / play |
-| `i` / `a` | Play next / append to queue |
-| `w` | Download song to `~/Music/yt-collate/Songs/`; playlists also write `{name}.json` |
-| Space | Play / pause |
-| `n` / `b` | Next / previous |
-| `0`–`9` | Jump to 0% … 90% |
-| `-` / `=` | Volume down / up |
-| `s` / `r` | Shuffle / cycle repeat |
-| `m` / `+` / `o` / `d` `x` | Mark / add / new playlist / delete |
-| `H` | Queue & History |
-| `,` | Settings |
-| `?` | Help |
-| `q` / Esc | Back |
-| Ctrl+Q | Quit |
+Collate uses browser headers to authenticate since OAuth2 currently fails (link sigma67 thing). Follow the steps HERE to create your auth headers file (any POST request should work); do it from a private/incognito window or your cookie might only last a few hours. Supply this file in Settings.
+
+Navigating with keys should be intuitive (hjkl supported); mouse is supported as well. 
+
+Press `?` to view list of all keybinds.
 
 ## Config
 
-Data lives under `~/.config/yt-collate/` (override with `YT_COLLATE_CONFIG`).
-
-On first run, `~/.config/youtube-music-lite/` is renamed if present. Audio files go to `~/Music/yt-collate/Songs/`; downloaded playlists are `{name}.json` in `~/Music/yt-collate/`.
+Data lives under `~/.config/yt-collate/` (override with `YT_COLLATE_CONFIG`). Downloads appear in `~/Music/yt-collate`.
 
 ## Development
+
+Contributions are welcome! 
 
 ```bash
 uv sync --group dev

@@ -395,6 +395,44 @@ class LibraryScreen(ContentView):
             keep += 1
         tv.set_tracks(tracks, highlight=min(keep, len(tracks) - 1))
 
+    def append_track(self, track: Track) -> int | None:
+        # paste: add at the end without stealing focus
+        if not self._drilled:
+            return None
+        tv = self.query_one("#lib-tracks", TrackList)
+        keep = tv.index if tv.index is not None else 0
+        tracks = [*tv.tracks, track]
+        tv.set_tracks(tracks, highlight=min(keep, len(tracks) - 1))
+        self.query_one("#lib-status", Label).update(
+            f"{len(tracks)} tracks · Esc/q back"
+        )
+        return len(tracks) - 1
+
+    def drop_appended(self, track: Track, index: int) -> None:
+        # undo a failed paste; prefer the inserted index, else last match
+        if not self._drilled:
+            return
+        tv = self.query_one("#lib-tracks", TrackList)
+        remove_at: int | None = None
+        if 0 <= index < len(tv.tracks) and _same_library_row(tv.tracks[index], track):
+            remove_at = index
+        else:
+            for i in range(len(tv.tracks) - 1, -1, -1):
+                if _same_library_row(tv.tracks[i], track):
+                    remove_at = i
+                    break
+        if remove_at is None:
+            return
+        remaining = [item for i, item in enumerate(tv.tracks) if i != remove_at]
+        keep = tv.index if tv.index is not None else 0
+        if keep > remove_at:
+            keep -= 1
+        highlight = min(keep, len(remaining) - 1) if remaining else 0
+        tv.set_tracks(remaining, highlight=highlight)
+        self.query_one("#lib-status", Label).update(
+            f"{len(remaining)} tracks · Esc/q back"
+        )
+
     def focused_index_playlist(self) -> PlaylistSummary | None:
         # playlist row on the library index, if any
         if self._drilled or self._opening or self._composing:
