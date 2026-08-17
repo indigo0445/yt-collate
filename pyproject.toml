@@ -1,12 +1,15 @@
 [project]
 name = "yt-collate"
-version = "0.1.0"
-description = "Terminal YouTube Music player (Textual + mpv + yt-dlp)"
+version = "0.0.1"
+description = "Enjoyable YouTube Music TUI player"
 readme = "README.md"
 authors = [
-    { name = "Ryan Wu", email = "ryanwusd@gmail.com" }
+    { name = "indigo0445" }
 ]
 requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+
 dependencies = [
     "textual>=2.0.0",
     "ytmusicapi>=1.10.0",
@@ -14,6 +17,9 @@ dependencies = [
     "pydantic-settings>=2.0.0",
     "pypresence>=4.3.0",
 ]
+
+[project.urls]
+GitHub = "https://github.com/indigo0445/yt-collate"
 
 [project.scripts]
 yt-collate = "cli:main"
