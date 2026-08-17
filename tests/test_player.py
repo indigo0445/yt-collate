@@ -6,27 +6,62 @@ from services.player import (
     FakeMpvTransport,
     PlayerService,
     build_mpv_args,
+    detect_ytdlp_js_runtime,
     ytdl_raw_options,
 )
 
 
-def test_mpv_args_request_bestaudio_and_cookies() -> None:
+def test_mpv_args_request_bestaudio_and_cookies(monkeypatch) -> None:
+    monkeypatch.setattr("services.player.detect_ytdlp_js_runtime", lambda: None)
     args = build_mpv_args(ipc_path="/tmp/ytc.sock", volume=80, cookies_file="/tmp/c.txt")
     assert "--ytdl-format=bestaudio/best" in args
     assert not any("player_client=web_music" in a for a in args)
     assert "--ytdl-raw-options-append=format-sort=abr" in args
     assert "--ytdl-raw-options-append=cookies=/tmp/c.txt" in args
     assert "--keep-open=always" in args
+    assert not any("js-runtimes" in a for a in args)
 
 
-def test_ytdl_raw_options_switch_client() -> None:
+def test_mpv_args_enable_node_without_deno(monkeypatch) -> None:
+    monkeypatch.setattr("services.player.detect_ytdlp_js_runtime", lambda: "node")
+    args = build_mpv_args(ipc_path="/tmp/ytc.sock", volume=80)
+    assert "--ytdl-raw-options-append=js-runtimes=node" in args
+
+
+def test_detect_ytdlp_js_runtime_prefers_deno(monkeypatch) -> None:
+    monkeypatch.setattr(
+        "services.player.shutil.which",
+        lambda name: "/usr/bin/deno" if name == "deno" else "/usr/bin/node",
+    )
+    assert detect_ytdlp_js_runtime() is None
+
+
+def test_detect_ytdlp_js_runtime_falls_back_to_node(monkeypatch) -> None:
+    monkeypatch.setattr(
+        "services.player.shutil.which",
+        lambda name: "/usr/bin/node" if name == "node" else None,
+    )
+    assert detect_ytdlp_js_runtime() == "node"
+
+
+def test_ytdl_raw_options_switch_client(monkeypatch) -> None:
+    monkeypatch.setattr("services.player.detect_ytdlp_js_runtime", lambda: None)
     music = ytdl_raw_options(music_client=True, cookies_file="/tmp/c.txt")
-    assert music["extractor-args"] == "youtube:player_client=web_music"
+    assert music["extractor-args"] == "youtube:player_client=web_music;formats=missing_pot"
     assert music["cookies"] == "/tmp/c.txt"
+    assert "js-runtimes" not in music
     web = ytdl_raw_options(music_client=False, cookies_file="/tmp/c.txt")
     assert web["extractor-args"] == "youtube:player_client=visionos"
     assert "cookies" not in web
     assert web["format-sort"] == "abr"
+
+
+def test_ytdl_raw_options_includes_node_runtime(monkeypatch) -> None:
+    monkeypatch.setattr("services.player.detect_ytdlp_js_runtime", lambda: "node")
+    music = ytdl_raw_options(music_client=True, cookies_file="/tmp/c.txt")
+    assert music["js-runtimes"] == "node"
+    web = ytdl_raw_options(music_client=False)
+    assert web["js-runtimes"] == "node"
 
 
 def test_play_sets_video_client_before_loadfile() -> None:
@@ -60,7 +95,7 @@ def test_play_keeps_cookies_for_music_client() -> None:
         for c in transport.commands
         if c[:2] == ["set_property", "ytdl-raw-options"]
     )
-    assert opts["extractor-args"] == "youtube:player_client=web_music"
+    assert opts["extractor-args"] == "youtube:player_client=web_music;formats=missing_pot"
     assert opts["cookies"] == "/tmp/c.txt"
 
 

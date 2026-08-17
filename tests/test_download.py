@@ -49,6 +49,21 @@ def test_existing_download_ignores_partials_and_video(tmp_path: Path) -> None:
     assert existing_download(tmp_path, "vid") == done
 
 
+def test_download_passes_node_js_runtime(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr("services.download.detect_ytdlp_js_runtime", lambda: "node")
+    calls: list[list[str]] = []
+
+    def run(cmd: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append(cmd)
+        return _write_from_template(cmd)
+
+    svc = DownloadService(tmp_path, run=run)
+    result = svc.download_track(_song("aaaaaaaaaaa"))
+    assert result.status == "ok"
+    assert "--js-runtimes" in calls[0]
+    assert calls[0][calls[0].index("--js-runtimes") + 1] == "node"
+
+
 def test_download_skips_existing_and_names_by_id(tmp_path: Path) -> None:
     calls: list[list[str]] = []
 

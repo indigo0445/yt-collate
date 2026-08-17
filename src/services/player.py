@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import socket
 import subprocess
 import tempfile
@@ -45,6 +46,19 @@ _YTDL_MUSIC_CLIENT = "youtube:player_client=web_music" # official yt catalog son
 _YTDL_VIDEO_CLIENT = "youtube:player_client=visionos" # if web_music as well, fails ~50% of the time
 
 
+def detect_ytdlp_js_runtime() -> str | None:
+    # catalog `web_music` streams need n/signature solving. Deno is yt-dlp's
+    # default; node and quickjs have to supplied as flags. Without any runtime,
+    # yt-dlp returns only storyboards and mpv never starts the song.
+    if shutil.which("deno"):
+        return None
+    if shutil.which("node"):
+        return "node"
+    if shutil.which("qjs"):
+        return "quickjs"
+    return None
+
+
 # yt-dlp is NOT directly called, these are passed to mpv on every play
 def ytdl_raw_options(
     *,
@@ -55,6 +69,9 @@ def ytdl_raw_options(
     opts: dict[str, str] = {
         "format-sort": "abr",
     }
+    runtime = detect_ytdlp_js_runtime()
+    if runtime:
+        opts["js-runtimes"] = runtime
     if music_client:
         # ';formats=missing_pot' is needed to get enhanced bitrate for yt subscribers
         # spent hours figuring that out omg
@@ -94,6 +111,9 @@ def build_mpv_args(
         "--ytdl-format=bestaudio/best",
         "--ytdl-raw-options-append=format-sort=abr",
     ]
+    runtime = detect_ytdlp_js_runtime()
+    if runtime:
+        args.append(f"--ytdl-raw-options-append=js-runtimes={runtime}")
     if cookies_file:
         args.append(f"--ytdl-raw-options-append=cookies={cookies_file}")
     elif cookies_from_browser:

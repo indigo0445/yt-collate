@@ -11,6 +11,7 @@ Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a 
 - Python 3.12+
 - [mpv](https://mpv.io/)
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) (nightly; yt-dlp --update-to nightly)
+- [Deno](https://deno.com/) or [node](https://nodejs.org/) or [QuickJS](https://bellard.org/quickjs/) (A JS runtime is needed for yt-dlp to [reliably download](https://github.com/yt-dlp/yt-dlp/wiki/ejs))
 
 ## Install
 
@@ -47,7 +48,7 @@ Short alias: `uv run ytc`.
 
 ## Usage
 
-Collate uses browser headers to authenticate since OAuth2 currently fails (link sigma67 thing). Follow the steps HERE to create your auth headers file (any POST request should work); do it from a private/incognito window or your cookie might only last a few hours. Supply this file in Settings.
+Collate uses browser headers to authenticate since OAuth2 currently fails (link sigma67 thing). Follow the steps https://ytmusicapi.readthedocs.io/en/stable/setup/browser.html to create your auth headers file (any POST request should work); do it from a private/incognito window or your cookie might only last a few hours. Supply this file in Settings.
 
 Navigating with keys should be intuitive (hjkl supported); mouse is supported as well. 
 

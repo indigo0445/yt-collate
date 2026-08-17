@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Literal
 
 from models.track import Track
+from services.player import detect_ytdlp_js_runtime
 
 # works for both yt catalog songs and regular videos
 _YTDL_MUSIC_CLIENT = "youtube:player_client=web_music"
@@ -144,6 +145,9 @@ class DownloadService:
             "-o",
             out,
         ]
+        runtime = detect_ytdlp_js_runtime()
+        if runtime:
+            cmd.extend(["--js-runtimes", runtime])
         if not track.is_video:
             cmd.extend(["--extractor-args", f"{_YTDL_MUSIC_CLIENT};formats=missing_pot"])
             cookies = self._cookies()
