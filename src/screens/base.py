@@ -30,7 +30,7 @@ class ContentView(Static):
         self._opening = key
         self._opening_row = row if key is not None else None
 
-    def _row_activity(self, index: int, base: str) -> str | Text:
+    def _row_activity(self, index: int, base: str | Text) -> str | Text:
         fetching = self._opening is not None and self._opening_row == index
         return row_activity_prompt(
             base,

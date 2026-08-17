@@ -130,7 +130,7 @@ def clip_list_label(widget: object, prefix: str, text: str, *, suffix: str = "")
 
 
 def row_activity_prompt(
-    base: str,
+    base: str | Text,
     *,
     downloading: tuple[int, int] | None = None,
     fetching: bool = False,

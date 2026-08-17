@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+from rich.text import Text
 from textual import work
 from textual.app import ComposeResult
 from textual.containers import Vertical
@@ -166,9 +167,9 @@ class CatalogScreen(ContentView):
         n = sum(1 for r in self._rows if r.kind == "item")
         self.query_one(f"#{self._status_id}", Label).update(f"{n} playlists · Esc/q back")
 
-    def _line(self, i: int, row: CatalogRow) -> str:
+    def _line(self, i: int, row: CatalogRow) -> str | Text:
         if row.kind == "section":
-            return row.label
+            return Text(row.label, style="bold")
         num = sum(1 for r in self._rows[: i + 1] if r.kind != "section")
         prefix = f"{num}. "
         lv = self.query_one(f"#{self._list_id}", NavListView)
