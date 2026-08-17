@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from rich.text import Text
@@ -38,6 +39,18 @@ def youtube_video_id(value: str) -> str | None:
     ):
         return parts[1]
     return None
+
+
+def display_user_path(path: Path | str) -> str:
+    # ~/foo when the path is under the home directory; otherwise the full path
+    raw = Path(path).expanduser()
+    try:
+        rel = raw.resolve().relative_to(Path.home().resolve())
+    except ValueError:
+        return str(raw)
+    if rel == Path("."):
+        return "~"
+    return f"~/{rel.as_posix()}"
 
 
 def format_time(seconds: float | int | None) -> str:

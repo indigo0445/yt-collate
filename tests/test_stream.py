@@ -18,8 +18,8 @@ def test_write_netscape_cookies(tmp_path: Path) -> None:
     assert "TRUE\t0\t__Secure-1PSID" in text
 
 
-def test_cookies_from_headers_auth(tmp_path: Path) -> None:
-    auth = tmp_path / "headers_auth.json"
+def test_cookies_from_browser_auth(tmp_path: Path) -> None:
+    auth = tmp_path / "browser.json"
     auth.write_text(
         '{"Cookie": "SID=s1; HSID=h1", "User-Agent": "TestUA/1.0"}',
         encoding="utf-8",

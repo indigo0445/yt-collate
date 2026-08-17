@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import random
 import threading
+import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -22,6 +23,7 @@ from services.music import LibraryTarget, MusicService
 from services.player import PlayerService, PlayerSnapshot
 from services.queue import QueueService
 from services.stream import cookies_and_user_agent
+from utils import display_user_path
 
 Listener = Callable[[], None]
 
@@ -109,7 +111,7 @@ class AppState:
     def _on_player_update(self, snap: PlayerSnapshot) -> None:
         prev = self._last_snap
         self._last_snap = snap
-        # skip per-tick progress emits (status bar polls). Pause/track changes still push
+        # if the player state has not changed, skip
         if (
             prev is not None
             and prev.paused == snap.paused
@@ -119,7 +121,7 @@ class AppState:
         ):
             return
         track = self.queue.current
-        self.discord.update(track, paused=snap.paused, position=snap.position)
+        self.discord.update(track, snap)
         self._emit()
 
     def _on_play_error(self, reason: str) -> None:
@@ -166,7 +168,7 @@ class AppState:
             self._start_current()
 
     def _refresh_playback_cookies(self) -> None:
-        # give mpv the same YouTube cookies as the Music API (from headers_auth)
+        # give mpv the same YouTube cookies as the Music API (from browser.json)
         cfg = self.config
         if cfg.config.cookies_file:
             path: str | None = str(Path(cfg.config.cookies_file).expanduser())
@@ -425,7 +427,7 @@ class AppState:
         if not resolved.exists():
             self.music.reload_auth(None)
             self._refresh_playback_cookies()
-            msg = f"File not found — disconnected ({resolved})"
+            msg = f"File not found — disconnected ({display_user_path(resolved)})"
             self.status_message = msg
             self._emit()
             return False, msg
@@ -447,7 +449,7 @@ class AppState:
             self.discord.connect()
             track = self.current_track
             snap = self.snapshot
-            self.discord.update(track, paused=snap.paused, position=snap.position)
+            self.discord.update(track, snap)
         else:
             self.discord.close()
         self.status_message = f"Discord RPC {'on' if enabled else 'off'}"
@@ -456,7 +458,7 @@ class AppState:
     def shutdown(self) -> None:
         self.library_jobs.shutdown()
         self.downloads.shutdown()
-        self.discord.close()
+        self.discord.close(join=True)
         self.player.shutdown()
         self.config.update(
             volume=self.player.volume,

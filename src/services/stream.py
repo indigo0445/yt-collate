@@ -51,7 +51,7 @@ def cookies_and_user_agent(
     auth_headers_path: Path | None,
     dest: Path,
 ) -> tuple[Path | None, str | None]:
-    # build yt-dlp cookies + User-Agent from headers_auth.json if present
+    # build yt-dlp cookies + User-Agent from browser.json if present
     if auth_headers_path is None:
         return None, None
     headers = headers_from_auth_file(auth_headers_path)

@@ -1,24 +1,22 @@
 priority:
 
-x/p, y/p (TODO: TEST)
+discord rich presence
+    - why sometimes when discord alr open, doesnt update anything at all? its connected...
+    - exponent reconnect backoff
 analyze how cookie file is actually used / what we actually need
 update/refactor help screen
 write README.md (provide image/video, link inspiration repos, rewrite keybinds, etc)
-rename default auth file name to browser.json
-+ doesnt detect duplicates for saved/likes for repeated additions at once
-saved/liked appears to save status when app starts?
-
+pyprescence.pyprecense?
 
 
 
 other:
 
 oauth credentials are broken rn, use browser auth. switch to oauth when fixed
-discord rich presence
 more queue management options: queue reordering, track deletion, etc
 queue unshuffle
     - unlikely / doesn't even make sense
-custom window layouts, to make better use of hjkl idea
+custom window layouts?
 dont autoplay on app open, wait for space (?)
 volume standardizer?
 remove toasts, and have a dedicated status/pending message location (left of Vol?)
@@ -34,3 +32,4 @@ play inconsistencies still?
     - fixed by using ytdlp nightly visionos, changing ytdl vid client to visionos for non-song vidoes
     - could still fail, e.g. 2/280 in my playlist failed to fetch/download
 playlist sortBy/reverse
+make log.debug and related actually print somewhere

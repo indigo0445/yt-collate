@@ -56,7 +56,7 @@ HELP_MD = """
 - **,** — Settings
 - **?** — This help
 
-Auth: `uv run ytmusicapi browser --file ~/.config/yt-collate/headers_auth.json`
+Auth: `uv run ytmusicapi browser --file ~/.config/yt-collate/browser.json`
 then Settings → paste path → **Enter**. Empty Enter disconnects. Startup autoloads the saved path.
 Use **My Library** for playlists, Saved Songs (YouTube library, not likes), and Liked Songs.
 """

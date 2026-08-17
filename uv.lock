@@ -1141,13 +1141,9 @@ source = { editable = "." }
 dependencies = [
     { name = "pydantic" },
     { name = "pydantic-settings" },
+    { name = "pypresence" },
     { name = "textual" },
     { name = "ytmusicapi" },
-]
-
-[package.optional-dependencies]
-discord = [
-    { name = "pypresence" },
 ]
 
 [package.dev-dependencies]
@@ -1162,11 +1158,10 @@ dev = [
 requires-dist = [
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "pydantic-settings", specifier = ">=2.0.0" },
-    { name = "pypresence", marker = "extra == 'discord'", specifier = ">=4.3.0" },
+    { name = "pypresence", specifier = ">=4.3.0" },
     { name = "textual", specifier = ">=2.0.0" },
     { name = "ytmusicapi", specifier = ">=1.10.0" },
 ]
-provides-extras = ["discord"]
 
 [package.metadata.requires-dev]
 dev = [

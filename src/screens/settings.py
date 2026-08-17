@@ -9,6 +9,7 @@ from textual.widgets import Input, Label
 
 from keyhints import SETTINGS
 from screens.base import ContentView
+from utils import display_user_path
 from widgets import NavListView, PanelHeader
 
 
@@ -40,14 +41,14 @@ class SettingsScreen(ContentView):
             with Horizontal(id="auth-edit-row"):
                 yield Label("1. Auth file: ", id="auth-edit-prefix")
                 yield AuthPathInput(
-                    placeholder="~/.config/yt-collate/headers_auth.json",
+                    placeholder="~/.config/yt-collate/browser.json",
                     id="auth-path",
                 )
             yield NavListView(id="settings-nav")
             yield Label(
                 "Setup outside TUI:\n"
                 "  uv run ytmusicapi browser --file "
-                "~/.config/yt-collate/headers_auth.json\n"
+                "~/.config/yt-collate/browser.json\n"
                 "Then Enter on Auth file, paste the path, and press Enter. "
                 "Empty Enter disconnects.",
                 classes="muted",
@@ -80,7 +81,7 @@ class SettingsScreen(ContentView):
         path = state.config.auth_headers_path
         cfg = state.config.config
         return [
-            f"Auth file: {path}",
+            f"Auth file: {display_user_path(path)}",
             f"Discord RPC: {_yn(cfg.discord_rpc)}",
             f"Autoplay: {_yn(cfg.autoplay)}",
             f"Show Episodes for Later: {_yn(cfg.show_episodes_for_later)}",
@@ -107,7 +108,7 @@ class SettingsScreen(ContentView):
         state = self.app.state  # type: ignore[attr-defined]
         stored = state.config.config.auth_headers_path
         inp = self.query_one("#auth-path", Input)
-        inp.value = stored if stored else str(state.config.auth_headers_path)
+        inp.value = display_user_path(stored or state.config.auth_headers_path)
         self._editing_auth = True
         self._rebuild_nav()
         inp.focus()

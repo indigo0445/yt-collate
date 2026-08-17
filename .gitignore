@@ -26,5 +26,5 @@ htmlcov/
 *~
 
 # Local auth / secrets (never commit)
-headers_auth.json
-**/headers_auth.json
+browser.json
+**/browser.json

@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from rich.text import Text
 
 from utils import (
     clip_list_label,
     display_duration,
     display_position,
+    display_user_path,
     format_bitrate,
     format_time,
     row_activity_prompt,
@@ -27,6 +30,21 @@ def test_format_time() -> None:
     assert format_time(0) == "0:00"
     assert format_time(254) == "4:14"
     assert format_time(253.7) == "4:13"
+
+
+def test_display_user_path(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setattr("utils.Path.home", lambda *args: home)
+    nested = home / ".config" / "yt-collate" / "browser.json"
+    nested.parent.mkdir(parents=True)
+    nested.write_text("{}\n")
+    assert display_user_path(nested) == "~/.config/yt-collate/browser.json"
+    assert display_user_path(home) == "~"
+    outside = tmp_path / "other" / "browser.json"
+    outside.parent.mkdir()
+    outside.write_text("{}\n")
+    assert display_user_path(outside) == str(outside.resolve())
 
 
 def test_format_bitrate() -> None:

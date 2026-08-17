@@ -12,10 +12,8 @@ dependencies = [
     "ytmusicapi>=1.10.0",
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
+    "pypresence>=4.3.0",
 ]
-
-[project.optional-dependencies]
-discord = ["pypresence>=4.3.0"]
 
 [project.scripts]
 ytc = "cli:main"

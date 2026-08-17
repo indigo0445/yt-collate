@@ -144,7 +144,7 @@ class YtCollateApp(App[None]):
         except Exception:  # noqa: BLE001
             pass
         if self.state.config.config.discord_rpc:
-            self.run_worker(self.state.discord.connect, thread=True)
+            self.state.discord.connect()
         self.state.play_restored_current()
 
     def on_unmount(self) -> None:

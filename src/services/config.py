@@ -11,9 +11,7 @@ from pydantic import BaseModel
 from models.config import AppConfig
 
 APP_DIR_NAME = "yt-collate"
-LEGACY_DIR_NAME = "youtube-music-lite"
 ENV_CONFIG = "YT_COLLATE_CONFIG"
-LEGACY_ENV_CONFIG = "YOUTUBE_MUSIC_LITE_CONFIG"
 
 
 def _config_home() -> Path:
@@ -24,19 +22,11 @@ def _config_home() -> Path:
 
 
 def get_config_dir() -> Path:
-    override = os.environ.get(ENV_CONFIG) or os.environ.get(LEGACY_ENV_CONFIG)
+    override = os.environ.get(ENV_CONFIG)
     if override:
         path = Path(override).expanduser()
     else:
-        home = _config_home()
-        path = home / APP_DIR_NAME
-        legacy = home / LEGACY_DIR_NAME
-        if not path.exists() and legacy.exists():
-            try:
-                path.parent.mkdir(parents=True, exist_ok=True)
-                legacy.rename(path)
-            except OSError:
-                path = legacy
+        path = _config_home() / APP_DIR_NAME
     path.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -81,4 +71,4 @@ class ConfigService:
     def auth_headers_path(self) -> Path:
         if self.config.auth_headers_path:
             return Path(self.config.auth_headers_path).expanduser()
-        return self.config_dir / "headers_auth.json"
+        return self.config_dir / "browser.json"

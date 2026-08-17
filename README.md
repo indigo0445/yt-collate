@@ -32,8 +32,14 @@ Short alias: `uv run ytc`.
 - Easy management of Library (e.g. o to create playlist, x/p to cut/paste tracks, etc.)
 - "Marking" playlists to easily add to collection from anywhere
 - YouTube Music subscribers benefit from enhanced audio bitrate (both streams and downloads)
-- Discord Rich Presence (`uv sync --extra discord`)
+- Discord Rich Presence integration
 - Extremeley lightweight; consistently under 100MB RAM
+
+## cool stuff
+
+- / for line #
+- bitrate
+- 0-9
 
 ## Usage
 
