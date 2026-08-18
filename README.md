@@ -3,6 +3,8 @@
 [![PyPI](https://img.shields.io/pypi/v/yt-collate)](https://pypi.org/project/yt-collate/)
 [![AUR](https://img.shields.io/aur/version/yt-collate)](https://aur.archlinux.org/packages/yt-collate)
 
+*Motivation: This is a personal passion project I made in my spare time, after I realized no YTM client had all the features/specs/quirks I wanted*
+
 A Terminal User Interface client for YouTube Music, with a focus on **efficiency** and **easy-of-use** while also offering a **comprehensive feature list**.
 
 Originally planned to only focus on gathering/arranging tracks in playlists (hence name), Collate has become a full-fledged music client that is reliable and "just works". Developed for **Linux** (likely compatible with Mac; untested yet).
