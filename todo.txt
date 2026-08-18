@@ -1,7 +1,5 @@
 priority:
 
-write README.md (provide image/video, 
-
 
 
 other:
@@ -28,3 +26,4 @@ playlist sortBy/reverse
 make log.debug and related actually print somewhere
 have Local only display songs that are actually downloaded, instead of showing all in playlist
 add pypi tags
+next ytdlp release will have visionos, so no need for nightly build anymore

@@ -40,7 +40,7 @@ Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a 
 
 - Python 3.12+
 - [mpv](https://mpv.io/)
-- [yt-dlp (nightly build)](https://github.com/yt-dlp/yt-dlp-nightly-builds) (Certain non-music videos will not play on stable build. Can run `yt-dlp --update-to nightly`)
+- [yt-dlp (nightly build)](https://github.com/yt-dlp/yt-dlp-nightly-builds) (Certain non-music videos will not play on current stable build. Can run `yt-dlp --update-to nightly`)
 - [Deno](https://deno.com/) or [Node](https://nodejs.org/) or [QuickJS](https://bellard.org/quickjs/) (A JS runtime is needed for yt-dlp to [reliably fetch](https://github.com/yt-dlp/yt-dlp/wiki/ejs))
 
 ## Install / Update
@@ -52,6 +52,10 @@ Make sure `~/.local/bin` is in your `PATH`.
 When a new version is released, update with:
 ```bash
 pipx upgrade yt-collate
+```
+Collate is also available on AUR:
+```bash
+yay -S yt-collate
 ```
 
 <p align="center">
