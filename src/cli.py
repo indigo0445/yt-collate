@@ -5,6 +5,14 @@ from __future__ import annotations
 import argparse
 import shutil
 import sys
+from importlib.metadata import PackageNotFoundError, version
+
+
+def _package_version() -> str:
+    try:
+        return version("yt-collate")
+    except PackageNotFoundError:
+        return "dev"
 
 
 def check_dependencies() -> list[str]:
@@ -24,7 +32,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--version",
         action="version",
-        version="yt-collate 0.1.0",
+        version=f"yt-collate {_package_version()}",
     )
     parser.parse_args(argv)
 

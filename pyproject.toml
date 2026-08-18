@@ -1,6 +1,6 @@
 [project]
 name = "yt-collate"
-version = "0.0.1"
+version = "0.0.2"
 description = "Efficient, well-rounded YouTube Music TUI player"
 readme = "README.md"
 authors = [
@@ -36,7 +36,7 @@ py-modules = ["app", "cli", "keyhints", "state", "utils"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-"*" = ["themes/*.tcss"]
+themes = ["*.tcss"]
 
 [dependency-groups]
 dev = [

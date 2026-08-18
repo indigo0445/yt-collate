@@ -18,7 +18,7 @@ Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a 
 - [yt-dlp (nightly build)](https://github.com/yt-dlp/yt-dlp-nightly-builds) (Certain non-music videos will not play on stable build. Can run `yt-dlp --update-to nightly`)
 - [Deno](https://deno.com/) or [Node](https://nodejs.org/) or [QuickJS](https://bellard.org/quickjs/) (A JS runtime is needed for yt-dlp to [reliably fetch](https://github.com/yt-dlp/yt-dlp/wiki/ejs))
 
-## Install/Run
+## Install / Run / Update
 
 ```bash
 pipx install yt-collate
@@ -26,6 +26,10 @@ pipx install yt-collate
 If `pipx` installs to a location on your `PATH` (usually `~/.local/bin`), run with:
 ```bash
 yt-collate
+```
+When a new version is released, run:
+```bash
+pipx upgrade yt-collate
 ```
 
 ## Features
