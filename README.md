@@ -1,10 +1,10 @@
 # yt-collate
 
-A Terminal User Interface music player for YouTube Music, developed for **Linux** (likely compatible with Mac; untested yet, don't have Mac).
+A Terminal User Interface client for YouTube Music, with a focus on **efficiency** and **easy-of-use** while also offering a **comprehensive feature list**.
 
-Originally planned to only focus on gathering/arranging tracks in playlists (hence name), Collate has become a full-fledged music client rivaling the ease-of-use of GUI clients while requiring only a fraction of their resources usage.
+Originally planned to only focus on gathering/arranging tracks in playlists (hence name), Collate has become a full-fledged music client that is reliable and "just works". Developed for **Linux** (likely compatible with Mac; untested yet).
 
-Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a mix of Vim binds and general binds for efficient keyboard-only navigation. Collate is inspired by [youtube-music-cli](https://github.com/involvex/youtube-music-cli) and [yazi](https://github.com/sxyazi/yazi); check them out!
+Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a mix of Vim binds and general binds for efficient keyboard navigation (mouse is supported as well). Collate is inspired by [youtube-music-cli](https://github.com/involvex/youtube-music-cli) and [yazi](https://github.com/sxyazi/yazi); check them out!
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/indigo0445/yt-collate/refs/heads/main/assets/home.png" alt="Home page">
@@ -14,7 +14,7 @@ Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a 
 
 ## Features
 
-- Clean, minimalistic, fullscreen TUI client for YouTube Music
+- Clean, minimalistic, modern TUI client for YouTube Music
 - Extremeley fast, lightweight, and responsive
 - Authentication to access your Library and personalized recommendations
 - Includes YouTube Music Home, Explore, Search, and Trending pages
@@ -73,8 +73,6 @@ and follow the prompts. The file is written to `~/.config/yt-collate/browser.jso
 ```bash
 yt-collate
 ```
-
-Collage is designed for efficient keyboard navigation, but mouse is supported as well. 
 
 Press `?` in-app to view list of all keybinds.
 
