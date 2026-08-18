@@ -22,12 +22,9 @@ uv sync
 uv run yt-collate
 ```
 
-Short alias: `uv run ytc`.
-
 ## Features
 
 - Clean, minimalistic, fullscreen TUI client for YouTube Music
-- Extremeley fast, lightweight, and responsive
 - Authentication to access your Library and personalized recommendations
 - Includes YouTube Music Home, Explore, Search, and Trending pages
 - Smooth playback experience, with a simple dynamic queue
@@ -37,6 +34,7 @@ Short alias: `uv run ytc`.
 - "Marking" playlists to easily add to collection from anywhere
 - YouTube Music subscribers benefit from enhanced audio bitrate (both streams and downloads)
 - Discord Rich Presence integration
+- Extremeley fast, lightweight, and responsive
 
 ![Library playlist](assets/playlist.png)
 
@@ -67,7 +65,7 @@ Data lives under `~/.config/yt-collate/` (override with `YT_COLLATE_CONFIG`). Do
 Contributions are welcome! As a start, consider adding your favorite genre to `GENRES` in `src/services/random_song.py`
 
 ```bash
-uv sync --group dev
-uv run pytest
-uv run ruff check .
+uv sync --group dev # install dev packages
+uv run pytest # for testing
+uv run ruff check . # for linting/formatting
 ```
