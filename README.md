@@ -6,7 +6,10 @@ Originally planned to only focus on gathering/arranging tracks in playlists (hen
 
 Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a mix of Vim binds and general binds for efficient keyboard-only navigation. Collate is inspired by [youtube-music-cli](https://github.com/involvex/youtube-music-cli) and [yazi](https://github.com/sxyazi/yazi); check them out!
 
-![Home](https://raw.githubusercontent.com/indigo0445/yt-collate/refs/heads/main/assets/home.png)
+<figure style="text-align: center;">
+  <img src="https://raw.githubusercontent.com/indigo0445/yt-collate/refs/heads/main/assets/home.png" alt="Home page">
+  <figcaption>Home page, with personalized recommendations once authenticated</figcaption>
+</figure>
 
 ## Prerequisites
 
@@ -39,7 +42,11 @@ yt-collate
 - Discord Rich Presence integration
 - Extremeley fast, lightweight, and responsive
 
-![Library playlist](https://raw.githubusercontent.com/indigo0445/yt-collate/refs/heads/main/assets/playlist.png)
+<figure style="text-align: center;">
+  <img src="https://raw.githubusercontent.com/indigo0445/yt-collate/refs/heads/main/assets/playlist.png" alt="Library playlist">
+  <figcaption>Library playlist, with a local filter (<code>/</code>) and download notification</figcaption>
+</figure>
+
 
 ## Distinct Touches
 
