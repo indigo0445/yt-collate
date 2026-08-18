@@ -46,11 +46,8 @@ class SettingsScreen(ContentView):
                 )
             yield NavListView(id="settings-nav")
             yield Label(
-                "Setup outside TUI:\n"
-                "  uv run ytmusicapi browser --file "
-                "~/.config/yt-collate/browser.json\n"
-                "Then Enter on Auth file, paste the path, and press Enter. "
-                "Empty Enter disconnects.",
+                "Create auth file from terminal: yt-collate auth\n"
+                "Then restart and verify the supplied path above is correct",
                 classes="muted",
             )
             yield Label(

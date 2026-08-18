@@ -12,30 +12,10 @@ Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a 
   <em>Home page, with personalized recommendations once authenticated</em>
 </p>
 
-## Prerequisites
-
-- Python 3.12+
-- [mpv](https://mpv.io/)
-- [yt-dlp (nightly build)](https://github.com/yt-dlp/yt-dlp-nightly-builds) (Certain non-music videos will not play on stable build. Can run `yt-dlp --update-to nightly`)
-- [Deno](https://deno.com/) or [Node](https://nodejs.org/) or [QuickJS](https://bellard.org/quickjs/) (A JS runtime is needed for yt-dlp to [reliably fetch](https://github.com/yt-dlp/yt-dlp/wiki/ejs))
-
-## Install / Run / Update
-
-```bash
-pipx install yt-collate
-```
-If `pipx` installs to a location on your `PATH` (usually `~/.local/bin`), run with:
-```bash
-yt-collate
-```
-When a new version is released, run:
-```bash
-pipx upgrade yt-collate
-```
-
 ## Features
 
 - Clean, minimalistic, fullscreen TUI client for YouTube Music
+- Extremeley fast, lightweight, and responsive
 - Authentication to access your Library and personalized recommendations
 - Includes YouTube Music Home, Explore, Search, and Trending pages
 - Smooth playback experience, with a simple dynamic queue
@@ -45,14 +25,6 @@ pipx upgrade yt-collate
 - "Marking" playlists to easily add to collection from anywhere
 - YouTube Music subscribers benefit from enhanced audio bitrate (both streams and downloads)
 - Discord Rich Presence integration
-- Extremeley fast, lightweight, and responsive
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/indigo0445/yt-collate/refs/heads/main/assets/playlist.png" alt="Library playlist">
-  <br>
-  <em>Library playlist, with a local filter (<code>/</code>) and download notification</em>
-</p>
-
 
 ## Distinct Touches
 
@@ -64,9 +36,43 @@ pipx upgrade yt-collate
 - Option to hide "Episodes for Later" in Library, I'm sure many find this annoying (me)
 - No concept of "unshuffle", `s` reshuffles queue everytime; I have no use "unshuffling" my queue
 
+## Prerequisites
+
+- Python 3.12+
+- [mpv](https://mpv.io/)
+- [yt-dlp (nightly build)](https://github.com/yt-dlp/yt-dlp-nightly-builds) (Certain non-music videos will not play on stable build. Can run `yt-dlp --update-to nightly`)
+- [Deno](https://deno.com/) or [Node](https://nodejs.org/) or [QuickJS](https://bellard.org/quickjs/) (A JS runtime is needed for yt-dlp to [reliably fetch](https://github.com/yt-dlp/yt-dlp/wiki/ejs))
+
+## Install / Update
+
+```bash
+pipx install yt-collate
+```
+Make sure `~/.local/bin` is in your `PATH`.
+When a new version is released, update with:
+```bash
+pipx upgrade yt-collate
+```
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/indigo0445/yt-collate/refs/heads/main/assets/playlist.png" alt="Library playlist">
+  <br>
+  <em>Library playlist, with a local filter (<code>/</code>) and download notification</em>
+</p>
+
 ## Usage
 
-Collate uses browser headers to authenticate since OAuth 2.0 [currently fails](https://github.com/sigma67/ytmusicapi/issues/813). See [here](https://ytmusicapi.readthedocs.io/en/stable/setup/browser.html) on how to create your auth headers file (any POST request should work; ignore the "Using the headers in your project" section). Do this from a private/incognito window so your cookie might last a few years. Supply this file in Settings.
+To set up authentication, run:
+
+```bash
+yt-collate auth
+```
+
+and follow the prompts. The file is written to `~/.config/yt-collate/browser.json`, and this will likely last a few years. Run Collate with:
+
+```bash
+yt-collate
+```
 
 Collage is designed for efficient keyboard navigation, but mouse is supported as well. 
 
@@ -78,7 +84,7 @@ Data lives under `~/.config/yt-collate/`. Downloads appear in `~/Music/yt-collat
 
 ## Development
 
-Contributions are welcome! As a start, consider adding your favorite genre to `GENRES` in `src/services/random_song.py`
+Contributions are welcome! As a start, consider adding your favorite genre to `GENRES` in `src/services/random_song.py`.
 
 ```bash
 uv sync --group dev # install dev packages

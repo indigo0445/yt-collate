@@ -24,7 +24,7 @@ def check_dependencies() -> list[str]:
     return missing
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="yt-collate",
         description="yt-collate — Terminal YouTube Music player",
@@ -34,7 +34,24 @@ def main(argv: list[str] | None = None) -> int:
         action="version",
         version=f"yt-collate {_package_version()}",
     )
-    parser.parse_args(argv)
+    sub = parser.add_subparsers(dest="command")
+    sub.add_parser(
+        "auth",
+        help="create browser.json from YouTube Music request headers",
+    )
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    if args.command == "auth":
+        from services.auth import run_auth
+
+        try:
+            return run_auth()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            return 1
 
     missing = check_dependencies()
     if missing:
