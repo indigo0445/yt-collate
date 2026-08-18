@@ -1,7 +1,7 @@
 [project]
 name = "yt-collate"
 version = "0.0.1"
-description = "Enjoyable YouTube Music TUI player"
+description = "Efficient, well-rounded YouTube Music TUI player"
 readme = "README.md"
 authors = [
     { name = "indigo0445" }
