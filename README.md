@@ -1,6 +1,6 @@
 # yt-collate
 
-A Terminal User Interface music player for YouTube Music, developed for Linux (likely compatible with Mac; untested yet, don't have Mac).
+A Terminal User Interface music player for YouTube Music, developed for **Linux** (likely compatible with Mac; untested yet, don't have Mac).
 
 Originally planned to only focus on gathering/arranging tracks in playlists (hence name), Collate has become a full-fledged music client rivaling the ease-of-use of GUI clients while requiring only a fraction of their resources usage.
 
@@ -15,11 +15,14 @@ Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a 
 - [yt-dlp (nightly build)](https://github.com/yt-dlp/yt-dlp-nightly-builds) (Certain non-music videos will not play on stable build. Can run `yt-dlp --update-to nightly`)
 - [Deno](https://deno.com/) or [Node](https://nodejs.org/) or [QuickJS](https://bellard.org/quickjs/) (A JS runtime is needed for yt-dlp to [reliably fetch](https://github.com/yt-dlp/yt-dlp/wiki/ejs))
 
-## Install
+## Install/Run
 
 ```bash
-uv sync
-uv run yt-collate
+pipx install yt-collate
+```
+If `pipx` installs to a location on your `PATH` (usually `~/.local/bin`), run with:
+```bash
+yt-collate
 ```
 
 ## Features
@@ -46,11 +49,11 @@ uv run yt-collate
 - Local filter `/` can jump to line numbers, allowing fast gotos
 - Search screen accepts YouTube URLs, useful if you prefer exploring YouTube on a browser (me)
 - Option to hide "Episodes for Later" in Library, I'm sure many find this annoying (me)
-- No concept of "unshuffle", `s` reshuffles everytime; I have no use "unshuffling" my queue
+- No concept of "unshuffle", `s` reshuffles queue everytime; I have no use "unshuffling" my queue
 
 ## Usage
 
-Collate uses browser headers to authenticate since OAuth2 [currently fails](https://github.com/sigma67/ytmusicapi/issues/813). Follow the steps [here](https://ytmusicapi.readthedocs.io/en/stable/setup/browser.html) to create your auth headers file (any POST request should work); do it from a private/incognito window so your cookie might last a few years. Supply this file in Settings.
+Collate uses browser headers to authenticate since OAuth 2.0 [currently fails](https://github.com/sigma67/ytmusicapi/issues/813). See [here](https://ytmusicapi.readthedocs.io/en/stable/setup/browser.html) on how to create your auth headers file (any POST request should work; ignore the "Using the headers in your project" section). Do this from a private/incognito window so your cookie might last a few years. Supply this file in Settings.
 
 Collage is designed for efficient keyboard navigation, but mouse is supported as well. 
 
@@ -58,7 +61,7 @@ Press `?` in-app to view list of all keybinds.
 
 ## Config
 
-Data lives under `~/.config/yt-collate/` (override with `YT_COLLATE_CONFIG`). Downloads appear in `~/Music/yt-collate`.
+Data lives under `~/.config/yt-collate/`. Downloads appear in `~/Music/yt-collate`.
 
 ## Development
 
