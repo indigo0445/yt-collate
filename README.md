@@ -5,7 +5,7 @@
 
 *Motivation: This is a personal passion project I made in my spare time, after I realized no YTM client had all the features/specs/quirks I wanted*
 
-A Terminal User Interface client for YouTube Music, with a focus on **efficiency** and **easy-of-use** while also offering a **comprehensive feature list**.
+A Terminal User Interface client for YouTube Music, with a focus on **efficiency** and **ease-of-use** while also offering a **comprehensive feature list**.
 
 Originally planned to only focus on gathering/arranging tracks in playlists (hence name), Collate has become a full-fledged music client that is reliable and "just works". Developed for **Linux** (likely compatible with Mac; untested yet).
 
@@ -20,11 +20,11 @@ Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a 
 ## Features
 
 - Clean, minimalistic, modern TUI client for YouTube Music
-- Extremeley fast, lightweight, and responsive
+- Extremely fast, lightweight, and responsive
 - Authentication to access your Library and personalized recommendations
 - Includes YouTube Music Home, Explore, Search, and Trending pages
 - Smooth playback experience, with a simple dynamic queue
-- Download songs/playlists to local / Automatic audio retrieval from local
+- Download songs/playlists to local / automatic audio retrieval from local
 - Vast set of intuitive keybinds (e.g. `n` for next track, `d` to download, etc.)
 - Easy management of Library (e.g. `o` to create playlist, `x` to delete song/playlist, etc.)
 - "Marking" playlists to easily add to collection from anywhere
@@ -36,7 +36,7 @@ Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a 
 - Has Vim's "unnamed register" for `x` (cut), `y` (yank), and `p` (put/paste) for songs
 - `0-9` keys jump around current track, imitating YouTube's playback keybinds
 - Audio bitrate indicator, originally added to verify enhanced premium bitrate
-- Local filter `/` can jump to line numbers, allowing fast gotos
+- Local filter `/` can jump to line numbers, allowing fast go-tos
 - Search screen accepts YouTube URLs, useful if you prefer exploring YouTube on a browser (me)
 - Option to hide "Episodes for Later" in Library, I'm sure many find this annoying (me)
 - No concept of "unshuffle", `s` reshuffles queue everytime; I have no use "unshuffling" my queue
