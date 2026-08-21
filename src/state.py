@@ -391,17 +391,13 @@ class AppState:
         self.register = items
 
     def set_auth_headers(self, path: str | None) -> tuple[bool, str]:
-        # load auth from path, or disconnect when empty/missing/invalid
+        # load auth from path. Empty field = default browser.json (still verify)
         if path is None or str(path).strip() == "":
             self.config.update(auth_headers_path=None)
-            self.music.reload_auth(None)
-            self._refresh_playback_cookies()
-            self.status_message = "Auth cleared (anonymous)"
-            self._emit()
-            return False, "Anonymous — auth cleared"
-
-        resolved = Path(str(path).strip()).expanduser()
-        self.config.update(auth_headers_path=str(resolved))
+            resolved = self.config.auth_headers_path
+        else:
+            resolved = Path(str(path).strip()).expanduser()
+            self.config.update(auth_headers_path=str(resolved))
 
         if not resolved.exists():
             self.music.reload_auth(None)

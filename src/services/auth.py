@@ -100,5 +100,8 @@ def run_auth(dest: Path | None = None) -> int:
 
     write_browser_json(path, headers)
     print(f"\nWrote {display_user_path(path)}")
-    print("You're all set! Run yt-collate to confirm your authentication. If you have a Premium account, you probably want to allow premium bitrates in Settings.")
+    print(
+        "You're all set! Run yt-collate to confirm your authentication.\n"
+        "If you have a Premium account, you probably want to allow premium bitrates in Settings."
+    )
     return 0

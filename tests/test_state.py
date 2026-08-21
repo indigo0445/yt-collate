@@ -326,3 +326,19 @@ def test_refresh_playback_cookies_after_mpv_started(tmp_path: Path) -> None:
     jar = Path(state.player.cookies_file)
     assert jar.exists()
     assert "SID" in jar.read_text(encoding="utf-8")
+
+
+def test_set_auth_headers_empty_loads_default(tmp_path: Path, monkeypatch) -> None:
+    state = _state(tmp_path)
+    default = state.config.auth_headers_path
+    default.parent.mkdir(parents=True, exist_ok=True)
+    default.write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(
+        type(state.music), "verify_auth", lambda self: (True, "OK — loaded")
+    )
+    ok, detail = state.set_auth_headers(None)
+    assert ok is True
+    assert "OK" in detail
+    assert state.config.config.auth_headers_path is None
+    assert state.music._auth_headers_path == default
+    assert state.music.authenticated is True

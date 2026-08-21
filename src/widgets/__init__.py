@@ -619,5 +619,5 @@ class StatusBar(Static):
         bar_width = max(10, width)
         self.query_one("#np-bar", Label).update(progress_bar(position, duration, bar_width))
         # I don't really think 'status' it's necessary, except for errors; unused for now
-        extra = f"  {status}" if status else ""
+        # extra = f"  {status}" if status else ""
         self.query_one("#playback-keys", Label).update(f"{PLAYBACK_KEYS}")
