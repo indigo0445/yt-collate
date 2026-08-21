@@ -1,6 +1,6 @@
 [project]
 name = "yt-collate"
-version = "0.0.3"
+version = "0.0.4"
 description = "Efficient, well-rounded YouTube Music TUI client"
 readme = "README.md"
 authors = [
