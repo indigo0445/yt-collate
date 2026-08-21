@@ -29,6 +29,7 @@ DownloadStatus = Literal["ok", "skipped", "error"]
 RunFn = Callable[..., subprocess.CompletedProcess[str]]
 CookiesFn = Callable[[], str | None]
 BrowserFn = Callable[[], str | None]
+PremiumFn = Callable[[], bool]
 
 
 def safe_video_id(video_id: str) -> str | None:
@@ -88,11 +89,13 @@ class DownloadService:
         *,
         cookies: CookiesFn | None = None,
         cookies_from_browser: BrowserFn | None = None,
+        premium_bitrates: PremiumFn | None = None,
         run: RunFn | None = None,
     ) -> None:
         self.dest = dest or SONGS_DIR
         self._cookies = cookies or (lambda: None)
         self._cookies_from_browser = cookies_from_browser or (lambda: None)
+        self._premium_bitrates = premium_bitrates or (lambda: False)
         self._run = run or subprocess.run
 
     def download_track(self, track: Track) -> TrackDownloadResult:
@@ -149,7 +152,8 @@ class DownloadService:
         if runtime:
             cmd.extend(["--js-runtimes", runtime])
         if not track.is_video:
-            cmd.extend(["--extractor-args", f"{_YTDL_MUSIC_CLIENT};formats=missing_pot"])
+            if self._premium_bitrates():
+                cmd.extend(["--extractor-args", f"{_YTDL_MUSIC_CLIENT};formats=missing_pot"])
             cookies = self._cookies()
             browser = self._cookies_from_browser()
             if cookies:

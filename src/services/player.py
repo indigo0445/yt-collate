@@ -65,6 +65,7 @@ def ytdl_raw_options(
     music_client: bool,
     cookies_file: str | None = None,
     cookies_from_browser: str | None = None,
+    premium_bitrates: bool = False,
 ) -> dict[str, str]:
     opts: dict[str, str] = {
         "format-sort": "abr",
@@ -75,7 +76,8 @@ def ytdl_raw_options(
     if music_client:
         # ';formats=missing_pot' is needed to get enhanced bitrate for yt subscribers
         # spent hours figuring that out omg
-        opts["extractor-args"] = f"{_YTDL_MUSIC_CLIENT};formats=missing_pot"
+        if premium_bitrates:
+            opts["extractor-args"] = f"{_YTDL_MUSIC_CLIENT};formats=missing_pot"
         if cookies_file:
             opts["cookies"] = cookies_file
         elif cookies_from_browser:
@@ -418,7 +420,12 @@ class PlayerService:
                     self._audio_bitrate = None
 
     def play(
-        self, url: str, *, start: float | None = None, music_client: bool = True
+        self,
+        url: str,
+        *,
+        start: float | None = None,
+        music_client: bool = True,
+        premium_bitrates: bool = False,
     ) -> None:
         # load either a local file or a YouTube URL
         # if local file, music_client param is ignored
@@ -446,6 +453,7 @@ class PlayerService:
                             music_client=music_client,
                             cookies_file=self.cookies_file,
                             cookies_from_browser=self.cookies_from_browser,
+                            premium_bitrates=premium_bitrates,
                         ),
                     ]
                 }

@@ -80,6 +80,7 @@ def test_download_skips_existing_and_names_by_id(tmp_path: Path) -> None:
     assert "-x" in calls[0]
     assert "opus" in calls[0]
     assert "player_client=web_music" in " ".join(calls[0])
+    assert "missing_pot" not in " ".join(calls[0])
     second = svc.download_track(_song("aaaaaaaaaaa", title="One"))
     assert second.status == "skipped"
     assert len(calls) == 1
@@ -98,6 +99,21 @@ def test_video_download_omits_cookies(tmp_path: Path) -> None:
     assert "--cookies" not in cmds[0]
     assert "extractor-args" not in cmds[0]
     assert result.path == tmp_path / "bbbbbbbbbbb.opus"
+
+
+def test_download_premium_bitrates_adds_missing_pot(tmp_path: Path) -> None:
+    cmds: list[list[str]] = []
+
+    def run(cmd: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        cmds.append(cmd)
+        return _write_from_template(cmd)
+
+    svc = DownloadService(tmp_path, premium_bitrates=lambda: True, run=run)
+    result = svc.download_track(_song("aaaaaaaaaaa"))
+    assert result.status == "ok"
+    joined = " ".join(cmds[0])
+    assert "player_client=web_music" in joined
+    assert "formats=missing_pot" in joined
 
 
 def test_download_replaces_leftover_mp4(tmp_path: Path) -> None:

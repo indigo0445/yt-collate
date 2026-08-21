@@ -45,3 +45,4 @@ def test_library_visibility_defaults() -> None:
     assert cfg.show_liked_songs is True
     assert cfg.show_saved_songs is True
     assert cfg.confirm_delete is True
+    assert cfg.premium_bitrates is False

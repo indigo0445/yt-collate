@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from models.track import Artist, Track
@@ -305,3 +306,23 @@ def test_play_restored_current_starts_unloaded_queue(tmp_path: Path) -> None:
     assert state.player.snapshot().url is not None
     state.play_restored_current()
     assert transport.loadfile_count() == 1
+
+
+def test_refresh_playback_cookies_after_mpv_started(tmp_path: Path) -> None:
+    # switching auth after the first play must still attach cookies; premium
+    # formats 403 if play() keeps the pre-auth cookies_file=None
+    state = _state(tmp_path)
+    state.play_track(_t(1))
+    assert state.player._started is True
+    assert state.player.cookies_file is None
+
+    auth = state.config.auth_headers_path
+    auth.write_text(
+        json.dumps({"cookie": "SID=abc; HSID=def", "user-agent": "TestAgent"}),
+        encoding="utf-8",
+    )
+    state._refresh_playback_cookies()
+    assert state.player.cookies_file == str(tmp_path / "cfg" / "yt-dlp-cookies.txt")
+    jar = Path(state.player.cookies_file)
+    assert jar.exists()
+    assert "SID" in jar.read_text(encoding="utf-8")

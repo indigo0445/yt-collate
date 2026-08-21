@@ -493,10 +493,28 @@ class MusicService:
         self._authenticated = (
             auth_headers_path is not None and auth_headers_path.exists()
         )
+        self._premium = False
 
     @property
     def authenticated(self) -> bool:
         return self._authenticated
+
+    @property
+    def premium(self) -> bool:
+        return self._premium
+
+    def check_premium(self) -> None:
+        # updates _premium flag. only way I'm aware is: "get_explore():
+        # ... The Top Songs chart is only returned when authenticated with a premium account"
+        # rewrite if know a better way
+        if self._yt is None:
+            self._premium = False
+            return
+        try:
+            explore = self._yt.get_explore()
+            self._premium = ("top_songs" in explore)
+        except Exception:
+            self._premium = False
 
     def _client(self):
         if self._yt is not None:
@@ -507,9 +525,11 @@ class MusicService:
         if path is not None and path.exists():
             self._yt = YTMusic(str(path))
             self._authenticated = True
+            self.check_premium()
         else:
             self._yt = YTMusic()
             self._authenticated = False
+            self._premium = False
         return self._yt
 
     def reload_auth(self, auth_headers_path: Path | None) -> None:
@@ -518,6 +538,7 @@ class MusicService:
         self._authenticated = (
             auth_headers_path is not None and auth_headers_path.exists()
         )
+        self._premium = False
 
     def search_songs(self, query: str, limit: int = 25) -> list[Track]:
         if not query.strip():
@@ -1029,6 +1050,7 @@ class MusicService:
             # force rebuild client from file
             self._yt = None
             self._authenticated = False
+            self._premium = False
             client = self._client()
             if not self.authenticated:
                 return False, "Auth file present but client is anonymous"
@@ -1037,6 +1059,7 @@ class MusicService:
             songs = client.get_library_songs(limit=5) or []
         except Exception as exc:  # noqa: BLE001
             self._authenticated = False
+            self._premium = False
             self._yt = None
             return False, f"Auth failed: {exc}"
 

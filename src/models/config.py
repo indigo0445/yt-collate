@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
 
 class RepeatMode(StrEnum):
@@ -27,3 +27,4 @@ class AppConfig(BaseModel):
     cookies_file: str | None = None
     cookies_from_browser: str | None = None
     confirm_delete: bool = True
+    premium_bitrates: bool = False

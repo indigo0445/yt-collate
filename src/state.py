@@ -60,6 +60,7 @@ class AppState:
             DownloadService( # default download dir
                 cookies=lambda: self.player.cookies_file,
                 cookies_from_browser=lambda: self.player.cookies_from_browser,
+                premium_bitrates=lambda: self.config.config.premium_bitrates,
             )
         )
 
@@ -154,6 +155,9 @@ class AppState:
 
     def _refresh_playback_cookies(self) -> None:
         # give mpv the same YouTube cookies as the Music API (from browser.json)
+        # must update even after mpv has started: play() sends cookies on each
+        # load via ytdl-raw-options. Skipping that left premium streams 403
+        # until the next process launch after switching auth files
         cfg = self.config
         if cfg.config.cookies_file:
             path: str | None = str(Path(cfg.config.cookies_file).expanduser())
@@ -163,9 +167,8 @@ class AppState:
                 auth, cfg.config_dir / "yt-dlp-cookies.txt"
             )
             path = str(cookies) if cookies else None
-        if not self.player._started:
-            self.player.cookies_file = path or cfg.config.cookies_file
-            self.player.cookies_from_browser = cfg.config.cookies_from_browser
+        self.player.cookies_file = path or cfg.config.cookies_file
+        self.player.cookies_from_browser = cfg.config.cookies_from_browser
 
     def _finish_queue(self) -> None:
         self.queue_finished = True
@@ -186,7 +189,11 @@ class AppState:
             return
         self.queue_finished = False
         try:
-            self.player.play(self._playback_source(track), music_client=not track.is_video)
+            self.player.play(
+                self._playback_source(track),
+                music_client=not track.is_video,
+                premium_bitrates=self.config.config.premium_bitrates,
+            )
         except Exception as exc:  # noqa: BLE001
             self.status_message = f"Playback failed: {exc}"
             self._emit()
@@ -266,6 +273,7 @@ class AppState:
                 self._playback_source(track),
                 start=max(0.0, position),
                 music_client=not track.is_video,
+                premium_bitrates=self.config.config.premium_bitrates,
             )
         except Exception as exc:  # noqa: BLE001
             self.status_message = f"Playback failed: {exc}"

@@ -85,6 +85,10 @@ class SettingsScreen(ContentView):
             f"Show Liked Songs: {_yn(cfg.show_liked_songs)}",
             f"Show Saved Songs: {_yn(cfg.show_saved_songs)}",
             f"Always confirm to delete: {_yn(cfg.confirm_delete)}",
+            (
+                "Fetch premium bitrates when available "
+                f"(non-premium accounts should NOT turn this on): {_yn(cfg.premium_bitrates)}"
+            ),
         ]
 
     def _rebuild_nav(self) -> None:
@@ -159,6 +163,10 @@ class SettingsScreen(ContentView):
             new_val = not cfg.confirm_delete
             state.config.update(confirm_delete=new_val)
             state.status_message = f"Always confirm to delete {_yn(new_val)}"
+        elif idx == 7:
+            new_val = not cfg.premium_bitrates
+            state.config.update(premium_bitrates=new_val)
+            state.status_message = f"Fetch premium bitrates {_yn(new_val)}"
         self._rebuild_nav()
 
     def on_input_submitted(self, event: Input.Submitted) -> None:

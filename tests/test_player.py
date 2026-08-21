@@ -47,9 +47,13 @@ def test_detect_ytdlp_js_runtime_falls_back_to_node(monkeypatch) -> None:
 def test_ytdl_raw_options_switch_client(monkeypatch) -> None:
     monkeypatch.setattr("services.player.detect_ytdlp_js_runtime", lambda: None)
     music = ytdl_raw_options(music_client=True, cookies_file="/tmp/c.txt")
-    assert music["extractor-args"] == "youtube:player_client=web_music;formats=missing_pot"
+    assert music["extractor-args"] == "youtube:player_client=web_music"
     assert music["cookies"] == "/tmp/c.txt"
     assert "js-runtimes" not in music
+    premium = ytdl_raw_options(
+        music_client=True, cookies_file="/tmp/c.txt", premium_bitrates=True
+    )
+    assert premium["extractor-args"] == "youtube:player_client=web_music;formats=missing_pot"
     web = ytdl_raw_options(music_client=False, cookies_file="/tmp/c.txt")
     assert web["extractor-args"] == "youtube:player_client=visionos"
     assert "cookies" not in web
@@ -95,8 +99,25 @@ def test_play_keeps_cookies_for_music_client() -> None:
         for c in transport.commands
         if c[:2] == ["set_property", "ytdl-raw-options"]
     )
-    assert opts["extractor-args"] == "youtube:player_client=web_music;formats=missing_pot"
+    assert opts["extractor-args"] == "youtube:player_client=web_music"
     assert opts["cookies"] == "/tmp/c.txt"
+
+
+def test_play_premium_bitrates_adds_missing_pot() -> None:
+    transport = FakeMpvTransport()
+    player = PlayerService(cookies_file="/tmp/c.txt")
+    player._transport = transport
+    player.play(
+        "https://music.youtube.com/watch?v=1",
+        music_client=True,
+        premium_bitrates=True,
+    )
+    opts = next(
+        c[2]
+        for c in transport.commands
+        if c[:2] == ["set_property", "ytdl-raw-options"]
+    )
+    assert opts["extractor-args"] == "youtube:player_client=web_music;formats=missing_pot"
 
 
 def test_play_local_file_skips_ytdl_options() -> None:
