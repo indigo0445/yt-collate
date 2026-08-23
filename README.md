@@ -7,7 +7,7 @@
 
 A Terminal User Interface client for YouTube Music, with a focus on **efficiency** and **ease-of-use** while also offering a **comprehensive feature list**.
 
-Originally planned to only focus on gathering/arranging tracks in playlists (hence name), Collate has become a full-fledged music client that is reliable and "just works". Developed for **Linux** (likely compatible with Mac; untested yet).
+Originally planned to only focus on gathering/arranging tracks in playlists (hence name), Collate has become a full-fledged music client that is reliable and "just works". Developed for **Linux** and **Mac**.
 
 Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a mix of Vim binds and general binds for efficient keyboard navigation (mouse is supported as well). Collate is inspired by [youtube-music-cli](https://github.com/involvex/youtube-music-cli) and [yazi](https://github.com/sxyazi/yazi); check them out!
 
