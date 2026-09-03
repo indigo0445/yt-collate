@@ -45,7 +45,7 @@ Built with **Textual**, **ytmusicapi**, **mpv**, and **yt-dlp**. Keybinds are a 
 
 - Python 3.12+
 - [mpv](https://mpv.io/)
-- [yt-dlp (nightly build)](https://github.com/yt-dlp/yt-dlp-nightly-builds) (Certain non-music videos will not play on current stable build. Can run `yt-dlp --update-to nightly`)
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - [Deno](https://deno.com/) or [Node](https://nodejs.org/) or [QuickJS](https://bellard.org/quickjs/) (A JS runtime is needed for yt-dlp to [reliably fetch](https://github.com/yt-dlp/yt-dlp/wiki/ejs))
 
 ## Install / Update

@@ -1,5 +1,6 @@
 priority:
 gapless audio for non-local streaming
+if song is somehow taken down from youtube, dont halt forever on it
 
 
 
